@@ -31,9 +31,29 @@ button,input,textarea{font:inherit} button{cursor:pointer}
 .modal-back{position:fixed;inset:0;background:rgba(40,65,85,.35);display:none;place-items:center;z-index:20}.modal-back.open{display:grid}.modal{width:min(470px,92vw);background:#fff;border-radius:24px;padding:22px;box-shadow:0 20px 60px rgba(40,70,90,.25)}.modal h3{margin-top:0}.modal label{display:block;font-size:12px;color:#6487a4;margin:12px 0 5px}.modal input,.modal textarea{width:100%}.modal textarea{min-height:90px;border:1px solid #d7e8f2;border-radius:12px;padding:9px;outline:0}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.cancel{border:0;background:#eef5f8;color:#6385a0;border-radius:12px;padding:9px 14px}.save{border:0;background:#70b4d9;color:white;border-radius:12px;padding:9px 14px;font-weight:700}
 @media(max-width:1050px){.sidebar{width:220px}.main{margin-left:220px;padding:22px}.grid3{grid-template-columns:1fr 1fr}.lower{grid-template-columns:1fr}.feature-grid{grid-template-columns:1fr}.scribble{display:none}}
 @media(max-width:760px){.sidebar{position:fixed;width:100%;height:72px;bottom:0;top:auto;padding:8px 8px 6px;border-right:0;border-top:1px solid #cfe2ee;background:rgba(236,247,251,.96);backdrop-filter:blur(12px)}.brand,.side-bottom{display:none}.nav{display:flex;justify-content:space-around;gap:4px}.nav button{background:transparent;padding:7px 8px;display:flex;flex-direction:column;gap:2px;font-size:10px;border-radius:12px}.nav button.active{background:#d4edf9}.nav .badge{position:absolute;margin:0;transform:translate(17px,-12px);padding:1px 5px}.main{margin-left:0;padding:10px 12px 90px}.topbar{height:38px}.hero{height:210px;padding:28px 14px}.hero-card{width:92%;padding:16px}.hero h2{font-size:23px}.grid3{grid-template-columns:1fr;gap:10px}.lower{gap:10px}.calendar-card{min-height:0}.day{min-height:60px;padding:5px;font-size:9px}.event-dot{font-size:7px}.bottom-grid{grid-template-columns:1fr}.music{margin-bottom:4px}.page-title{font-size:24px}}
+
+/* Personalization + theme system */
+body.theme-ocean{--bg:#dcecf7;--panel:#fffdfb;--panel2:#eef7fc;--ink:#315f8e;--muted:#7294b2;--line:#d4e7f4;--blue:#75b9df;--blue2:#cce8f8;--pink:#f7c3cf;--purple:#ddd1f5;--green:#d9f0df}
+body.theme-sunset{--bg:#f8e7dc;--panel:#fffaf7;--panel2:#fff1e9;--ink:#875a4d;--muted:#aa8174;--line:#f0d7cb;--blue:#e6a28e;--blue2:#f7d4c6;--pink:#f2b9c5;--purple:#dfc8dc;--green:#dcebd9}
+body.theme-seaglass{--bg:#d9eee9;--panel:#fffdf9;--panel2:#edf8f5;--ink:#3e756f;--muted:#729c96;--line:#cce5df;--blue:#73bdb3;--blue2:#c8e8e2;--pink:#f3c8c8;--purple:#d8d0e8;--green:#d5ebdc}
+body.theme-tropical{--bg:#e3f0dd;--panel:#fffdf8;--panel2:#f0f8eb;--ink:#4d7654;--muted:#78957c;--line:#d6e7ce;--blue:#7fb9a4;--blue2:#cfe8d9;--pink:#f5c7bb;--purple:#ddd3e8;--green:#cfe9cf}
+body.theme-pink{--bg:#f5e3eb;--panel:#fffafd;--panel2:#fff0f6;--ink:#8a5c79;--muted:#ad829f;--line:#efd5e3;--blue:#c58fb5;--blue2:#ead0e0;--pink:#f3bdcf;--purple:#d9c8eb;--green:#d9ebdd}
+body.theme-moon{--bg:#d9dceb;--panel:#fdfdff;--panel2:#eceef8;--ink:#4d587d;--muted:#7f88a8;--line:#d1d5e7;--blue:#8596c7;--blue2:#d4dcf2;--pink:#e9c5d5;--purple:#d7ccec;--green:#d7e9df}
+body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--muted:#6f99aa;--line:#cce4ed;--blue:#58b4c7;--blue2:#c4e8ee;--pink:#f3c4c6;--purple:#d8d0eb;--green:#d5ead9}
+.theme-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px}
+.theme-choice{border:2px solid transparent;background:var(--panel2);border-radius:18px;padding:13px;text-align:left;color:var(--ink);transition:.15s;position:relative}
+.theme-choice:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.theme-choice.selected{border-color:var(--blue)}
+.theme-choice.locked{opacity:.52;cursor:not-allowed}
+.swatches{display:flex;gap:5px;margin-bottom:8px}.swatch{width:24px;height:24px;border-radius:50%;border:2px solid rgba(255,255,255,.8);box-shadow:0 1px 5px rgba(0,0,0,.08)}
+.theme-choice b{display:block;font-size:13px}.theme-choice small{color:var(--muted);font-size:10px}
+.lock{position:absolute;right:10px;top:10px;font-size:13px}
+.profile-preview{display:flex;align-items:center;gap:13px;background:var(--panel2);border-radius:18px;padding:14px;margin-top:15px}
+.profile-preview .avatar{flex:none}.personal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.personal-grid label{margin:0}.settings-card label{display:block;font-size:11px;color:var(--muted);font-weight:700;margin:12px 0 5px}.settings-card input{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;outline:0;color:var(--ink);background:var(--panel)}
+@media(max-width:760px){.theme-grid{grid-template-columns:1fr}.personal-grid{grid-template-columns:1fr}}
 </style>
 </head>
-<body>
+<body class="theme-ocean">
 <div class="app">
 <aside class="sidebar">
   <div class="brand"><h1>Salty Plans</h1><p>better days, brighter plans ♡</p></div>
@@ -43,6 +63,7 @@ button,input,textarea{font:inherit} button{cursor:pointer}
     <button data-view="todos">☷ <span>To-dos</span><span class="badge" id="todoBadge">0</span></button>
     <button data-view="goals">⚑ <span>Goals</span></button>
     <button data-view="notes">♧ <span>Notes</span></button>
+    <button data-view="personalize">⚙ <span>Personalize</span></button>
   </nav>
   <div class="side-bottom">
     <p class="quote">good things<br>take time<br>◎</p>
@@ -53,11 +74,11 @@ button,input,textarea{font:inherit} button{cursor:pointer}
 </aside>
 
 <main class="main">
-  <div class="topbar"><span>☼ 72° · Partly Cloudy</span><span id="dateTop">Tue, Sep 29</span><span class="avatar">J</span></div>
+  <div class="topbar"><span>☼ 72° · Partly Cloudy</span><span id="dateTop">Tue, Sep 29</span><span class="avatar" id="topAvatar">J</span></div>
 
   <section class="view active" id="today">
     <div class="hero">
-      <div class="hero-card"><div class="eyebrow" id="heroDate">Tuesday, September 29 · YOUR DAILY TIDE</div><h2>Hey there, Jamie ☀️</h2><p>A new day, a fresh little start. Take it one thing at a time.</p></div>
+      <div class="hero-card"><div class="eyebrow" id="heroDate">Tuesday, September 29 · YOUR DAILY TIDE</div><h2>Hey there, <span id="userName">Jamie</span> ☀️</h2><p id="userGreeting">A new day, a fresh little start. Take it one thing at a time.</p></div>
       <div class="scribble">same girl..<br>bigger dreams ♡</div>
     </div>
 
@@ -127,6 +148,34 @@ button,input,textarea{font:inherit} button{cursor:pointer}
     <h2 class="page-title">Notes & brain dumps</h2><p class="page-sub">No need to organize it.</p>
     <div class="feature-grid"><div class="card brain"><div class="eyebrow">LET IT OUT</div><h3>♧ Brain dump</h3><textarea id="brainDump2" placeholder="Write anything..."></textarea><div class="char"><span>autosaves</span><span id="charCount2">0 characters</span></div></div><div class="card"><div class="eyebrow">LITTLE REMINDER</div><h3>♡</h3><p style="font-family:'Shadows Into Light';font-size:25px">Small steps = big progress ♡</p></div></div>
   </section>
+
+  <section class="view" id="personalize">
+    <h2 class="page-title">Make Salty Plans yours ✨</h2>
+    <p class="page-sub">Pick your vibe, change your name, and make your little planner feel like home.</p>
+    <div class="feature-grid">
+      <div class="card settings-card">
+        <div class="eyebrow">YOUR LITTLE PROFILE</div>
+        <h3>♡ Personal details</h3>
+        <div class="personal-grid">
+          <div><label for="nameSetting">What should I call you?</label><input id="nameSetting" placeholder="Your name"></div>
+          <div><label for="initialSetting">Avatar letter</label><input id="initialSetting" maxlength="1" placeholder="J"></div>
+        </div>
+        <label for="greetingSetting">Your daily message</label>
+        <input id="greetingSetting" placeholder="A new day, a fresh little start.">
+        <label for="taglineSetting">Your sidebar tagline</label>
+        <input id="taglineSetting" placeholder="better days, brighter plans ♡">
+        <button class="save" style="margin-top:14px" onclick="savePersonalization()">Save my vibe ♡</button>
+        <div class="profile-preview"><span class="avatar" id="profileAvatar">J</span><div><b id="profileName">Jamie</b><div class="mini-note" id="profileTagline">better days, brighter plans ♡</div></div></div>
+      </div>
+      <div class="card">
+        <div class="eyebrow">YOUR COASTAL VIBE</div>
+        <h3>🏝️ Pick a theme</h3>
+        <p class="mini-note">Some themes unlock as you earn XP. Your current XP: <b id="themeXP">350</b>.</p>
+        <div class="theme-grid" id="themeGrid"></div>
+      </div>
+    </div>
+  </section>
+
 </main>
 </div>
 
@@ -146,7 +195,7 @@ button,input,textarea{font:inherit} button{cursor:pointer}
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, dark:false, brain:"",
+ xp:350, streak:4, badges:7, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean",
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -166,6 +215,51 @@ let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Oc
 function save(){localStorage.setItem(KEY,JSON.stringify(data));document.querySelectorAll(".save-dot").forEach(x=>x.textContent="● Saved on this device")}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})}
+
+const THEMES=[
+ {id:"ocean",name:"Ocean Blue",emoji:"🌊",need:0,desc:"Your classic Salty Plans vibe.",sw:["#dcecf7","#75b9df","#315f8e"]},
+ {id:"seaglass",name:"Sea Glass",emoji:"🐚",need:300,desc:"Soft, minty beach glass.",sw:["#d9eee9","#73bdb3","#3e756f"]},
+ {id:"sunset",name:"Sunset Beach",emoji:"🌅",need:350,desc:"Warm skies and golden sand.",sw:["#f8e7dc","#e6a28e","#875a4d"]},
+ {id:"tropical",name:"Tropical",emoji:"🌴",need:700,desc:"Fresh island energy.",sw:["#e3f0dd","#7fb9a4","#4d7654"]},
+ {id:"pink",name:"Coastal Pink",emoji:"🌸",need:1000,desc:"Sweet seashells and rosy skies.",sw:["#f5e3eb","#c58fb5","#8a5c79"]},
+ {id:"moon",name:"Moonlit Ocean",emoji:"🌙",need:1500,desc:"Calm nighttime waves.",sw:["#d9dceb","#8596c7","#4d587d"]},
+ {id:"surf",name:"Summer Surf",emoji:"🏄",need:2000,desc:"Bright, playful surf days.",sw:["#d9eef4","#58b4c7","#2f7188"]}
+];
+function applyTheme(){
+ document.body.className="theme-"+(data.theme||"ocean");
+ document.getElementById("themeXP").textContent=data.xp;
+ const grid=document.getElementById("themeGrid");
+ if(!grid)return;
+ grid.innerHTML=THEMES.map(t=>{
+   const unlocked=data.xp>=t.need, selected=(data.theme||"ocean")===t.id;
+   return `<button class="theme-choice ${selected?"selected":""} ${unlocked?"":"locked"}" ${unlocked?`onclick="chooseTheme('${t.id}')`:"disabled"}><span class="swatches">${t.sw.map(c=>`<span class="swatch" style="background:${c}"></span>`).join("")}</span><b>${t.emoji} ${t.name}</b><small>${unlocked?t.desc:`🔒 Unlock at ${t.need} XP`}</small>${selected?`<span class="lock">✓</span>`:""}</button>`;
+ }).join("");
+}
+function chooseTheme(id){data.theme=id;save();applyTheme()}
+function renderPersonalization(){
+ const name=data.name||"Jamie", initial=(data.initial||name.charAt(0)||"J").toUpperCase().slice(0,1);
+ document.getElementById("userName").textContent=name;
+ document.getElementById("userGreeting").textContent=data.greeting||"A new day, a fresh little start. Take it one thing at a time.";
+ document.getElementById("topAvatar").textContent=initial;
+ document.querySelector(".brand p").textContent=data.tagline||"better days, brighter plans ♡";
+ document.getElementById("nameSetting").value=name;
+ document.getElementById("initialSetting").value=initial;
+ document.getElementById("greetingSetting").value=data.greeting||"";
+ document.getElementById("taglineSetting").value=data.tagline||"";
+ document.getElementById("profileAvatar").textContent=initial;
+ document.getElementById("profileName").textContent=name;
+ document.getElementById("profileTagline").textContent=data.tagline||"";
+ applyTheme();
+}
+function savePersonalization(){
+ data.name=document.getElementById("nameSetting").value.trim()||"Jamie";
+ data.initial=(document.getElementById("initialSetting").value.trim()||data.name.charAt(0)||"J").toUpperCase().slice(0,1);
+ data.greeting=document.getElementById("greetingSetting").value.trim()||"A new day, a fresh little start. Take it one thing at a time.";
+ data.tagline=document.getElementById("taglineSetting").value.trim()||"better days, brighter plans ♡";
+ save();renderPersonalization();
+ const btn=document.querySelector("#personalize .save"); const old=btn.textContent; btn.textContent="Saved! ♡"; setTimeout(()=>btn.textContent=old,1200);
+}
+
 function render(){
  document.getElementById("xpNum").textContent=data.xp; document.getElementById("streakStat").textContent=data.streak; document.getElementById("sideStreak").textContent=data.streak+" day streak";
  const level=Math.floor(data.xp/100)+1, within=data.xp%100;
@@ -175,7 +269,7 @@ function render(){
  ["doneStat"].forEach(id=>document.getElementById(id).textContent=done); document.getElementById("totalStat").textContent=total;
  document.getElementById("todoDonePill").textContent=`${done}/${total} done`; document.getElementById("todoBadge").textContent=total-done;
  document.getElementById("badgeCount").textContent=data.badges;
- renderTodos(); renderGoals(); renderCalendar(); renderBrain();
+ renderTodos(); renderGoals(); renderCalendar(); renderBrain(); renderPersonalization();
 }
 function renderTodos(){
  const html=data.todos.map((t,i)=>`<div class="todo ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span>${esc(t.text)}</span></div>`).join("");
@@ -215,7 +309,7 @@ function renderBrain(){
  ["brainDump","brainDump2"].forEach(id=>{const e=document.getElementById(id);if(e){e.value=data.brain;e.oninput=()=>{data.brain=e.value;document.querySelectorAll("#brainDump,#brainDump2").forEach(x=>x.value=data.brain);document.querySelectorAll("#charCount,#charCount2").forEach(x=>x.textContent=data.brain.length+" characters");save()}}});
  document.querySelectorAll("#charCount,#charCount2").forEach(x=>x.textContent=data.brain.length+" characters");
 }
-function gainXP(n){data.xp+=n;data.badges+=1;save();render()}
+function gainXP(n){const before=data.xp;data.xp+=n;data.badges+=1;save();render();const newly=THEMES.find(t=>before<t.need && data.xp>=t.need);if(newly)alert(`🌊 New theme unlocked: ${newly.emoji} ${newly.name}! Check Personalize.`)}
 function toggleMusic(){playing=!playing;document.getElementById("playBtn").textContent=playing?"Ⅱ":"▶";if(playing)musicTick()}
 function musicTick(){if(!playing)return;let b=document.getElementById("musicProgress"),w=parseInt(b.style.width)||38;w=(w+1)%101;b.style.width=w+"%";setTimeout(musicTick,700)}
 function nextSong(){songIndex=(songIndex+1)%songs.length;document.getElementById("songTitle").textContent=songs[songIndex]}
@@ -224,6 +318,7 @@ function weeklyReset(){if(!confirm("Reset weekly goal progress and completed to-
 document.querySelectorAll(".nav button").forEach(btn=>btn.onclick=()=>{document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(btn.dataset.view).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})});
 document.querySelectorAll("[data-cal]").forEach(btn=>btn.onclick=()=>{document.querySelectorAll("[data-cal]").forEach(b=>b.classList.remove("active"));btn.classList.add("active");if(btn.dataset.cal!=="month"){alert(btn.dataset.cal==="week"?"Week view is coming next — the month view is fully functional now.":"Day view is coming next — choose a date to plan it.")}});
 document.getElementById("darkToggle").onclick=()=>{data.dark=!data.dark;document.body.style.filter=data.dark?"brightness(.84) saturate(.8)":"none";save()};
+document.body.className="theme-"+(data.theme||"ocean");
 document.getElementById("modalBack").onclick=e=>{if(e.target.id==="modalBack")closeModal()};
 document.getElementById("dateTop").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
 render();
