@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Salty Plans — Your daily tide</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Pacifico&family=Shadows+Into+Light&display=swap');
+:root{
+  --bg:#dcecf7; --panel:#fffdfb; --panel2:#eef7fc; --ink:#315f8e; --muted:#7294b2;
+  --line:#d4e7f4; --blue:#75b9df; --blue2:#cce8f8; --pink:#f7c3cf; --purple:#ddd1f5;
+  --green:#d9f0df; --shadow:0 8px 28px rgba(58,105,140,.10); --radius:22px;
+}
+*{box-sizing:border-box} body{margin:0;font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--ink)}
+button,input,textarea{font:inherit} button{cursor:pointer}
+.app{min-height:100vh;display:flex}
+.sidebar{width:272px;position:fixed;left:0;top:0;bottom:0;padding:28px 17px 18px;background:linear-gradient(180deg,#d7e9f5 0%,#e8f3f7 75%,#cfe6f2 100%);border-right:1px solid #d0e5f2;z-index:5}
+.brand{padding:0 14px 24px}.brand h1{font-family:Pacifico,cursive;font-size:31px;margin:0 0 2px;color:#2f628f;font-weight:400}.brand p{margin:0;color:#6287a8;font-size:13px}
+.nav{display:grid;gap:8px}.nav button{border:0;background:rgba(255,255,255,.82);color:#4777a4;border-radius:17px;padding:12px 15px;text-align:left;font-weight:600;font-size:15px;display:flex;gap:12px;align-items:center}.nav button.active{background:#c9e7f8;color:#276b9e}.nav .badge{margin-left:auto;background:#a9d9f3;color:#37739d;border-radius:99px;padding:2px 8px;font-size:12px}
+.side-bottom{position:absolute;left:17px;right:17px;bottom:16px}.quote{font-family:"Shadows Into Light",cursive;font-size:20px;line-height:1.05;margin:0 14px 20px;color:#28669b}.streak-mini{background:rgba(255,255,255,.85);border:1px solid #d5e8f2;border-radius:18px;padding:11px 13px;font-size:12px;box-shadow:var(--shadow)}.settings{display:flex;justify-content:space-between;align-items:center;margin-top:11px;padding:0 7px;color:#4777a4;font-size:13px}.save-dot{font-size:11px;color:#56a77c;margin-top:10px;padding-left:7px}
+.main{margin-left:272px;flex:1;padding:26px 30px 40px;max-width:1500px}.topbar{height:46px;display:flex;justify-content:flex-end;align-items:center;gap:18px;color:#6192b6;font-size:13px}.avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#fff2e9;color:#9c795f}
+.view{display:none}.view.active{display:block}.hero{height:216px;border-radius:26px;background:linear-gradient(180deg,rgba(247,222,203,.9),rgba(107,177,207,.75)),url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80") center/cover;position:relative;overflow:hidden;padding:44px 30px;box-shadow:var(--shadow)}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.78),rgba(255,255,255,0) 62%)}.hero-card{position:relative;z-index:1;background:rgba(255,255,255,.88);border-radius:24px;padding:18px 24px;width:min(470px,90%);box-shadow:0 10px 30px rgba(70,90,110,.10)}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:#6f96b4}.hero h2{margin:8px 0 4px;font-size:27px}.hero p{margin:0;color:#6688a6;font-size:14px}.scribble{position:absolute;z-index:1;right:32px;top:20px;color:#fff;font-family:"Shadows Into Light",cursive;font-size:25px;text-align:right;line-height:.95}
+.grid3{display:grid;grid-template-columns:1.25fr .85fr .85fr;gap:16px;margin-top:20px}.card{background:var(--panel);border:1px solid rgba(205,226,239,.8);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}.card h3{margin:5px 0 13px;font-size:19px}.card-head{display:flex;justify-content:space-between;align-items:center}.pill{background:#fff0d7;color:#a87831;padding:5px 10px;border-radius:99px;font-size:11px;font-weight:700}.xp-num{font-size:27px;font-weight:700;margin:2px 0}.xpbar,.progress{height:7px;background:#e3eff7;border-radius:99px;overflow:hidden}.xpbar span,.progress span{display:block;height:100%;background:#6db2d8;border-radius:99px}.mini-note{font-size:11px;color:#7898b4;margin-top:8px}.quick-xp{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:13px}.quick-xp button{border:1px solid #d5e7f2;background:#eef7fc;border-radius:13px;padding:9px 4px;color:#47779f;font-size:10px}.quick-xp b{display:block;margin-top:4px}.big-stat{font-size:27px;font-weight:700;margin-top:18px}.big-stat small{font-size:13px;color:#7899b4;font-weight:500}.stat-copy{font-size:11px;color:#7899b4}
+.lower{display:grid;grid-template-columns:1.55fr .95fr;gap:16px;margin-top:16px}.calendar-card{min-height:470px}.seg{display:flex;background:#edf6fb;border-radius:14px;padding:3px;margin:10px 0 14px}.seg button{border:0;background:transparent;flex:1;padding:8px;border-radius:11px;color:#7394af;font-size:12px;font-weight:700}.seg button.active{background:white;color:#3d75a3;box-shadow:0 2px 7px rgba(80,120,150,.12)}
+.cal-head{display:flex;justify-content:space-between;align-items:center}.cal-title{font-size:18px;font-weight:700}.month-nav{display:flex;gap:7px;align-items:center}.month-nav button{border:1px solid #d5e7f1;background:white;width:32px;height:32px;border-radius:50%;color:#5786a9}.weekdays,.days{display:grid;grid-template-columns:repeat(7,1fr)}.weekdays div{text-align:center;font-size:10px;font-weight:700;color:#7397b4;padding:8px 0;background:#eef7fc;border:1px solid #d9eaf4;border-bottom:0}.days{border-radius:16px;overflow:hidden}.day{min-height:74px;background:#fff;border:1px solid #d9eaf4;padding:8px;font-size:11px;color:#4778a4;position:relative}.day.muted{color:#b0c5d5;background:#f8fbfd}.day.today{background:#e6f5f2}.day .num{font-weight:700}.event-dot{display:block;margin-top:7px;padding:3px 5px;border-radius:8px;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pink{background:#f8d7df;color:#a15e71}.purple{background:#e8def9;color:#7c67a8}.green{background:#dcefe1;color:#5a946a}.blue{background:#dceef9;color:#4c86aa}.day-plans{margin-top:14px;border-top:1px solid #dceaf3;padding-top:10px}.plan-row{display:flex;align-items:center;gap:10px;font-size:12px;padding:5px 0}.time{width:70px;color:#7a9ab4;font-size:10px}.plan-row button{margin-left:auto;border:0;background:none;color:#9ab2c5}
+.sidecol{display:grid;gap:16px}.goal{border-bottom:1px solid #deebf3;padding:8px 0 16px;margin-bottom:9px}.goal:last-child{border-bottom:0}.goal-top{display:flex;justify-content:space-between}.goal-name{font-weight:700;font-size:13px}.x{border:0;background:none;color:#9bb2c4}.goal p{font-size:10px;color:#7a99b2;margin:4px 0 8px}.goal-foot{display:flex;align-items:center;gap:8px;font-size:10px;color:#7898b2}.goal-foot button{border:0;background:#e5f3fb;border-radius:50%;width:22px;height:22px;color:#5e91b3}.goal-foot .grow{margin-left:auto}.brain textarea{width:100%;min-height:145px;border:0;border-bottom:1px solid #d8e9f3;resize:vertical;outline:0;color:#3e6d99;background:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,#dbeaf2 32px);font-family:"Shadows Into Light",cursive;font-size:21px;line-height:32px;padding:0 5px}.char{display:flex;justify-content:space-between;color:#9ab2c3;font-size:10px;margin-top:6px}
+.todos{margin-top:16px}.todo{display:flex;align-items:center;gap:11px;border-bottom:1px solid #e1edf4;padding:10px 2px;font-size:13px}.todo input{appearance:none;width:20px;height:20px;border:2px solid #b9d7ea;border-radius:7px;cursor:pointer}.todo input:checked{background:#acd9f1;border-color:#acd9f1;position:relative}.todo input:checked:after{content:"✓";position:absolute;color:white;font-weight:800;left:3px;top:-1px}.todo.done span{text-decoration:line-through;color:#8fa8bb}.add-row{display:flex;gap:8px;margin-top:12px}.add-row input,.modal input{flex:1;border:1px solid #d7e8f2;border-radius:12px;padding:9px 11px;outline:0;color:#426f97}.add{border:0;background:#d6ebf8;color:#3f7aa4;border-radius:12px;padding:0 14px;font-weight:700}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.celebrate{background:#e2f2df}.memory{min-height:155px;background:linear-gradient(180deg,rgba(30,50,65,.12),rgba(20,38,52,.76)),url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=75") center/cover;color:white;display:flex;flex-direction:column;justify-content:flex-end}.memory .scrib{font-family:"Shadows Into Light",cursive;font-size:25px}.music{margin-top:16px;display:flex;align-items:center;gap:12px}.album{width:56px;height:56px;border-radius:14px;background:linear-gradient(160deg,#f2c5a9,#6eaec8);display:grid;place-items:center;color:white;font-size:22px}.music-info{flex:1}.music-info b{display:block}.music-info small{color:#86a2b8}.music-controls{display:flex;gap:5px}.music-controls button{border:0;background:#eef6fa;border-radius:50%;width:32px;height:32px;color:#477aa2}.music-controls .play{background:#72b7dc;color:white}
+.footer-line{font-family:"Shadows Into Light",cursive;font-size:22px;margin:20px 5px;color:#3c78a6;display:flex;justify-content:space-between}.reset{border:1px solid #cde1ed;background:#edf7fb;color:#4c7e9f;border-radius:14px;padding:8px 12px;font-family:"DM Sans";font-size:11px;font-weight:700}
+.page-title{font-size:27px;margin:10px 0 5px}.page-sub{color:#7898b2;margin-top:0}.feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px}
+.modal-back{position:fixed;inset:0;background:rgba(40,65,85,.35);display:none;place-items:center;z-index:20}.modal-back.open{display:grid}.modal{width:min(470px,92vw);background:#fff;border-radius:24px;padding:22px;box-shadow:0 20px 60px rgba(40,70,90,.25)}.modal h3{margin-top:0}.modal label{display:block;font-size:12px;color:#6487a4;margin:12px 0 5px}.modal input,.modal textarea{width:100%}.modal textarea{min-height:90px;border:1px solid #d7e8f2;border-radius:12px;padding:9px;outline:0}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.cancel{border:0;background:#eef5f8;color:#6385a0;border-radius:12px;padding:9px 14px}.save{border:0;background:#70b4d9;color:white;border-radius:12px;padding:9px 14px;font-weight:700}
+@media(max-width:1050px){.sidebar{width:220px}.main{margin-left:220px;padding:22px}.grid3{grid-template-columns:1fr 1fr}.lower{grid-template-columns:1fr}.feature-grid{grid-template-columns:1fr}.scribble{display:none}}
+@media(max-width:760px){.sidebar{position:fixed;width:100%;height:72px;bottom:0;top:auto;padding:8px 8px 6px;border-right:0;border-top:1px solid #cfe2ee;background:rgba(236,247,251,.96);backdrop-filter:blur(12px)}.brand,.side-bottom{display:none}.nav{display:flex;justify-content:space-around;gap:4px}.nav button{background:transparent;padding:7px 8px;display:flex;flex-direction:column;gap:2px;font-size:10px;border-radius:12px}.nav button.active{background:#d4edf9}.nav .badge{position:absolute;margin:0;transform:translate(17px,-12px);padding:1px 5px}.main{margin-left:0;padding:10px 12px 90px}.topbar{height:38px}.hero{height:210px;padding:28px 14px}.hero-card{width:92%;padding:16px}.hero h2{font-size:23px}.grid3{grid-template-columns:1fr;gap:10px}.lower{gap:10px}.calendar-card{min-height:0}.day{min-height:60px;padding:5px;font-size:9px}.event-dot{font-size:7px}.bottom-grid{grid-template-columns:1fr}.music{margin-bottom:4px}.page-title{font-size:24px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><h1>Salty Plans</h1><p>better days, brighter plans ♡</p></div>
+  <nav class="nav">
+    <button class="active" data-view="today">☼ <span>Today</span></button>
+    <button data-view="calendar">▣ <span>Calendar</span></button>
+    <button data-view="todos">☷ <span>To-dos</span><span class="badge" id="todoBadge">0</span></button>
+    <button data-view="goals">⚑ <span>Goals</span></button>
+    <button data-view="notes">♧ <span>Notes</span></button>
+  </nav>
+  <div class="side-bottom">
+    <p class="quote">good things<br>take time<br>◎</p>
+    <div class="streak-mini">🌴 <b id="sideStreak">4 day streak</b><br><span style="color:#8aa6ba">You're showing up for you.</span></div>
+    <div class="settings"><span>◐ Dark mode</span><button id="darkToggle" style="border:0;background:none;color:#4777a4">○</button></div>
+    <div class="save-dot">● Saved on this device</div>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar"><span>☼ 72° · Partly Cloudy</span><span id="dateTop">Tue, Sep 29</span><span class="avatar">J</span></div>
+
+  <section class="view active" id="today">
+    <div class="hero">
+      <div class="hero-card"><div class="eyebrow" id="heroDate">Tuesday, September 29 · YOUR DAILY TIDE</div><h2>Hey there, Jamie ☀️</h2><p>A new day, a fresh little start. Take it one thing at a time.</p></div>
+      <div class="scribble">same girl..<br>bigger dreams ♡</div>
+    </div>
+
+    <div class="grid3">
+      <div class="card">
+        <div class="card-head"><div class="eyebrow">🎮 GAME TIME</div><span class="pill" id="levelPill">LEVEL 4</span></div>
+        <div class="xp-num"><span id="xpNum">350</span> <small style="font-size:14px;color:#7898b4">XP</small></div>
+        <div class="xpbar"><span id="xpBar" style="width:70%"></span></div>
+        <div class="mini-note" id="levelText">Level 4: Golden Hour · 50 XP to level up</div>
+        <div class="quick-xp">
+          <button onclick="gainXP(10)">▣<b>Study</b>+10 XP</button><button onclick="gainXP(10)">♧<b>Workout</b>+10 XP</button><button onclick="gainXP(10)">◉<b>Productive</b>+10 XP</button><button onclick="gainXP(10)">♡<b>Self Care</b>+10 XP</button>
+        </div>
+      </div>
+      <div class="card"><div class="eyebrow">✓ TODAY</div><div class="big-stat"><span id="doneStat">2</span><small> / <span id="totalStat">7</span></small></div><div class="stat-copy">little things checked off</div></div>
+      <div class="card"><div class="eyebrow">♡ YOUR STREAK</div><div class="big-stat"><span id="streakStat">4</span><small> days</small></div><div class="stat-copy">Your rhythm is lovely.</div></div>
+    </div>
+
+    <div class="lower">
+      <div>
+        <div class="card calendar-card">
+          <div class="cal-head"><div><div class="eyebrow">MAKE A LITTLE SPACE</div><h3>▣ Your calendar ≋</h3></div><div class="month-nav"><button onclick="changeMonth(-1)">‹</button><b id="monthLabel">September 2026</b><button onclick="changeMonth(1)">›</button></div></div>
+          <div class="seg"><button class="active" data-cal="month">Month</button><button data-cal="week">Week</button><button data-cal="day">Day</button></div>
+          <div id="calendarGrid"></div>
+          <div class="day-plans"><b id="selectedDateLabel">Tuesday, September 29</b><div id="planList"></div><button class="add" onclick="openEventModal()">＋ Add a plan</button></div>
+        </div>
+        <div class="card todos">
+          <div class="card-head"><div><div class="eyebrow">SMALL STEPS COUNT</div><h3>☷ Today's to-dos</h3></div><span class="pill" id="todoDonePill">2/7 done</span></div>
+          <div id="todoList"></div>
+          <div class="add-row"><input id="todoInput" placeholder="Add a little task..."><button class="add" onclick="addTodo()">Add</button></div>
+        </div>
+      </div>
+
+      <div class="sidecol">
+        <div class="card">
+          <div class="eyebrow">GROW AT YOUR OWN PACE</div><div class="card-head"><h3>⚑ Gentle goals</h3><button class="x" onclick="openGoalModal()">＋</button></div>
+          <div id="goalList"></div>
+          <button class="add" onclick="openGoalModal()">＋ plant a new goal</button>
+        </div>
+        <div class="card brain"><div class="eyebrow">LET IT OUT</div><h3>♧ Brain dump</h3><textarea id="brainDump" placeholder="Let it all out..."></textarea><div class="char"><span>♡ no need to organize it</span><span id="charCount">0 characters</span></div></div>
+        <div class="card memory"><div class="eyebrow" style="color:#fff">TODAY'S LITTLE MEMORY</div><div class="scrib">you're doing better than you think ♡</div></div>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <div class="card celebrate"><div class="eyebrow">A LITTLE CELEBRATION</div><h3>🏆 Shell yeah, you're making waves!</h3><div class="mini-note">You've earned <span id="badgeCount">7</span> little badges so far. Keep showing up in your own way.</div></div>
+      <div class="card"><div class="music"><div class="album">🌅</div><div class="music-info"><small>CURRENTLY PLAYING ♪</small><b id="songTitle">Golden Hour</b><small>coastal mix · ocean sounds</small><div class="progress" style="margin-top:7px"><span id="musicProgress" style="width:38%"></span></div></div><div class="music-controls"><button onclick="prevSong()">‹</button><button class="play" id="playBtn" onclick="toggleMusic()">▶</button><button onclick="nextSong()">›</button></div></div></div>
+    </div>
+    <div class="footer-line"><span>Plan it ✧ Do it ✧ Enjoy it ♡</span><button class="reset" onclick="weeklyReset()">↻ Weekly reset</button></div>
+  </section>
+
+  <section class="view" id="calendar">
+    <h2 class="page-title">Your calendar ≋</h2><p class="page-sub">Make a little space for what matters.</p>
+    <div class="card" style="margin-top:18px"><div class="cal-head"><h3>▣ September 2026</h3><button class="add" onclick="openEventModal()">＋ Add a plan</button></div><div id="calendarGrid2"></div></div>
+  </section>
+
+  <section class="view" id="todos">
+    <h2 class="page-title">Today's to-dos</h2><p class="page-sub">Small steps count.</p>
+    <div class="card" style="margin-top:18px"><div id="todoList2"></div><div class="add-row"><input id="todoInput2" placeholder="Add a little task..."><button class="add" onclick="addTodo('todoInput2')">Add</button></div></div>
+  </section>
+
+  <section class="view" id="goals">
+    <h2 class="page-title">Gentle goals</h2><p class="page-sub">Grow at your own pace.</p>
+    <div class="feature-grid"><div class="card"><div id="goalList2"></div><button class="add" onclick="openGoalModal()">＋ plant a new goal</button></div><div class="card celebrate"><div class="eyebrow">YOUR PROGRESS</div><h3>You're making waves 🌊</h3><p class="mini-note">Every little check-in counts.</p></div></div>
+  </section>
+
+  <section class="view" id="notes">
+    <h2 class="page-title">Notes & brain dumps</h2><p class="page-sub">No need to organize it.</p>
+    <div class="feature-grid"><div class="card brain"><div class="eyebrow">LET IT OUT</div><h3>♧ Brain dump</h3><textarea id="brainDump2" placeholder="Write anything..."></textarea><div class="char"><span>autosaves</span><span id="charCount2">0 characters</span></div></div><div class="card"><div class="eyebrow">LITTLE REMINDER</div><h3>♡</h3><p style="font-family:'Shadows Into Light';font-size:25px">Small steps = big progress ♡</p></div></div>
+  </section>
+</main>
+</div>
+
+<div class="modal-back" id="modalBack">
+  <div class="modal" id="eventModal">
+    <h3>🌊 Add a little plan</h3>
+    <label>Date</label><input type="date" id="eventDate">
+    <label>Time</label><input type="time" id="eventTime">
+    <label>Plan</label><input id="eventName" placeholder="Coffee with a friend...">
+    <div class="modal-actions"><button class="cancel" onclick="closeModal()">Cancel</button><button class="save" onclick="saveEvent()">Add plan</button></div>
+  </div>
+  <div class="modal" id="goalModal" style="display:none">
+    <h3>🐚 Plant a new goal</h3><label>Goal</label><input id="goalName" placeholder="Read before bed"><label>Why?</label><input id="goalWhy" placeholder="Unwind, one chapter at a time"><div class="modal-actions"><button class="cancel" onclick="closeModal()">Cancel</button><button class="save" onclick="saveGoal()">Plant it</button></div>
+  </div>
+</div>
+
+<script>
+const KEY="saltyPlansV2";
+const defaultData={
+ xp:350, streak:4, badges:7, dark:false, brain:"",
+ todos:[
+  {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
+  {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
+ ],
+ goals:[
+  {name:"Read before bed",why:"Unwind, one chapter at a time",done:3,total:7},
+  {name:"Move my body",why:"A little movement, most days",done:4,total:7}
+ ],
+ events:[
+  {date:"2026-09-29",time:"10:30",name:"Coffee w/ Maya",type:"pink"},
+  {date:"2026-09-29",time:"14:00",name:"Study time",type:"purple"},
+  {date:"2026-09-30",time:"09:00",name:"Gym",type:"green"}
+ ]
+};
+let data=JSON.parse(localStorage.getItem(KEY)||"null")||defaultData;
+let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
+function save(){localStorage.setItem(KEY,JSON.stringify(data));document.querySelectorAll(".save-dot").forEach(x=>x.textContent="● Saved on this device")}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})}
+function render(){
+ document.getElementById("xpNum").textContent=data.xp; document.getElementById("streakStat").textContent=data.streak; document.getElementById("sideStreak").textContent=data.streak+" day streak";
+ const level=Math.floor(data.xp/100)+1, within=data.xp%100;
+ document.getElementById("levelPill").textContent="LEVEL "+level; document.getElementById("xpBar").style.width=within+"%";
+ document.getElementById("levelText").textContent=`Level ${level}: ${level%2?"Sea Glass":"Golden Hour"} · ${100-within} XP to level up`;
+ const done=data.todos.filter(t=>t.done).length,total=data.todos.length;
+ ["doneStat"].forEach(id=>document.getElementById(id).textContent=done); document.getElementById("totalStat").textContent=total;
+ document.getElementById("todoDonePill").textContent=`${done}/${total} done`; document.getElementById("todoBadge").textContent=total-done;
+ document.getElementById("badgeCount").textContent=data.badges;
+ renderTodos(); renderGoals(); renderCalendar(); renderBrain();
+}
+function renderTodos(){
+ const html=data.todos.map((t,i)=>`<div class="todo ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span>${esc(t.text)}</span></div>`).join("");
+ ["todoList","todoList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
+}
+function toggleTodo(i){data.todos[i].done=!data.todos[i].done;if(data.todos[i].done){data.xp+=10;data.badges+=1}save();render()}
+function addTodo(inputId="todoInput"){const el=document.getElementById(inputId);const v=el.value.trim();if(!v)return;data.todos.push({text:v,done:false});el.value="";save();render()}
+function renderGoals(){
+ const html=data.goals.map((g,i)=>{let pct=Math.round(g.done/g.total*100);return `<div class="goal"><div class="goal-top"><span class="goal-name">${esc(g.name)}</span><button class="x" onclick="removeGoal(${i})">×</button></div><p>${esc(g.why)}</p><div style="display:flex;justify-content:space-between;font-size:10px;color:#6f91ad;margin-bottom:6px"><span>${g.done} of ${g.total} days</span><b>${pct}%</b></div><div class="progress"><span style="width:${pct}%"></span></div><div class="goal-foot"><button onclick="goalStep(${i},-1)">−</button><span>track today</span><button onclick="goalStep(${i},1)">+</button></div></div>`}).join("");
+ ["goalList","goalList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
+}
+function goalStep(i,n){data.goals[i].done=Math.max(0,Math.min(data.goals[i].total,data.goals[i].done+n));if(n>0)data.xp+=5;save();render()}
+function removeGoal(i){data.goals.splice(i,1);save();render()}
+function openGoalModal(){document.getElementById("eventModal").style.display="none";document.getElementById("goalModal").style.display="block";document.getElementById("modalBack").classList.add("open")}
+function saveGoal(){let n=document.getElementById("goalName").value.trim(),w=document.getElementById("goalWhy").value.trim();if(!n)return;data.goals.push({name:n,why:w||"A little progress, most days",done:0,total:7});closeModal();save();render()}
+function openEventModal(){document.getElementById("goalModal").style.display="none";document.getElementById("eventModal").style.display="block";document.getElementById("eventDate").value=selected;document.getElementById("eventTime").value="12:00";document.getElementById("eventName").value="";document.getElementById("modalBack").classList.add("open")}
+function saveEvent(){let date=document.getElementById("eventDate").value,time=document.getElementById("eventTime").value,name=document.getElementById("eventName").value.trim();if(!date||!name)return;data.events.push({date,time,name,type:["pink","purple","green","blue"][data.events.length%4]});selected=date;closeModal();save();render()}
+function closeModal(){document.getElementById("modalBack").classList.remove("open")}
+function renderCalendar(){
+ const y=current.getFullYear(),m=current.getMonth();document.getElementById("monthLabel").textContent=current.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+ const first=new Date(y,m,1),start=(first.getDay()+6)%7,last=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
+ let cells="";
+ for(let i=0;i<42;i++){let n=i-start+1,day=n,muted=false,yy=y,mm=m;if(n<=0){day=prev+n;muted=true;mm=m-1}else if(n>last){day=n-last;muted=true;mm=m+1}
+  const iso=`${yy}-${String(mm+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+  const ev=data.events.filter(e=>e.date===iso); cells+=`<div class="day ${muted?"muted":""} ${iso===selected?"today":""}" onclick="selectDate('${iso}')"><span class="num">${day}</span>${ev.slice(0,2).map(e=>`<span class="event-dot ${e.type}">${esc(e.name)}</span>`).join("")}</div>`;
+ }
+ const grid=`<div class="weekdays">${["MON","TUE","WED","THU","FRI","SAT","SUN"].map(x=>`<div>${x}</div>`).join("")}</div><div class="days">${cells}</div>`;
+ ["calendarGrid","calendarGrid2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=grid});
+ document.getElementById("selectedDateLabel").textContent=fmtDate(new Date(selected+"T12:00:00"));
+ const evs=data.events.filter(e=>e.date===selected).sort((a,b)=>a.time.localeCompare(b.time));
+ document.getElementById("planList").innerHTML=evs.length?evs.map((e,i)=>`<div class="plan-row"><span class="time">${e.time}</span><span class="event-dot ${e.type}" style="flex:1">${esc(e.name)}</span><button onclick="removeEvent('${e.date}','${e.time}','${esc(e.name).replace(/'/g,"\\'")}')">×</button></div>`).join(""):`<div class="mini-note">No plans yet — a little breathing room ♡</div>`;
+}
+function selectDate(iso){selected=iso;renderCalendar()}
+function removeEvent(date,time,name){data.events=data.events.filter(e=>!(e.date===date&&e.time===time&&e.name===name));save();render()}
+function changeMonth(n){current=new Date(current.getFullYear(),current.getMonth()+n,1);renderCalendar()}
+function renderBrain(){
+ ["brainDump","brainDump2"].forEach(id=>{const e=document.getElementById(id);if(e){e.value=data.brain;e.oninput=()=>{data.brain=e.value;document.querySelectorAll("#brainDump,#brainDump2").forEach(x=>x.value=data.brain);document.querySelectorAll("#charCount,#charCount2").forEach(x=>x.textContent=data.brain.length+" characters");save()}}});
+ document.querySelectorAll("#charCount,#charCount2").forEach(x=>x.textContent=data.brain.length+" characters");
+}
+function gainXP(n){data.xp+=n;data.badges+=1;save();render()}
+function toggleMusic(){playing=!playing;document.getElementById("playBtn").textContent=playing?"Ⅱ":"▶";if(playing)musicTick()}
+function musicTick(){if(!playing)return;let b=document.getElementById("musicProgress"),w=parseInt(b.style.width)||38;w=(w+1)%101;b.style.width=w+"%";setTimeout(musicTick,700)}
+function nextSong(){songIndex=(songIndex+1)%songs.length;document.getElementById("songTitle").textContent=songs[songIndex]}
+function prevSong(){songIndex=(songIndex-1+songs.length)%songs.length;document.getElementById("songTitle").textContent=songs[songIndex]}
+function weeklyReset(){if(!confirm("Reset weekly goal progress and completed to-dos? Your plans and notes will stay."))return;data.goals.forEach(g=>g.done=0);data.todos.forEach(t=>t.done=false);save();render()}
+document.querySelectorAll(".nav button").forEach(btn=>btn.onclick=()=>{document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.getElementById(btn.dataset.view).classList.add("active");window.scrollTo({top:0,behavior:"smooth"})});
+document.querySelectorAll("[data-cal]").forEach(btn=>btn.onclick=()=>{document.querySelectorAll("[data-cal]").forEach(b=>b.classList.remove("active"));btn.classList.add("active");if(btn.dataset.cal!=="month"){alert(btn.dataset.cal==="week"?"Week view is coming next — the month view is fully functional now.":"Day view is coming next — choose a date to plan it.")}});
+document.getElementById("darkToggle").onclick=()=>{data.dark=!data.dark;document.body.style.filter=data.dark?"brightness(.84) saturate(.8)":"none";save()};
+document.getElementById("modalBack").onclick=e=>{if(e.target.id==="modalBack")closeModal()};
+document.getElementById("dateTop").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+render();
+</script>
+</body>
+</html>
