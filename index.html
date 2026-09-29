@@ -256,7 +256,7 @@ function applyTheme(){
  if(!grid)return;
  grid.innerHTML=THEMES.map(t=>{
    const unlocked=data.xp>=t.need, selected=(data.theme||"ocean")===t.id;
-   return `<button class="theme-choice ${selected?"selected":""} ${unlocked?"":"locked"}" ${unlocked?`onclick="chooseTheme('${t.id}')`:"disabled"}><span class="swatches">${t.sw.map(c=>`<span class="swatch" style="background:${c}"></span>`).join("")}</span><b>${t.emoji} ${t.name}</b><small>${unlocked?t.desc:`🔒 Unlock at ${t.need} XP`}</small>${selected?`<span class="lock">✓</span>`:""}</button>`;
+   return `<button class="theme-choice ${selected?"selected":""} ${unlocked?"":"locked"}" ${unlocked?`onclick="chooseTheme('${t.id}')"`:"disabled"}><span class="swatches">${t.sw.map(c=>`<span class="swatch" style="background:${c}"></span>`).join("")}</span><b>${t.emoji} ${t.name}</b><small>${unlocked?t.desc:`🔒 Unlock at ${t.need} XP`}</small>${selected?`<span class="lock">✓</span>`:""}</button>`;
  }).join("");
 }
 function chooseTheme(id){data.theme=id;save();applyTheme()}
