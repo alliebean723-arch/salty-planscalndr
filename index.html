@@ -52,16 +52,19 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 .profile-preview .avatar{flex:none}.personal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.personal-grid label{margin:0}.settings-card label{display:block;font-size:11px;color:var(--muted);font-weight:700;margin:12px 0 5px}.settings-card input{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px;outline:0;color:var(--ink);background:var(--panel)}
 @media(max-width:760px){.theme-grid{grid-template-columns:1fr}.personal-grid{grid-template-columns:1fr}}
 
-/* V4 planner upgrades */
-.todo-tools,.plan-tools{margin-left:auto;display:flex;gap:5px}.mini-tool{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:9px;padding:5px 7px;font-size:10px}
-.event-note-preview{font-size:9px;color:var(--muted);margin:0 0 6px 80px}.v4-modal-back{position:fixed;inset:0;background:rgba(33,62,79,.38);display:none;place-items:center;z-index:100;padding:18px}.v4-modal-back.open{display:grid}
-.v4-modal{width:min(500px,94vw);background:var(--panel);border:1px solid var(--line);border-radius:23px;padding:20px;box-shadow:0 24px 70px rgba(30,60,80,.25)}.v4-modal h3{margin:0 0 14px}
-.v4-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v4-field.full{grid-column:1/-1}.v4-field label{display:block;font-size:10px;font-weight:800;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
-.v4-field input,.v4-field textarea{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:11px;padding:9px;outline:0}.v4-field textarea{min-height:82px;resize:vertical}
-.v4-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:15px}.v4-modal-actions button{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:11px;padding:9px 13px;font-weight:700}.v4-modal-actions .primary{background:var(--blue);color:white;border-color:transparent}
-.v4-colors{display:flex;gap:8px;flex-wrap:wrap;padding-top:5px}.v4-color{width:28px;height:28px;border-radius:50%;border:3px solid transparent}.v4-color.selected{outline:2px solid var(--ink);outline-offset:2px}
-.streak-reset{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:10px;padding:6px 9px;font-size:9px;font-weight:700;margin-top:9px}.streak-info{font-size:9px;color:var(--muted);margin-top:6px}
-@media(max-width:600px){.v4-fields{grid-template-columns:1fr}.v4-field.full{grid-column:auto}.event-note-preview{margin-left:0}}
+/* V4 planner controls — intentionally matched to the V3 design */
+.todo-actions,.event-actions{margin-left:auto;display:flex;gap:5px}
+.icon-btn{border:0;background:#eef7fc;color:#5e88a7;border-radius:9px;padding:4px 7px;font-size:11px}
+.icon-btn:hover{background:#dceef9}
+.todo > span:first-of-type{flex:1}
+.event-note{margin:0 0 5px 80px;color:#7898b4;font-size:10px;line-height:1.35}
+.event-color-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}
+.event-color-btn{width:29px;height:29px;border-radius:50%;border:3px solid white;box-shadow:0 0 0 1px #d7e8f2}
+.event-color-btn.selected{box-shadow:0 0 0 2px #4777a4}
+.streak-reset{margin-top:9px;border:1px solid #d5e7f2;background:#eef7fc;color:#47779f;border-radius:11px;padding:7px 10px;font-size:10px;font-weight:700}
+.modal .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.modal .two-col{grid-template-columns:1fr}.event-note{margin-left:0}}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -104,7 +107,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
         </div>
       </div>
       <div class="card"><div class="eyebrow">✓ TODAY</div><div class="big-stat"><span id="doneStat">2</span><small> / <span id="totalStat">7</span></small></div><div class="stat-copy">little things checked off</div></div>
-      <div class="card"><div class="eyebrow">♡ YOUR STREAK</div><div class="big-stat"><span id="streakStat">4</span><small> days</small></div><div class="stat-copy">Consecutive days you open Salty Plans.</div><div class="streak-info">● Updates once per calendar day</div><button class="streak-reset" onclick="resetLoginStreak()">↻ Reset streak</button></div>
+      <div class="card"><div class="eyebrow">♡ YOUR STREAK</div><div class="big-stat"><span id="streakStat">4</span><small> days</small></div><div class="stat-copy">Consecutive days you open Salty Plans.</div><button class="streak-reset" onclick="resetStreak()">↻ Reset streak</button></div>
     </div>
 
     <div class="lower">
@@ -192,11 +195,16 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 
 <div class="modal-back" id="modalBack">
   <div class="modal" id="eventModal">
-    <h3>🌊 Add a little plan</h3>
-    <label>Date</label><input type="date" id="eventDate">
-    <label>Time</label><input type="time" id="eventTime">
+    <h3 id="eventModalTitle">🌊 Add a little plan</h3>
     <label>Plan</label><input id="eventName" placeholder="Coffee with a friend...">
-    <div class="modal-actions"><button class="cancel" onclick="closeModal()">Cancel</button><button class="save" onclick="saveEvent()">Add plan</button></div>
+    <label>Date</label><input type="date" id="eventDate">
+    <div class="two-col">
+      <div><label>Start time</label><input type="time" id="eventStart"></div>
+      <div><label>End time</label><input type="time" id="eventEnd"></div>
+    </div>
+    <label>Color</label><div class="event-color-row" id="eventColorRow"></div>
+    <label>Notes</label><textarea id="eventNote" placeholder="Room number, what to bring, little reminder..."></textarea>
+    <div class="modal-actions"><button class="cancel" onclick="closeModal()">Cancel</button><button class="save" id="eventSaveBtn" onclick="saveEvent()">Add plan</button></div>
   </div>
   <div class="modal" id="goalModal" style="display:none">
     <h3>🐚 Plant a new goal</h3><label>Goal</label><input id="goalName" placeholder="Read before bed"><label>Why?</label><input id="goalWhy" placeholder="Unwind, one chapter at a time"><div class="modal-actions"><button class="cancel" onclick="closeModal()">Cancel</button><button class="save" onclick="saveGoal()">Plant it</button></div>
@@ -206,7 +214,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, dark:false, brain:"", lastLogin:null, name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean",
+ xp:350, streak:4, badges:7, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean",
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -221,7 +229,12 @@ const defaultData={
   {date:"2026-09-30",time:"09:00",name:"Gym",type:"green"}
  ]
 };
-let data=JSON.parse(localStorage.getItem(KEY)||"null")||defaultData;
+let savedData=JSON.parse(localStorage.getItem(KEY)||"null");
+let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defaultData));
+data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
+data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
+data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
+if(!("lastLogin" in data)) data.lastLogin=null;
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
 function save(){localStorage.setItem(KEY,JSON.stringify(data));document.querySelectorAll(".save-dot").forEach(x=>x.textContent="● Saved on this device")}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
@@ -243,7 +256,7 @@ function applyTheme(){
  if(!grid)return;
  grid.innerHTML=THEMES.map(t=>{
    const unlocked=data.xp>=t.need, selected=(data.theme||"ocean")===t.id;
-   return `<button class="theme-choice ${selected?"selected":""} ${unlocked?"":"locked"}" ${unlocked?`onclick="chooseTheme('${t.id}')"`:"disabled"}><span class="swatches">${t.sw.map(c=>`<span class="swatch" style="background:${c}"></span>`).join("")}</span><b>${t.emoji} ${t.name}</b><small>${unlocked?t.desc:`🔒 Unlock at ${t.need} XP`}</small>${selected?`<span class="lock">✓</span>`:""}</button>`;
+   return `<button class="theme-choice ${selected?"selected":""} ${unlocked?"":"locked"}" ${unlocked?`onclick="chooseTheme('${t.id}')`:"disabled"}><span class="swatches">${t.sw.map(c=>`<span class="swatch" style="background:${c}"></span>`).join("")}</span><b>${t.emoji} ${t.name}</b><small>${unlocked?t.desc:`🔒 Unlock at ${t.need} XP`}</small>${selected?`<span class="lock">✓</span>`:""}</button>`;
  }).join("");
 }
 function chooseTheme(id){data.theme=id;save();applyTheme()}
@@ -271,12 +284,6 @@ function savePersonalization(){
  const btn=document.querySelector("#personalize .save"); const old=btn.textContent; btn.textContent="Saved! ♡"; setTimeout(()=>btn.textContent=old,1200);
 }
 
-
-function localDateKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
-function updateLoginStreak(){const today=localDateKey();if(data.lastLogin===today)return;const y=new Date();y.setDate(y.getDate()-1);if(data.lastLogin===localDateKey(y))data.streak=(Number(data.streak)||0)+1;else data.streak=1;data.lastLogin=today;save()}
-function resetLoginStreak(){if(confirm("Reset your login streak to 0? Your other progress will stay.")){data.streak=0;data.lastLogin=null;save();render()}}
-updateLoginStreak();
-
 function render(){
  document.getElementById("xpNum").textContent=data.xp; document.getElementById("streakStat").textContent=data.streak; document.getElementById("sideStreak").textContent=data.streak+" day streak";
  const level=Math.floor(data.xp/100)+1, within=data.xp%100;
@@ -289,13 +296,19 @@ function render(){
  renderTodos(); renderGoals(); renderCalendar(); renderBrain(); renderPersonalization();
 }
 function renderTodos(){
- const html=data.todos.map((x,i)=>`<div class="todo ${x.done?"done":""}"><input type="checkbox" ${x.done?"checked":""} onchange="toggleTodo(${i})"><span style="flex:1">${esc(x.text)}</span><span class="todo-tools"><button class="mini-tool" onclick="editTodo(${i})">✎</button><button class="mini-tool" onclick="deleteTodo(${i})">×</button></span></div>`).join("");
+ const html=data.todos.map((t,i)=>`<div class="todo ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span>${esc(t.text)}</span><span class="todo-actions"><button class="icon-btn" title="Edit" onclick="editTodo(${i})">✎</button><button class="icon-btn" title="Delete" onclick="deleteTodo(${i})">×</button></span></div>`).join("");
  ["todoList","todoList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
 }
-let editingTodoIndex=-1;
-function editTodo(i){editingTodoIndex=i;document.getElementById("v4TodoText").value=data.todos[i].text;document.getElementById("v4TodoModal").classList.add("open")}
-function saveTodoEdit(){const v=document.getElementById("v4TodoText").value.trim();if(editingTodoIndex<0||!v)return;data.todos[editingTodoIndex].text=v;save();closeV4Modal("v4TodoModal");render()}
-function deleteTodo(i){if(confirm(`Delete "${data.todos[i].text}"?`)){data.todos.splice(i,1);save();render()}}
+function editTodo(i){
+ const next=prompt("Edit your to-do:",data.todos[i].text);
+ if(next===null)return;
+ const clean=next.trim();
+ if(!clean)return;
+ data.todos[i].text=clean;save();render();
+}
+function deleteTodo(i){
+ if(confirm(`Delete "${data.todos[i].text}"?`)){data.todos.splice(i,1);save();render()}
+}
 function toggleTodo(i){data.todos[i].done=!data.todos[i].done;if(data.todos[i].done){data.xp+=10;data.badges+=1}save();render()}
 function addTodo(inputId="todoInput"){const el=document.getElementById(inputId);const v=el.value.trim();if(!v)return;data.todos.push({text:v,done:false});el.value="";save();render()}
 function renderGoals(){
@@ -306,40 +319,99 @@ function goalStep(i,n){data.goals[i].done=Math.max(0,Math.min(data.goals[i].tota
 function removeGoal(i){data.goals.splice(i,1);save();render()}
 function openGoalModal(){document.getElementById("eventModal").style.display="none";document.getElementById("goalModal").style.display="block";document.getElementById("modalBack").classList.add("open")}
 function saveGoal(){let n=document.getElementById("goalName").value.trim(),w=document.getElementById("goalWhy").value.trim();if(!n)return;data.goals.push({name:n,why:w||"A little progress, most days",done:0,total:7});closeModal();save();render()}
-function openEventModal(){editEvent(-1)}
-function saveEvent(){saveV4Event()});selected=date;closeModal();save();render()}
-function closeModal(){document.getElementById("modalBack").classList.remove("open")}
-
-function normalizeV4Events(){data.events=(data.events||[]).map(e=>({date:e.date||"",start:e.start||e.time||"",end:e.end||"",name:e.name||e.title||"Untitled plan",type:e.type||"blue",color:e.color||({pink:"#e9a7b6",purple:"#b8a7df",green:"#9bc9a6",blue:"#78b6d9"}[e.type]||"#78b6d9"),note:e.note||""}))}
-normalizeV4Events();
-const V4_EVENT_COLORS=[["Ocean","#78b6d9"],["Sea Glass","#8fc8b7"],["Sunset","#e5a06f"],["Shell Pink","#e9a7b6"],["Lavender","#b8a7df"],["Sunshine","#e6c86d"]];
-let editingEventIndex=-1,v4EventColor="#78b6d9";
-function editEvent(i=-1){editingEventIndex=i;const e=i>=0?data.events[i]:{date:selected,start:"",end:"",name:"",color:"#78b6d9",note:""};document.getElementById("v4EventTitle").textContent=i>=0?"Edit your plan":"Add a little plan";document.getElementById("v4EventName").value=e.name;document.getElementById("v4EventDate").value=e.date||selected;document.getElementById("v4EventStart").value=e.start;document.getElementById("v4EventEnd").value=e.end;document.getElementById("v4EventNote").value=e.note;v4EventColor=e.color;renderV4Colors();document.getElementById("v4EventModal").classList.add("open")}
-function renderV4Colors(){document.getElementById("v4EventColors").innerHTML=V4_EVENT_COLORS.map(c=>`<button type="button" title="${c[0]}" class="v4-color ${c[1]===v4EventColor?"selected":""}" style="background:${c[1]}" onclick="v4EventColor='${c[1]}';renderV4Colors()"></button>`).join("")}
-function saveV4Event(){const name=document.getElementById("v4EventName").value.trim(),date=document.getElementById("v4EventDate").value,start=document.getElementById("v4EventStart").value,end=document.getElementById("v4EventEnd").value,note=document.getElementById("v4EventNote").value.trim();if(!name||!date){alert("Add an event name and date first ♡");return}if(start&&end&&end<=start){alert("Your end time needs to be after your start time.");return}const o={date,start,end,name,type:"blue",color:v4EventColor,note};if(editingEventIndex>=0)data.events[editingEventIndex]=o;else data.events.push(o);selected=date;save();closeV4Modal("v4EventModal");render()}
-function deleteEvent(i){if(confirm(`Delete "${data.events[i].name}"?`)){data.events.splice(i,1);save();render()}}
-function closeV4Modal(id){document.getElementById(id).classList.remove("open")}
-
+const EVENT_COLORS=[
+ {id:"blue",hex:"#dceef9",text:"#4c86aa",name:"Ocean"},
+ {id:"green",hex:"#dcefe1",text:"#5a946a",name:"Sea Glass"},
+ {id:"pink",hex:"#f8d7df",text:"#a15e71",name:"Shell Pink"},
+ {id:"purple",hex:"#e8def9",text:"#7c67a8",name:"Lavender"},
+ {id:"sunset",hex:"#f7dfcf",text:"#a66f55",name:"Sunset"},
+ {id:"sun",hex:"#f7edc9",text:"#9b823c",name:"Sunshine"}
+];
+let editingEventIndex=-1, chosenEventColor="blue";
+function normalizeEvents(){
+ data.events=data.events.map(e=>({
+   date:e.date||selected,
+   start:e.start||e.time||"",
+   end:e.end||"",
+   name:e.name||e.title||"Untitled plan",
+   type:e.type||e.color||"blue",
+   note:e.note||""
+ }));
+}
+normalizeEvents();
+function renderEventColors(){
+ const row=document.getElementById("eventColorRow"); if(!row)return;
+ row.innerHTML=EVENT_COLORS.map(c=>`<button type="button" class="event-color-btn ${chosenEventColor===c.id?"selected":""}" title="${c.name}" style="background:${c.hex}" onclick="chosenEventColor='${c.id}';renderEventColors()"></button>`).join("");
+}
+function openEventModal(i=-1){
+ editingEventIndex=i;
+ document.getElementById("goalModal").style.display="none";
+ document.getElementById("eventModal").style.display="block";
+ const e=i>=0?data.events[i]:{date:selected,start:"12:00",end:"",name:"",type:"blue",note:""};
+ document.getElementById("eventModalTitle").textContent=i>=0?"✎ Edit your plan":"🌊 Add a little plan";
+ document.getElementById("eventSaveBtn").textContent=i>=0?"Save changes":"Add plan";
+ document.getElementById("eventDate").value=e.date||selected;
+ document.getElementById("eventStart").value=e.start||"";
+ document.getElementById("eventEnd").value=e.end||"";
+ document.getElementById("eventName").value=e.name||"";
+ document.getElementById("eventNote").value=e.note||"";
+ chosenEventColor=e.type||"blue"; renderEventColors();
+ document.getElementById("modalBack").classList.add("open");
+}
+function saveEvent(){
+ const date=document.getElementById("eventDate").value;
+ const start=document.getElementById("eventStart").value;
+ const end=document.getElementById("eventEnd").value;
+ const name=document.getElementById("eventName").value.trim();
+ const note=document.getElementById("eventNote").value.trim();
+ if(!date||!name){alert("Add a date and plan name first ♡");return}
+ if(start&&end&&end<=start){alert("Your end time needs to be after your start time.");return}
+ const event={date,start,end,name,type:chosenEventColor,note};
+ if(editingEventIndex>=0)data.events[editingEventIndex]=event;else data.events.push(event);
+ selected=date;closeModal();save();render();
+}
+function deleteEvent(i){
+ if(confirm(`Delete "${data.events[i].name}"?`)){data.events.splice(i,1);save();render()}
+}
+function closeModal(){document.getElementById("modalBack").classList.remove("open");editingEventIndex=-1}
 function renderCalendar(){
  const y=current.getFullYear(),m=current.getMonth();document.getElementById("monthLabel").textContent=current.toLocaleDateString(undefined,{month:"long",year:"numeric"});
  const first=new Date(y,m,1),start=(first.getDay()+6)%7,last=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
  let cells="";
  for(let i=0;i<42;i++){let n=i-start+1,day=n,muted=false,yy=y,mm=m;if(n<=0){day=prev+n;muted=true;mm=m-1}else if(n>last){day=n-last;muted=true;mm=m+1}
-  const iso=`${yy}-${String(mm+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-  const ev=data.events.filter(e=>e.date===iso); cells+=`<div class="day ${muted?"muted":""} ${iso===selected?"today":""}" onclick="selectDate('${iso}')"><span class="num">${day}</span>${ev.slice(0,2).map(e=>`<span class="event-dot" style="background:${e.color};color:white">${esc(e.name)}</span>`).join("")}</div>`;
+  const cellDate=new Date(yy,mm,day), cy=cellDate.getFullYear(), cm=cellDate.getMonth(), cd=cellDate.getDate();
+  const iso=`${cy}-${String(cm+1).padStart(2,"0")}-${String(cd).padStart(2,"0")}`;
+  const ev=data.events.filter(e=>e.date===iso); cells+=`<div class="day ${muted?"muted":""} ${iso===selected?"today":""}" onclick="selectDate('${iso}')"><span class="num">${day}</span>${ev.slice(0,2).map(e=>`<span class="event-dot ${e.type}">${esc(e.name)}</span>`).join("")}</div>`;
  }
  const grid=`<div class="weekdays">${["MON","TUE","WED","THU","FRI","SAT","SUN"].map(x=>`<div>${x}</div>`).join("")}</div><div class="days">${cells}</div>`;
  ["calendarGrid","calendarGrid2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=grid});
  document.getElementById("selectedDateLabel").textContent=fmtDate(new Date(selected+"T12:00:00"));
- const evs=data.events.filter(e=>e.date===selected).sort((a,b)=>(a.start||"").localeCompare(b.start||""));
- document.getElementById("planList").innerHTML=evs.length?evs.map(e=>{const i=data.events.indexOf(e),tm=e.start?(e.end?`${e.start}–${e.end}`:e.start):"Anytime";return `<div class="plan-row"><span class="time">${tm}</span><span class="event-dot" style="flex:1;background:${e.color};color:white">${esc(e.name)}</span><span class="plan-tools"><button class="mini-tool" onclick="editEvent(${i})">✎</button><button class="mini-tool" onclick="deleteEvent(${i})">×</button></span></div>${e.note?`<div class="event-note-preview">📝 ${esc(e.note)}</div>`:""}`}).join(""):`<div class="mini-note">No plans yet — a little breathing room ♡</div>`;
+ const evs=data.events.map((e,index)=>({...e,_index:index})).filter(e=>e.date===selected).sort((a,b)=>(a.start||"").localeCompare(b.start||""));
+ document.getElementById("planList").innerHTML=evs.length?evs.map(e=>{
+   const time=e.start?(e.end?`${e.start}–${e.end}`:e.start):"Anytime";
+   return `<div class="plan-row"><span class="time">${time}</span><span class="event-dot ${e.type}" style="flex:1">${esc(e.name)}</span><span class="event-actions"><button class="icon-btn" title="Edit" onclick="openEventModal(${e._index})">✎</button><button class="icon-btn" title="Delete" onclick="deleteEvent(${e._index})">×</button></span></div>${e.note?`<div class="event-note">📝 ${esc(e.note)}</div>`:""}`;
+ }).join(""):`<div class="mini-note">No plans yet — a little breathing room ♡</div>`;
 }
 function selectDate(iso){selected=iso;renderCalendar()}
-function removeEvent(date,time,name){data.events=data.events.filter(e=>!(e.date===date&&e.time===time&&e.name===name));save();render()}
 function changeMonth(n){current=new Date(current.getFullYear(),current.getMonth()+n,1);renderCalendar()}
 function renderBrain(){
  ["brainDump","brainDump2"].forEach(id=>{const e=document.getElementById(id);if(e){e.value=data.brain;e.oninput=()=>{data.brain=e.value;document.querySelectorAll("#brainDump,#brainDump2").forEach(x=>x.value=data.brain);document.querySelectorAll("#charCount,#charCount2").forEach(x=>x.textContent=data.brain.length+" characters");save()}}});
  document.querySelectorAll("#charCount,#charCount2").forEach(x=>x.textContent=data.brain.length+" characters");
+}
+function localDateKey(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function updateLoginStreak(){
+ const today=localDateKey();
+ if(data.lastLogin===today)return;
+ const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+ if(data.lastLogin===localDateKey(yesterday))data.streak=(Number(data.streak)||0)+1;
+ else data.streak=1;
+ data.lastLogin=today;save();
+}
+function resetStreak(){
+ if(!confirm("Reset your login streak to 0? Your tasks, XP, themes, and plans will stay."))return;
+ data.streak=0;
+ data.lastLogin=localDateKey();
+ save();render();
 }
 function gainXP(n){const before=data.xp;data.xp+=n;data.badges+=1;save();render();const newly=THEMES.find(t=>before<t.need && data.xp>=t.need);if(newly)alert(`🌊 New theme unlocked: ${newly.emoji} ${newly.name}! Check Personalize.`)}
 function toggleMusic(){playing=!playing;document.getElementById("playBtn").textContent=playing?"Ⅱ":"▶";if(playing)musicTick()}
@@ -353,11 +425,8 @@ document.getElementById("darkToggle").onclick=()=>{data.dark=!data.dark;document
 document.body.className="theme-"+(data.theme||"ocean");
 document.getElementById("modalBack").onclick=e=>{if(e.target.id==="modalBack")closeModal()};
 document.getElementById("dateTop").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
+updateLoginStreak();
 render();
 </script>
-
-<div class="v4-modal-back" id="v4TodoModal"><div class="v4-modal"><h3>✎ Edit to-do</h3><div class="v4-field full"><label>Task</label><input id="v4TodoText"></div><div class="v4-modal-actions"><button onclick="closeV4Modal('v4TodoModal')">Cancel</button><button class="primary" onclick="saveTodoEdit()">Save changes</button></div></div></div>
-<div class="v4-modal-back" id="v4EventModal"><div class="v4-modal"><h3 id="v4EventTitle">Add a little plan</h3><div class="v4-fields"><div class="v4-field full"><label>Event name</label><input id="v4EventName" placeholder="Study session..."></div><div class="v4-field"><label>Date</label><input id="v4EventDate" type="date"></div><div class="v4-field"><label>Start time</label><input id="v4EventStart" type="time"></div><div class="v4-field"><label>End time</label><input id="v4EventEnd" type="time"></div><div class="v4-field"><label>Event color</label><div class="v4-colors" id="v4EventColors"></div></div><div class="v4-field full"><label>Notes</label><textarea id="v4EventNote" placeholder="Room number, what to bring, little reminder..."></textarea></div></div><div class="v4-modal-actions"><button onclick="closeV4Modal('v4EventModal')">Cancel</button><button class="primary" onclick="saveV4Event()">Save event</button></div></div></div>
-
 </body>
 </html>
