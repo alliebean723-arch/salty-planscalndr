@@ -88,7 +88,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 </aside>
 
 <main class="main">
-  <div class="topbar"><span>☼ 72° · Partly Cloudy</span><span id="dateTop">Tue, Sep 29</span><span class="avatar" id="topAvatar">J</span></div>
+  <div class="topbar"><span id="weatherTop" title="Current weather">🌤️ Weather loading…</span><span id="dateTop">Tue, Sep 29</span><span class="avatar" id="topAvatar">J</span></div>
 
   <section class="view active" id="today">
     <div class="hero">
@@ -178,6 +178,9 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
         <input id="greetingSetting" placeholder="A new day, a fresh little start.">
         <label for="taglineSetting">Your sidebar tagline</label>
         <input id="taglineSetting" placeholder="better days, brighter plans ♡">
+        <label for="weatherCitySetting">Weather city</label>
+        <input id="weatherCitySetting" placeholder="Portsmouth, NH">
+        <div class="mini-note">Used only to load your local weather — no precise location permission needed.</div>
         <button class="save" style="margin-top:14px" onclick="savePersonalization()">Save my vibe ♡</button>
         <div class="profile-preview"><span class="avatar" id="profileAvatar">J</span><div><b id="profileName">Jamie</b><div class="mini-note" id="profileTagline">better days, brighter plans ♡</div></div></div>
       </div>
@@ -214,7 +217,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean",
+ xp:350, streak:4, badges:7, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -270,6 +273,7 @@ function renderPersonalization(){
  document.getElementById("initialSetting").value=initial;
  document.getElementById("greetingSetting").value=data.greeting||"";
  document.getElementById("taglineSetting").value=data.tagline||"";
+ document.getElementById("weatherCitySetting").value=data.weatherCity||"Portsmouth, NH";
  document.getElementById("profileAvatar").textContent=initial;
  document.getElementById("profileName").textContent=name;
  document.getElementById("profileTagline").textContent=data.tagline||"";
@@ -280,8 +284,52 @@ function savePersonalization(){
  data.initial=(document.getElementById("initialSetting").value.trim()||data.name.charAt(0)||"J").toUpperCase().slice(0,1);
  data.greeting=document.getElementById("greetingSetting").value.trim()||"A new day, a fresh little start. Take it one thing at a time.";
  data.tagline=document.getElementById("taglineSetting").value.trim()||"better days, brighter plans ♡";
+ const nextWeatherCity=document.getElementById("weatherCitySetting").value.trim()||"Portsmouth, NH";
+ const weatherCityChanged=nextWeatherCity!==data.weatherCity;
+ data.weatherCity=nextWeatherCity;
  save();renderPersonalization();
+ if(weatherCityChanged) loadWeather();
  const btn=document.querySelector("#personalize .save"); const old=btn.textContent; btn.textContent="Saved! ♡"; setTimeout(()=>btn.textContent=old,1200);
+}
+
+
+function weatherLabel(code,isDay=1){
+ const c=Number(code);
+ if(c===0)return [isDay?"☀️":"🌙","Clear"];
+ if(c===1)return [isDay?"🌤️":"🌙","Mostly clear"];
+ if(c===2)return ["⛅","Partly cloudy"];
+ if(c===3)return ["☁️","Cloudy"];
+ if(c===45||c===48)return ["🌫️","Foggy"];
+ if([51,53,55,56,57].includes(c))return ["🌦️","Drizzle"];
+ if([61,63,65,66,67,80,81,82].includes(c))return ["🌧️","Rainy"];
+ if([71,73,75,77,85,86].includes(c))return ["❄️","Snowy"];
+ if([95,96,99].includes(c))return ["⛈️","Thunderstorms"];
+ return ["🌤️","Current weather"];
+}
+async function loadWeather(){
+ const el=document.getElementById("weatherTop"); if(!el)return;
+ const city=(data.weatherCity||"Portsmouth, NH").trim();
+ el.textContent="🌤️ Weather loading…";
+ try{
+   const geoURL=`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
+   const geoRes=await fetch(geoURL);
+   if(!geoRes.ok)throw new Error("Location lookup failed");
+   const geo=await geoRes.json();
+   if(!geo.results||!geo.results.length)throw new Error("City not found");
+   const place=geo.results[0];
+   const wxURL=`https://api.open-meteo.com/v1/forecast?latitude=${place.latitude}&longitude=${place.longitude}&current=temperature_2m,weather_code,is_day&temperature_unit=fahrenheit&timezone=auto`;
+   const wxRes=await fetch(wxURL);
+   if(!wxRes.ok)throw new Error("Weather lookup failed");
+   const wx=await wxRes.json();
+   if(!wx.current)throw new Error("No current weather");
+   const [icon,label]=weatherLabel(wx.current.weather_code,wx.current.is_day);
+   el.textContent=`${icon} ${Math.round(wx.current.temperature_2m)}° · ${label}`;
+   const area=[place.name,place.admin1].filter(Boolean).join(", ");
+   el.title=`Current weather for ${area}`;
+ }catch(err){
+   el.textContent="🌊 Weather unavailable";
+   el.title=`Check your Weather city in Personalize (${city})`;
+ }
 }
 
 function render(){
@@ -427,6 +475,7 @@ document.getElementById("modalBack").onclick=e=>{if(e.target.id==="modalBack")cl
 document.getElementById("dateTop").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
 updateLoginStreak();
 render();
+loadWeather();
 </script>
 </body>
 </html>
