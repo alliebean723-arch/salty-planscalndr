@@ -257,7 +257,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
   </section>
 
   <section class="view" id="gameroom">
-  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.6</span></p>
+  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.7</span></p>
   <div class="card" style="margin-top:18px">
     <div class="eyebrow">YOUR COASTAL JOURNEY</div><h3 id="gameRoomLevel">🌊 Level 1 · New Tide</h3>
     <div class="xpbar"><span id="gameRoomXPBar" style="width:0%"></span></div>
@@ -271,7 +271,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
       <button class="game-action" onclick="goToRoom('collection')"><span style="font-size:28px">🐚</span><b>Shell Collection →</b><small>See the treasures you've discovered.</small></button>
       <button class="game-action" onclick="goToRoom('achievements')"><span style="font-size:28px">🏆</span><b>Trophy Shelf →</b><small>See your badges and upcoming milestones.</small></button>
     </div>
-    <p class="mini-note" style="margin-top:16px">Keep completing tasks and growing goals to make waves. More little games are coming soon ♡</p><div class="card shell-game-card">
+    <p class="mini-note" style="margin-top:16px">Rewards are rarer now: treasures come from bigger milestones, and levels/themes take longer to unlock ♡</p><div class="card shell-game-card">
   <div class="shell-game-head">
     <div><div class="eyebrow">MINI GAME</div><h3>🐚 Shell Catch</h3><p class="mini-note">Catch as many beach treasures as you can in 20 seconds!</p></div>
     <div class="shell-game-stats">
@@ -361,7 +361,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",
+ xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -381,7 +381,7 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
+if(!("lastLogin" in data)) data.lastLogin=null;if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
 function save(){localStorage.setItem(KEY,JSON.stringify(data));document.querySelectorAll(".save-dot").forEach(x=>x.textContent="● Saved on this device")}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
@@ -391,14 +391,23 @@ const SHELLS=[["seashell","🐚","Seashell"],["seaglass","🫧","Sea Glass"],["s
 function renderShells(){const grid=document.getElementById("shellGrid");if(!grid)return;const total=SHELLS.reduce((n,s)=>n+(Number(data.shells[s.id])||0),0),unique=SHELLS.filter(s=>(Number(data.shells[s.id])||0)>0).length;document.getElementById("shellTotal").textContent=total;document.getElementById("shellUnique").textContent=`${unique} of ${SHELLS.length} discovered`;document.getElementById("shellBadge").textContent=total;grid.innerHTML=SHELLS.map(s=>{const c=Number(data.shells[s.id])||0;return `<div class="shell-item ${c?"":"locked"}"><span class="shell-emoji">${c?s.emoji:"❔"}</span><b>${c?s.name:"Undiscovered"}</b><small>${c?`× ${c}`:"Keep making waves"}</small></div>`}).join("")}
 function showShellFind(s){const t=document.getElementById("shellToast");if(!t)return;document.getElementById("shellToastEmoji").textContent=s.emoji;document.getElementById("shellToastTitle").textContent=`${s.name} found!`;document.getElementById("shellToastCopy").textContent="Added to your Shell Collection ♡";t.classList.add("show");clearTimeout(window.shellToastTimer);window.shellToastTimer=setTimeout(()=>t.classList.remove("show"),2400)}
 function earnShell(){data.shellEarnCount=(Number(data.shellEarnCount)||0)+1;const s=SHELLS[(data.shellEarnCount-1)%SHELLS.length];data.shells[s.id]=(Number(data.shells[s.id])||0)+1;save();renderShells();showShellFind(s)}
+function rewardTreasure(key){if(data.rewardMilestones[key])return;data.rewardMilestones[key]=true;earnShell()}
+function checkRewardMilestones(){
+ const t=Number(data.rewardStats.tasks)||0,g=Number(data.rewardStats.goalSteps)||0,x=Number(data.xp)||0,st=Number(data.streak)||0;
+ [[5,"task5"],[15,"task15"],[30,"task30"],[60,"task60"],[100,"task100"]].forEach(([n,k])=>{if(t>=n)rewardTreasure(k)});
+ [[10,"goal10"],[25,"goal25"],[50,"goal50"]].forEach(([n,k])=>{if(g>=n)rewardTreasure(k)});
+ [[1000,"xp1000"],[2500,"xp2500"],[5000,"xp5000"]].forEach(([n,k])=>{if(x>=n)rewardTreasure(k)});
+ [[14,"streak14"],[30,"streak30"],[60,"streak60"]].forEach(([n,k])=>{if(st>=n)rewardTreasure(k)});
+}
+
 
 const ACHIEVEMENTS=[
- {id:"firstWave",icon:"🌊",name:"First Wave",desc:"Complete your first to-do.",test:()=>data.todos.some(t=>t.done)},
- {id:"makingWaves",icon:"✨",name:"Making Waves",desc:"Reach 500 XP.",test:()=>Number(data.xp)>=500},
- {id:"shellCollector",icon:"🐚",name:"Shell Collector",desc:"Collect 10 coastal treasures.",test:()=>SHELLS.reduce((n,s)=>n+(Number(data.shells[s.id])||0),0)>=10},
- {id:"palmTreeEnergy",icon:"🌴",name:"Palm Tree Energy",desc:"Reach a 7-day login streak.",test:()=>Number(data.streak)>=7},
- {id:"gentleGrowth",icon:"🌱",name:"Gentle Growth",desc:"Fill a weekly goal to 7 of 7.",test:()=>data.goals.some(g=>Number(g.done)>=7)},
- {id:"colorChaser",icon:"🎨",name:"Color Chaser",desc:"Unlock at least 3 beach themes.",test:()=>THEMES.filter(t=>Number(data.xp)>=Number(t.need)).length>=3}
+ {id:"firstWave",icon:"🌊",name:"First Wave",desc:"Complete 10 to-dos.",test:()=>Number(data.rewardStats.tasks)>=10},
+ {id:"makingWaves",icon:"✨",name:"Making Waves",desc:"Reach 1,000 XP.",test:()=>Number(data.xp)>=1000},
+ {id:"shellCollector",icon:"🐚",name:"Shell Collector",desc:"Collect 8 coastal treasures.",test:()=>SHELLS.reduce((n,s)=>n+(Number(data.shells[s.id])||0),0)>=8},
+ {id:"palmTreeEnergy",icon:"🌴",name:"Palm Tree Energy",desc:"Reach a 14-day login streak.",test:()=>Number(data.streak)>=14},
+ {id:"gentleGrowth",icon:"🌱",name:"Gentle Growth",desc:"Complete 25 goal steps.",test:()=>Number(data.rewardStats.goalSteps)>=25},
+ {id:"colorChaser",icon:"🎨",name:"Color Chaser",desc:"Unlock at least 5 beach themes.",test:()=>THEMES.filter(t=>Number(data.xp)>=Number(t.need)).length>=5}
 ];
 function renderAchievements(){
  const grid=document.getElementById("achievementGrid");if(!grid)return;
@@ -428,17 +437,17 @@ function checkAchievements(showPopups=true){
  }
 }
 const LEVEL_NAMES=["New Tide","Fresh Start","Sunshine","Sea Breeze","Golden Hour","High Tide","Ocean Glow","Summer Soul","Tide Chaser","Sea Star"];
-function levelInfo(xp=0){const safe=Math.max(0,Number(xp)||0),level=Math.floor(safe/100)+1,within=safe%100;const name=LEVEL_NAMES[Math.min(level-1,LEVEL_NAMES.length-1)]||"Sea Star";return {level,within,name,next:100-within}}
+function levelInfo(xp=0){const safe=Math.max(0,Number(xp)||0);let level=1,start=0,cost=150;while(safe>=start+cost){start+=cost;level++;cost=150+(level-1)*50}const earned=safe-start,within=Math.min(100,(earned/cost)*100),name=LEVEL_NAMES[Math.min(level-1,LEVEL_NAMES.length-1)]||"Sea Star";return {level,within,name,next:Math.max(0,cost-earned)}}
 function showLevelUp(level,name){const toast=document.getElementById("levelToast");if(!toast)return;document.getElementById("levelToastTitle").textContent=`LEVEL ${level} — ${name}`;document.getElementById("levelToastCopy").textContent="Level up! Keep making waves ♡";toast.classList.add("show");clearTimeout(window.levelToastTimer);window.levelToastTimer=setTimeout(()=>toast.classList.remove("show"),2600)}
-function addXP(n){const beforeXP=Number(data.xp)||0,before=levelInfo(beforeXP);data.xp=beforeXP+n;const after=levelInfo(data.xp);save();render();if(after.level>before.level){showLevelUp(after.level,after.name);earnShell()}checkAchievements();const newly=THEMES.find(t=>beforeXP<t.need&&data.xp>=t.need);if(newly)setTimeout(()=>alert(`🌊 New theme unlocked: ${newly.emoji} ${newly.name}! Check Personalize.`),300)}
+function addXP(n){const beforeXP=Number(data.xp)||0,before=levelInfo(beforeXP);data.xp=beforeXP+n;const after=levelInfo(data.xp);save();render();if(after.level>before.level){showLevelUp(after.level,after.name)}checkRewardMilestones();checkAchievements();const newly=THEMES.find(t=>beforeXP<t.need&&data.xp>=t.need);if(newly)setTimeout(()=>alert(`🌊 New theme unlocked: ${newly.emoji} ${newly.name}! Check Personalize.`),300)}
 const THEMES=[
  {id:"ocean",name:"Ocean Blue",emoji:"🌊",need:0,desc:"Your classic Salty Plans vibe.",sw:["#dcecf7","#75b9df","#315f8e"]},
- {id:"seaglass",name:"Sea Glass",emoji:"🐚",need:300,desc:"Soft, minty beach glass.",sw:["#d9eee9","#73bdb3","#3e756f"]},
- {id:"sunset",name:"Sunset Beach",emoji:"🌅",need:350,desc:"Warm skies and golden sand.",sw:["#f8e7dc","#e6a28e","#875a4d"]},
- {id:"tropical",name:"Tropical",emoji:"🌴",need:700,desc:"Fresh island energy.",sw:["#e3f0dd","#7fb9a4","#4d7654"]},
- {id:"pink",name:"Coastal Pink",emoji:"🌸",need:1000,desc:"Sweet seashells and rosy skies.",sw:["#f5e3eb","#c58fb5","#8a5c79"]},
+ {id:"seaglass",name:"Sea Glass",emoji:"🐚",need:500,desc:"Soft, minty beach glass.",sw:["#d9eee9","#73bdb3","#3e756f"]},
+ {id:"sunset",name:"Sunset Beach",emoji:"🌅",need:900,desc:"Warm skies and golden sand.",sw:["#f8e7dc","#e6a28e","#875a4d"]},
+ {id:"tropical",name:"Tropical",emoji:"🌴",need:3200,desc:"Fresh island energy.",sw:["#e3f0dd","#7fb9a4","#4d7654"]},
+ {id:"pink",name:"Coastal Pink",emoji:"🌸",need:2300,desc:"Sweet seashells and rosy skies.",sw:["#f5e3eb","#c58fb5","#8a5c79"]},
  {id:"moon",name:"Moonlit Ocean",emoji:"🌙",need:1500,desc:"Calm nighttime waves.",sw:["#d9dceb","#8596c7","#4d587d"]},
- {id:"surf",name:"Summer Surf",emoji:"🏄",need:2000,desc:"Bright, playful surf days.",sw:["#d9eef4","#58b4c7","#2f7188"]}
+ {id:"surf",name:"Summer Surf",emoji:"🏄",need:4500,desc:"Bright, playful surf days.",sw:["#d9eef4","#58b4c7","#2f7188"]}
 ];
 function applyTheme(){
  document.body.className="theme-"+(data.theme||"ocean");
@@ -599,13 +608,13 @@ function editTodo(i){
 function deleteTodo(i){
  if(confirm(`Delete "${data.todos[i].text}"?`)){data.todos.splice(i,1);save();render()}
 }
-function toggleTodo(i){data.todos[i].done=!data.todos[i].done;if(data.todos[i].done){data.badges+=1;addXP(10);earnShell()}else{save();render()}}
+function toggleTodo(i){data.todos[i].done=!data.todos[i].done;if(data.todos[i].done){data.badges+=1;data.rewardStats.tasks=(Number(data.rewardStats.tasks)||0)+1;addXP(10);checkRewardMilestones()}else{save();render()}}
 function addTodo(inputId="todoInput"){const el=document.getElementById(inputId);const v=el.value.trim();if(!v)return;data.todos.push({text:v,done:false});el.value="";save();render()}
 function renderGoals(){
  const html=data.goals.map((g,i)=>{let pct=Math.round(g.done/g.total*100);return `<div class="goal"><div class="goal-top"><span class="goal-name">${esc(g.name)}</span><button class="x" onclick="removeGoal(${i})">×</button></div><p>${esc(g.why)}</p><div style="display:flex;justify-content:space-between;font-size:10px;color:#6f91ad;margin-bottom:6px"><span>${g.done} of ${g.total} days</span><b>${pct}%</b></div><div class="progress"><span style="width:${pct}%"></span></div><div class="goal-foot"><button onclick="goalStep(${i},-1)">−</button><span>track today</span><button onclick="goalStep(${i},1)">+</button></div></div>`}).join("");
  ["goalList","goalList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
 }
-function goalStep(i,n){const before=data.goals[i].done;data.goals[i].done=Math.max(0,Math.min(data.goals[i].total,data.goals[i].done+n));if(n>0&&data.goals[i].done>before){addXP(5);earnShell()}else{save();render()}}
+function goalStep(i,n){const before=data.goals[i].done;data.goals[i].done=Math.max(0,Math.min(data.goals[i].total,data.goals[i].done+n));if(n>0&&data.goals[i].done>before){data.rewardStats.goalSteps=(Number(data.rewardStats.goalSteps)||0)+1;addXP(5);checkRewardMilestones()}else{save();render()}}
 function removeGoal(i){data.goals.splice(i,1);save();render()}
 function openGoalModal(){document.getElementById("eventModal").style.display="none";document.getElementById("goalModal").style.display="block";document.getElementById("modalBack").classList.add("open")}
 function saveGoal(){let n=document.getElementById("goalName").value.trim(),w=document.getElementById("goalWhy").value.trim();if(!n)return;data.goals.push({name:n,why:w||"A little progress, most days",done:0,total:7});closeModal();save();render()}
@@ -717,6 +726,7 @@ document.body.className="theme-"+(data.theme||"ocean");
 document.getElementById("modalBack").onclick=e=>{if(e.target.id==="modalBack")closeModal()};
 document.getElementById("dateTop").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
 updateLoginStreak();
+checkRewardMilestones();
 render();
 checkAchievements(false);
 render();
