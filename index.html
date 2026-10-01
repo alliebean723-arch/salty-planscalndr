@@ -289,7 +289,7 @@ const ACHIEVEMENTS=[
  {id:"shellCollector",icon:"🐚",name:"Shell Collector",desc:"Collect 10 coastal treasures.",test:()=>SHELLS.reduce((n,s)=>n+(Number(data.shells[s.id])||0),0)>=10},
  {id:"palmTreeEnergy",icon:"🌴",name:"Palm Tree Energy",desc:"Reach a 7-day login streak.",test:()=>Number(data.streak)>=7},
  {id:"gentleGrowth",icon:"🌱",name:"Gentle Growth",desc:"Fill a weekly goal to 7 of 7.",test:()=>data.goals.some(g=>Number(g.done)>=7)},
- {id:"colorChaser",icon:"🎨",name:"Color Chaser",desc:"Unlock at least 3 beach themes.",test:()=>themes.filter(t=>Number(data.xp)>=Number(t.xp)).length>=3}
+ {id:"colorChaser",icon:"🎨",name:"Color Chaser",desc:"Unlock at least 3 beach themes.",test:()=>THEMES.filter(t=>Number(data.xp)>=Number(t.need)).length>=3}
 ];
 function renderAchievements(){
  const grid=document.getElementById("achievementGrid");if(!grid)return;
