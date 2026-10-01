@@ -153,6 +153,26 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 .shell-game-overlay h3{font-size:24px;margin:5px 0}.shell-game-overlay p{max-width:420px;color:#587182;margin:5px 0 14px}
 @media(max-width:760px){.shell-catch-board{height:260px}}
 
+
+/* V5.8 Coastal Match */
+.memory-card-wrap{margin-top:16px}
+.memory-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.memory-difficulties{display:flex;gap:7px;flex-wrap:wrap}
+.memory-difficulties button{border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:8px 11px;border-radius:999px;cursor:pointer}
+.memory-difficulties button.active{background:var(--accent);color:white;border-color:transparent}
+.memory-stats{display:flex;gap:8px;flex-wrap:wrap}
+.memory-board{display:grid;gap:9px;margin-top:12px}
+.memory-card{aspect-ratio:1/1;border:0;background:transparent;perspective:700px;cursor:pointer;padding:0}
+.memory-inner{position:relative;width:100%;height:100%;transition:transform .35s;transform-style:preserve-3d}
+.memory-card.flipped .memory-inner,.memory-card.matched .memory-inner{transform:rotateY(180deg)}
+.memory-face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:16px;backface-visibility:hidden;border:1px solid var(--line);box-shadow:0 4px 12px rgba(55,90,110,.08)}
+.memory-back{background:linear-gradient(145deg,var(--panel2),var(--panel));font-size:22px}
+.memory-front{background:var(--panel);transform:rotateY(180deg);font-size:30px}
+.memory-card.matched .memory-front{box-shadow:0 0 0 2px rgba(70,170,155,.2) inset}
+.memory-result{margin-top:12px;padding:12px 14px;border:1px dashed var(--line);border-radius:14px;display:none}
+.memory-result.show{display:block}
+@media(max-width:760px){.memory-board{gap:6px}.memory-front{font-size:24px}.memory-back{font-size:18px}}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -257,7 +277,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
   </section>
 
   <section class="view" id="gameroom">
-  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.7</span></p>
+  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.8</span></p>
   <div class="card" style="margin-top:18px">
     <div class="eyebrow">YOUR COASTAL JOURNEY</div><h3 id="gameRoomLevel">🌊 Level 1 · New Tide</h3>
     <div class="xpbar"><span id="gameRoomXPBar" style="width:0%"></span></div>
@@ -290,6 +310,26 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
   </div>
 </div>
   </div>
+<div class="card memory-card-wrap">
+  <div class="eyebrow">MEMORY GAME</div>
+  <h3>🧠 Coastal Match</h3>
+  <p class="mini-note">Flip two cards at a time and match all the coastal pairs.</p>
+  <div class="memory-toolbar">
+    <div class="memory-difficulties">
+      <button id="memEasy" onclick="setMemoryDifficulty('easy')">Easy · 4×3</button>
+      <button id="memMedium" class="active" onclick="setMemoryDifficulty('medium')">Medium · 4×4</button>
+      <button id="memHard" onclick="setMemoryDifficulty('hard')">Hard · 6×4</button>
+    </div>
+    <div class="memory-stats">
+      <span class="shell-pill">🎯 Moves: <b id="memoryMoves">0</b></span>
+      <span class="shell-pill">⏱ <b id="memoryTime">0</b>s</span>
+      <span class="shell-pill">🏆 Best: <b id="memoryBest">—</b></span>
+    </div>
+  </div>
+  <button class="primary" onclick="startMemoryGame()">New Game 🌊</button>
+  <div class="memory-board" id="memoryBoard"></div>
+  <div class="memory-result" id="memoryResult"></div>
+</div>
 </section>
 <section class="view" id="collection"><h2 class="page-title">Shell Collection 🐚</h2><p class="page-sub">Little treasures you find while making waves.</p><div class="card" style="margin-top:18px"><div class="eyebrow">YOUR BEACH BAG</div><h3>Collected treasures</h3><div class="shell-summary"><div><b id="shellTotal">0</b> treasures found<div class="mini-note" id="shellUnique">0 of 10 discovered</div></div><div style="font-size:34px">🐚</div></div><div class="shell-grid" id="shellGrid"></div><div class="mini-note" style="margin-top:14px">Complete to-dos, grow your goals, and level up to discover more treasures ♡</div></div></section>
 
@@ -572,8 +612,62 @@ function endShellCatch(){
  document.getElementById("shellCatchStart").textContent="Play again 🐚";
  document.getElementById("shellCatchOverlay").classList.remove("hidden");
 }
+const MEMORY_LEVELS={
+ easy:{cols:4,pairs:6,label:"Easy"},
+ medium:{cols:4,pairs:8,label:"Medium"},
+ hard:{cols:6,pairs:12,label:"Hard"}
+};
+const MEMORY_ICONS=["🐚","⭐","🌺","🪸","🫧","🌴","🌙","🏄","🐠","☀️","🌊","🦀"];
+let memoryDifficulty="medium",memoryFirst=null,memorySecond=null,memoryLock=false,memoryMoves=0,memoryMatches=0,memorySeconds=0,memoryTimer=null,memoryStarted=false;
+function memoryBestKey(){return "saltyPlansMemoryBest_"+memoryDifficulty}
+function getMemoryBest(){try{return JSON.parse(localStorage.getItem(memoryBestKey())||"null")}catch(e){return null}}
+function updateMemoryStats(){
+ const m=document.getElementById("memoryMoves"),t=document.getElementById("memoryTime"),b=document.getElementById("memoryBest");
+ if(m)m.textContent=memoryMoves;if(t)t.textContent=memorySeconds;
+ const best=getMemoryBest();if(b)b.textContent=best?`${best.moves} moves · ${best.time}s`:"—";
+}
+function setMemoryDifficulty(level){
+ memoryDifficulty=level;
+ ["easy","medium","hard"].forEach(x=>{const b=document.getElementById("mem"+x[0].toUpperCase()+x.slice(1));if(b)b.classList.toggle("active",x===level)});
+ startMemoryGame();
+}
+function shuffleMemory(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function startMemoryGame(){
+ clearInterval(memoryTimer);memoryFirst=null;memorySecond=null;memoryLock=false;memoryMoves=0;memoryMatches=0;memorySeconds=0;memoryStarted=false;
+ const cfg=MEMORY_LEVELS[memoryDifficulty],board=document.getElementById("memoryBoard"),result=document.getElementById("memoryResult");
+ result.classList.remove("show");result.innerHTML="";
+ board.style.gridTemplateColumns=`repeat(${cfg.cols},minmax(0,1fr))`;
+ const deck=shuffleMemory([...MEMORY_ICONS.slice(0,cfg.pairs),...MEMORY_ICONS.slice(0,cfg.pairs)]);
+ board.innerHTML=deck.map((icon,i)=>`<button class="memory-card" data-icon="${icon}" onclick="flipMemoryCard(this)"><span class="memory-inner"><span class="memory-face memory-back">🌊</span><span class="memory-face memory-front">${icon}</span></span></button>`).join("");
+ updateMemoryStats();
+}
+function flipMemoryCard(card){
+ if(memoryLock||card.classList.contains("flipped")||card.classList.contains("matched"))return;
+ if(!memoryStarted){memoryStarted=true;memoryTimer=setInterval(()=>{memorySeconds++;updateMemoryStats()},1000)}
+ card.classList.add("flipped");
+ if(!memoryFirst){memoryFirst=card;return}
+ memorySecond=card;memoryMoves++;updateMemoryStats();
+ if(memoryFirst.dataset.icon===memorySecond.dataset.icon){
+   memoryFirst.classList.add("matched");memorySecond.classList.add("matched");memoryFirst=null;memorySecond=null;memoryMatches++;
+   if(memoryMatches===MEMORY_LEVELS[memoryDifficulty].pairs)finishMemoryGame();
+ }else{
+   memoryLock=true;
+   setTimeout(()=>{memoryFirst.classList.remove("flipped");memorySecond.classList.remove("flipped");memoryFirst=null;memorySecond=null;memoryLock=false},650);
+ }
+}
+function finishMemoryGame(){
+ clearInterval(memoryTimer);const current={moves:memoryMoves,time:memorySeconds},best=getMemoryBest();
+ const better=!best||current.moves<best.moves||(current.moves===best.moves&&current.time<best.time);
+ if(better)localStorage.setItem(memoryBestKey(),JSON.stringify(current));
+ updateMemoryStats();
+ const result=document.getElementById("memoryResult");
+ result.innerHTML=`🏆 <b>${better?"New personal best!":"Board cleared!"}</b> ${memoryMoves} moves in ${memorySeconds} seconds. <button class="small-btn" onclick="startMemoryGame()" style="margin-left:8px">Play again</button>`;
+ result.classList.add("show");
+}
 function renderGameRoom(){
  updateShellCatchUI();
+ updateMemoryStats();
+ const mb=document.getElementById("memoryBoard");if(mb&&!mb.children.length)startMemoryGame();
  const li=levelInfo(data.xp);
  document.getElementById("gameRoomLevel").textContent=`🌊 Level ${li.level} · ${li.name}`;
  document.getElementById("gameRoomXPBar").style.width=li.within+"%";
