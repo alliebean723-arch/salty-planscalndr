@@ -80,6 +80,30 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 .achievement-toast.show{opacity:1;transform:translate(-50%,0)}
 .achievement-toast b{display:block;margin:3px 0}
 @media(max-width:760px){.achievement-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* V5.4.4 — responsive laptop sidebar */
+@media (min-width:761px) and (max-height:820px){
+  .sidebar{padding-top:16px;padding-bottom:10px;overflow-y:auto}
+  .brand{padding:0 14px 12px}
+  .brand h1{font-size:27px}
+  .nav{gap:5px}
+  .nav button{padding:9px 13px;border-radius:14px;font-size:14px}
+  .side-bottom{position:static;margin-top:12px;padding-bottom:8px}
+  .quote{font-size:17px;line-height:1;margin:8px 14px 10px}
+  .streak-mini{padding:8px 11px;border-radius:14px}
+  .settings{margin-top:7px}
+  .save-dot{margin-top:6px}
+}
+@media (min-width:761px) and (max-height:700px){
+  .brand{padding-bottom:8px}
+  .brand p{display:none}
+  .nav{gap:3px}
+  .nav button{padding:7px 12px;font-size:13px}
+  .quote{display:none}
+  .side-bottom{margin-top:7px}
+  .streak-mini{padding:7px 10px}
+}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -186,7 +210,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 
 <section class="view" id="achievements">
   <h2 class="page-title">Achievements 🏆</h2>
-  <p class="page-sub">Little milestones from your Salty Plans journey. <span style="font-size:10px;opacity:.65">V5.4.3</span></p>
+  <p class="page-sub">Little milestones from your Salty Plans journey. <span style="font-size:10px;opacity:.55">V5.4.4</span></p>
   <div class="card" style="margin-top:18px">
     <div class="eyebrow">TROPHY SHELF</div>
     <h3>Your badges</h3>
