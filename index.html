@@ -173,6 +173,101 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 .memory-result.show{display:block}
 @media(max-width:760px){.memory-board{gap:6px}.memory-front{font-size:24px}.memory-back{font-size:18px}}
 
+
+/* V5.8.1 Coastal Match fix + compact/fullscreen */
+.memory-card-wrap{padding:15px}
+.memory-toolbar{margin:8px 0}
+.memory-board{gap:6px;margin:9px auto 0;max-width:520px}
+.memory-card{aspect-ratio:1/1;min-width:0}
+.memory-face{border-radius:12px}
+.memory-front{font-size:25px}.memory-back{font-size:18px}
+.memory-full-btn{border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:8px 11px;border-radius:999px;cursor:pointer}
+.memory-card-wrap.memory-fullscreen{
+ position:fixed;inset:14px;z-index:9999;overflow:auto;margin:0!important;
+ background:var(--panel);border-radius:24px;box-shadow:0 18px 60px rgba(20,50,70,.25);padding:18px;
+}
+.memory-card-wrap.memory-fullscreen .memory-board{max-width:min(72vh,680px)}
+.memory-card-wrap.memory-fullscreen .memory-front{font-size:30px}
+body.memory-open{overflow:hidden}
+@media(max-width:760px){
+ .memory-board{max-width:390px;gap:5px}
+ .memory-card-wrap{padding:12px}
+ .memory-card-wrap.memory-fullscreen{inset:6px;padding:12px}
+ .memory-card-wrap.memory-fullscreen .memory-board{max-width:min(88vw,72vh)}
+}
+
+
+/* V5.8.2 Coastal Match visual repair */
+#memoryBoard.memory-board{
+ width:min(100%,480px)!important;
+ max-width:480px!important;
+ margin:10px auto 0!important;
+ gap:7px!important;
+ align-items:stretch!important;
+}
+#memoryBoard .memory-card{
+ display:block!important;
+ position:relative!important;
+ width:100%!important;
+ min-width:0!important;
+ height:auto!important;
+ aspect-ratio:1/1!important;
+ padding:0!important;
+ margin:0!important;
+ border:0!important;
+ background:transparent!important;
+ box-shadow:none!important;
+ cursor:pointer!important;
+}
+#memoryBoard .memory-inner{
+ display:block!important;
+ position:relative!important;
+ width:100%!important;
+ height:100%!important;
+ min-height:0!important;
+ transform-style:preserve-3d!important;
+ transition:transform .32s ease!important;
+}
+#memoryBoard .memory-card.flipped .memory-inner,
+#memoryBoard .memory-card.matched .memory-inner{transform:rotateY(180deg)!important}
+#memoryBoard .memory-face{
+ display:flex!important;
+ position:absolute!important;
+ inset:0!important;
+ align-items:center!important;
+ justify-content:center!important;
+ width:auto!important;
+ height:auto!important;
+ border-radius:14px!important;
+ backface-visibility:hidden!important;
+ -webkit-backface-visibility:hidden!important;
+ border:1px solid var(--line)!important;
+}
+#memoryBoard .memory-back{
+ background:linear-gradient(145deg,#dff4f5,#eef9f7)!important;
+ color:#32778b!important;
+ font-size:20px!important;
+ transform:rotateY(0deg)!important;
+}
+#memoryBoard .memory-front{
+ background:var(--panel)!important;
+ font-size:28px!important;
+ transform:rotateY(180deg)!important;
+}
+.memory-game-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.memory-new-btn,.memory-full-btn{
+ appearance:none;border:1px solid var(--line)!important;border-radius:12px!important;
+ padding:9px 13px!important;cursor:pointer!important;font:inherit!important;
+ background:var(--panel2)!important;color:var(--ink)!important;
+}
+.memory-new-btn{background:var(--accent)!important;color:white!important;border-color:transparent!important}
+.memory-version{font-size:10px;opacity:.6;margin-left:6px}
+.memory-card-wrap.memory-fullscreen #memoryBoard.memory-board{width:min(76vh,620px)!important;max-width:620px!important}
+@media(max-width:760px){
+ #memoryBoard.memory-board{width:min(100%,390px)!important;max-width:390px!important;gap:5px!important}
+ #memoryBoard .memory-front{font-size:23px!important}
+}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -277,7 +372,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
   </section>
 
   <section class="view" id="gameroom">
-  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.8</span></p>
+  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.8.2</span></p>
   <div class="card" style="margin-top:18px">
     <div class="eyebrow">YOUR COASTAL JOURNEY</div><h3 id="gameRoomLevel">🌊 Level 1 · New Tide</h3>
     <div class="xpbar"><span id="gameRoomXPBar" style="width:0%"></span></div>
@@ -312,7 +407,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
   </div>
 <div class="card memory-card-wrap">
   <div class="eyebrow">MEMORY GAME</div>
-  <h3>🧠 Coastal Match</h3>
+  <h3>🧠 Coastal Match <span class="memory-version">V5.8.2</span></h3>
   <p class="mini-note">Flip two cards at a time and match all the coastal pairs.</p>
   <div class="memory-toolbar">
     <div class="memory-difficulties">
@@ -326,7 +421,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
       <span class="shell-pill">🏆 Best: <b id="memoryBest">—</b></span>
     </div>
   </div>
-  <button class="primary" onclick="startMemoryGame()">New Game 🌊</button>
+  <div class="memory-game-buttons"><button class="memory-new-btn" onclick="startMemoryGame()">New Game 🌊</button><button class="memory-full-btn" id="memoryFullBtn" onclick="toggleMemoryFullscreen()">⛶ Full screen</button></div>
   <div class="memory-board" id="memoryBoard"></div>
   <div class="memory-result" id="memoryResult"></div>
 </div>
@@ -632,13 +727,21 @@ function setMemoryDifficulty(level){
  startMemoryGame();
 }
 function shuffleMemory(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function toggleMemoryFullscreen(){
+ const card=document.querySelector(".memory-card-wrap"),btn=document.getElementById("memoryFullBtn");
+ if(!card)return;
+ const on=card.classList.toggle("memory-fullscreen");
+ document.body.classList.toggle("memory-open",on);
+ if(btn)btn.textContent=on?"✕ Exit full screen":"⛶ Full screen";
+}
 function startMemoryGame(){
  clearInterval(memoryTimer);memoryFirst=null;memorySecond=null;memoryLock=false;memoryMoves=0;memoryMatches=0;memorySeconds=0;memoryStarted=false;
  const cfg=MEMORY_LEVELS[memoryDifficulty],board=document.getElementById("memoryBoard"),result=document.getElementById("memoryResult");
  result.classList.remove("show");result.innerHTML="";
- board.style.gridTemplateColumns=`repeat(${cfg.cols},minmax(0,1fr))`;
+ board.style.setProperty("grid-template-columns",`repeat(${cfg.cols},minmax(0,1fr))`,"important");
  const deck=shuffleMemory([...MEMORY_ICONS.slice(0,cfg.pairs),...MEMORY_ICONS.slice(0,cfg.pairs)]);
- board.innerHTML=deck.map((icon,i)=>`<button class="memory-card" data-icon="${icon}" onclick="flipMemoryCard(this)"><span class="memory-inner"><span class="memory-face memory-back">🌊</span><span class="memory-face memory-front">${icon}</span></span></button>`).join("");
+ board.innerHTML=deck.map((icon,i)=>`<div class="memory-card" role="button" tabindex="0" data-icon="${icon}" onclick="flipMemoryCard(this)"><span class="memory-inner"><span class="memory-face memory-back">🌊</span><span class="memory-face memory-front">${icon}</span></span></div>`).join("");
+ board.querySelectorAll(".memory-card").forEach(c=>c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();flipMemoryCard(c)}}));
  updateMemoryStats();
 }
 function flipMemoryCard(card){
