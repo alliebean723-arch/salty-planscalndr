@@ -137,6 +137,22 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 .game-action{border:1px solid var(--line);background:var(--panel2);border-radius:18px;padding:18px;color:var(--ink);text-align:left}
 .game-action b{display:block;font-size:16px;margin:6px 0}.game-action small{color:var(--muted)}
 @media(max-width:760px){.game-room-stats{grid-template-columns:1fr}.game-room-actions{grid-template-columns:1fr}}
+
+/* V5.6 Shell Catch */
+.shell-game-card{margin-top:16px}
+.shell-game-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.shell-game-stats{display:flex;gap:10px;flex-wrap:wrap}
+.shell-pill{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:12px;color:var(--ink)}
+.shell-catch-board{position:relative;height:300px;margin-top:14px;overflow:hidden;border:1px solid var(--line);border-radius:22px;background:linear-gradient(to bottom,#bfe9f4 0 38%,#8bd2e6 38% 52%,#f4dfb2 52% 100%);user-select:none}
+.shell-catch-board:before{content:"";position:absolute;left:0;right:0;top:46%;height:12px;background:rgba(255,255,255,.45);border-radius:50%}
+.shell-target{position:absolute;border:0;background:rgba(255,255,255,.76);width:52px;height:52px;border-radius:50%;font-size:27px;cursor:pointer;box-shadow:0 5px 14px rgba(55,90,110,.16);animation:shellPop .16s ease-out}
+.shell-target:hover{transform:scale(1.08)}
+@keyframes shellPop{from{transform:scale(.5);opacity:.3}to{transform:scale(1);opacity:1}}
+.shell-game-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;background:rgba(255,255,255,.48);backdrop-filter:blur(2px);z-index:3}
+.shell-game-overlay.hidden{display:none}
+.shell-game-overlay h3{font-size:24px;margin:5px 0}.shell-game-overlay p{max-width:420px;color:#587182;margin:5px 0 14px}
+@media(max-width:760px){.shell-catch-board{height:260px}}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -241,7 +257,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
   </section>
 
   <section class="view" id="gameroom">
-  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.5</span></p>
+  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.6</span></p>
   <div class="card" style="margin-top:18px">
     <div class="eyebrow">YOUR COASTAL JOURNEY</div><h3 id="gameRoomLevel">🌊 Level 1 · New Tide</h3>
     <div class="xpbar"><span id="gameRoomXPBar" style="width:0%"></span></div>
@@ -255,7 +271,24 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
       <button class="game-action" onclick="goToRoom('collection')"><span style="font-size:28px">🐚</span><b>Shell Collection →</b><small>See the treasures you've discovered.</small></button>
       <button class="game-action" onclick="goToRoom('achievements')"><span style="font-size:28px">🏆</span><b>Trophy Shelf →</b><small>See your badges and upcoming milestones.</small></button>
     </div>
-    <p class="mini-note" style="margin-top:16px">Keep completing tasks and growing goals to make waves. More little games are coming soon ♡</p>
+    <p class="mini-note" style="margin-top:16px">Keep completing tasks and growing goals to make waves. More little games are coming soon ♡</p><div class="card shell-game-card">
+  <div class="shell-game-head">
+    <div><div class="eyebrow">MINI GAME</div><h3>🐚 Shell Catch</h3><p class="mini-note">Catch as many beach treasures as you can in 20 seconds!</p></div>
+    <div class="shell-game-stats">
+      <span class="shell-pill">⏱ <b id="shellCatchTime">20</b>s</span>
+      <span class="shell-pill">🐚 Score: <b id="shellCatchScore">0</b></span>
+      <span class="shell-pill">🏆 Best: <b id="shellCatchBest">0</b></span>
+    </div>
+  </div>
+  <div class="shell-catch-board" id="shellCatchBoard">
+    <div class="shell-game-overlay" id="shellCatchOverlay">
+      <div style="font-size:42px">🐚 ⭐ 🫧</div>
+      <h3 id="shellCatchTitle">Ready to make a splash?</h3>
+      <p id="shellCatchMessage">Click the treasures as they pop up. Your best score saves on this device.</p>
+      <button class="primary" id="shellCatchStart" onclick="startShellCatch()">Catch the treasures! 🌊</button>
+    </div>
+  </div>
+</div>
   </div>
 </section>
 <section class="view" id="collection"><h2 class="page-title">Shell Collection 🐚</h2><p class="page-sub">Little treasures you find while making waves.</p><div class="card" style="margin-top:18px"><div class="eyebrow">YOUR BEACH BAG</div><h3>Collected treasures</h3><div class="shell-summary"><div><b id="shellTotal">0</b> treasures found<div class="mini-note" id="shellUnique">0 of 10 discovered</div></div><div style="font-size:34px">🐚</div></div><div class="shell-grid" id="shellGrid"></div><div class="mini-note" style="margin-top:14px">Complete to-dos, grow your goals, and level up to discover more treasures ♡</div></div></section>
@@ -487,7 +520,51 @@ async function loadWeather(){
  }
 }
 
+let shellCatchTimer=null,shellCatchSpawner=null,shellCatchScore=0,shellCatchTime=20;
+const SHELL_CATCH_BEST_KEY="saltyPlansShellCatchBest";
+function shellCatchBest(){return Number(localStorage.getItem(SHELL_CATCH_BEST_KEY)||0)}
+function updateShellCatchUI(){
+ const b=document.getElementById("shellCatchBest"); if(b)b.textContent=shellCatchBest();
+ const sc=document.getElementById("shellCatchScore"); if(sc)sc.textContent=shellCatchScore;
+ const tm=document.getElementById("shellCatchTime"); if(tm)tm.textContent=shellCatchTime;
+}
+function spawnShellCatch(){
+ const board=document.getElementById("shellCatchBoard"); if(!board)return;
+ board.querySelectorAll(".shell-target").forEach(x=>x.remove());
+ const target=document.createElement("button");
+ target.className="shell-target";
+ const treasures=["🐚","⭐","🫧","🪸","🌺"];
+ target.textContent=treasures[Math.floor(Math.random()*treasures.length)];
+ const maxX=Math.max(0,board.clientWidth-58), maxY=Math.max(0,board.clientHeight-58);
+ target.style.left=Math.floor(Math.random()*maxX)+"px";
+ target.style.top=Math.floor(Math.random()*maxY)+"px";
+ target.onclick=()=>{shellCatchScore++;updateShellCatchUI();target.remove();spawnShellCatch()};
+ board.appendChild(target);
+}
+function startShellCatch(){
+ clearInterval(shellCatchTimer);clearInterval(shellCatchSpawner);
+ shellCatchScore=0;shellCatchTime=20;updateShellCatchUI();
+ document.getElementById("shellCatchOverlay").classList.add("hidden");
+ spawnShellCatch();
+ shellCatchSpawner=setInterval(spawnShellCatch,850);
+ shellCatchTimer=setInterval(()=>{
+   shellCatchTime--;updateShellCatchUI();
+   if(shellCatchTime<=0)endShellCatch();
+ },1000);
+}
+function endShellCatch(){
+ clearInterval(shellCatchTimer);clearInterval(shellCatchSpawner);
+ document.querySelectorAll("#shellCatchBoard .shell-target").forEach(x=>x.remove());
+ const oldBest=shellCatchBest(),isBest=shellCatchScore>oldBest;
+ if(isBest)localStorage.setItem(SHELL_CATCH_BEST_KEY,String(shellCatchScore));
+ updateShellCatchUI();
+ document.getElementById("shellCatchTitle").textContent=isBest?"New beach record! 🏆":"Round complete! 🌊";
+ document.getElementById("shellCatchMessage").textContent=`You caught ${shellCatchScore} treasures.${isBest?" That's your new personal best!":" Your best is "+shellCatchBest()+"."}`;
+ document.getElementById("shellCatchStart").textContent="Play again 🐚";
+ document.getElementById("shellCatchOverlay").classList.remove("hidden");
+}
 function renderGameRoom(){
+ updateShellCatchUI();
  const li=levelInfo(data.xp);
  document.getElementById("gameRoomLevel").textContent=`🌊 Level ${li.level} · ${li.name}`;
  document.getElementById("gameRoomXPBar").style.width=li.within+"%";
