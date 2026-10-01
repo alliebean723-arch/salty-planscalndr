@@ -66,6 +66,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 @media(max-width:600px){.modal .two-col{grid-template-columns:1fr}.event-note{margin-left:0}}
 
 .level-toast{position:fixed;left:50%;top:26px;transform:translate(-50%,-18px);z-index:50;background:rgba(255,253,251,.97);border:1px solid var(--line);border-radius:22px;padding:15px 22px;box-shadow:0 16px 45px rgba(45,95,130,.22);text-align:center;color:var(--ink);opacity:0;pointer-events:none;transition:.3s}.level-toast.show{opacity:1;transform:translate(-50%,0)}.level-toast b{display:block;font-size:18px;margin:3px 0}.level-toast span{font-size:11px;color:var(--muted)}
+.shell-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.shell-item{background:var(--panel2);border:1px solid var(--line);border-radius:17px;padding:13px 8px;text-align:center;min-height:105px;display:flex;flex-direction:column;justify-content:center}.shell-item .shell-emoji{font-size:29px}.shell-item b{font-size:11px;margin-top:6px}.shell-item small{font-size:9px;color:var(--muted);margin-top:3px}.shell-item.locked{filter:grayscale(1);opacity:.45}.shell-summary{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;margin:12px 0 16px;background:var(--panel2);border-radius:16px}.shell-summary b{font-size:22px}.shell-toast{position:fixed;left:50%;top:104px;transform:translate(-50%,-14px);z-index:49;background:rgba(255,253,251,.98);border:1px solid var(--line);border-radius:20px;padding:13px 20px;box-shadow:0 14px 40px rgba(45,95,130,.2);text-align:center;opacity:0;pointer-events:none;transition:.3s;color:var(--ink)}.shell-toast.show{opacity:1;transform:translate(-50%,0)}.shell-toast b{display:block}@media(max-width:760px){.shell-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body class="theme-ocean">
@@ -78,7 +79,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
     <button data-view="todos">☷ <span>To-dos</span><span class="badge" id="todoBadge">0</span></button>
     <button data-view="goals">⚑ <span>Goals</span></button>
     <button data-view="notes">♧ <span>Notes</span></button>
-    <button data-view="personalize">⚙ <span>Personalize</span></button>
+    <button data-view="collection">🐚 <span>Shells</span><span class="badge" id="shellBadge">0</span></button><button data-view="personalize">⚙ <span>Personalize</span></button>
   </nav>
   <div class="side-bottom">
     <p class="quote">good things<br>take time<br>◎</p>
@@ -168,7 +169,8 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
     <div class="feature-grid"><div class="card brain"><div class="eyebrow">LET IT OUT</div><h3>♧ Brain dump</h3><textarea id="brainDump2" placeholder="Write anything..."></textarea><div class="char"><span>autosaves</span><span id="charCount2">0 characters</span></div></div><div class="card"><div class="eyebrow">LITTLE REMINDER</div><h3>♡</h3><p style="font-family:'Shadows Into Light';font-size:25px">Small steps = big progress ♡</p></div></div>
   </section>
 
-  <section class="view" id="personalize">
+  <section class="view" id="collection"><h2 class="page-title">Shell Collection 🐚</h2><p class="page-sub">Little treasures you find while making waves.</p><div class="card" style="margin-top:18px"><div class="eyebrow">YOUR BEACH BAG</div><h3>Collected treasures</h3><div class="shell-summary"><div><b id="shellTotal">0</b> treasures found<div class="mini-note" id="shellUnique">0 of 10 discovered</div></div><div style="font-size:34px">🐚</div></div><div class="shell-grid" id="shellGrid"></div><div class="mini-note" style="margin-top:14px">Complete to-dos, grow your goals, and level up to discover more treasures ♡</div></div></section>
+<section class="view" id="personalize">
     <h2 class="page-title">Make Salty Plans yours ✨</h2>
     <p class="page-sub">Pick your vibe, change your name, and make your little planner feel like home.</p>
     <div class="feature-grid">
@@ -201,7 +203,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 </main>
 </div>
 
-<div class="level-toast" id="levelToast"><div>🌊✨🐚</div><b id="levelToastTitle">LEVEL UP!</b><span id="levelToastCopy">You’re making waves.</span></div>
+<div class="shell-toast" id="shellToast"><div id="shellToastEmoji" style="font-size:27px">🐚</div><b id="shellToastTitle">Treasure found!</b><span id="shellToastCopy" class="mini-note"></span></div><div class="level-toast" id="levelToast"><div>🌊✨🐚</div><b id="levelToastTitle">LEVEL UP!</b><span id="levelToastCopy">You’re making waves.</span></div>
 <div class="modal-back" id="modalBack">
   <div class="modal" id="eventModal">
     <h3 id="eventModalTitle">🌊 Add a little plan</h3>
@@ -223,7 +225,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",
+ xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -243,16 +245,20 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;
+if(!("lastLogin" in data)) data.lastLogin=null;if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
 function save(){localStorage.setItem(KEY,JSON.stringify(data));document.querySelectorAll(".save-dot").forEach(x=>x.textContent="● Saved on this device")}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})}
 
+const SHELLS=[["seashell","🐚","Seashell"],["seaglass","🫧","Sea Glass"],["starfish","⭐","Starfish"],["coral","🪸","Coral"],["hibiscus","🌺","Hibiscus"],["fish","🐠","Tropical Fish"],["palm","🌴","Palm"],["moon","🌙","Moon Shell"],["surf","🏄","Surfboard"],["sun","☀️","Sun Charm"]].map(([id,emoji,name])=>({id,emoji,name}));
+function renderShells(){const grid=document.getElementById("shellGrid");if(!grid)return;const total=SHELLS.reduce((n,s)=>n+(Number(data.shells[s.id])||0),0),unique=SHELLS.filter(s=>(Number(data.shells[s.id])||0)>0).length;document.getElementById("shellTotal").textContent=total;document.getElementById("shellUnique").textContent=`${unique} of ${SHELLS.length} discovered`;document.getElementById("shellBadge").textContent=total;grid.innerHTML=SHELLS.map(s=>{const c=Number(data.shells[s.id])||0;return `<div class="shell-item ${c?"":"locked"}"><span class="shell-emoji">${c?s.emoji:"❔"}</span><b>${c?s.name:"Undiscovered"}</b><small>${c?`× ${c}`:"Keep making waves"}</small></div>`}).join("")}
+function showShellFind(s){const t=document.getElementById("shellToast");if(!t)return;document.getElementById("shellToastEmoji").textContent=s.emoji;document.getElementById("shellToastTitle").textContent=`${s.name} found!`;document.getElementById("shellToastCopy").textContent="Added to your Shell Collection ♡";t.classList.add("show");clearTimeout(window.shellToastTimer);window.shellToastTimer=setTimeout(()=>t.classList.remove("show"),2400)}
+function earnShell(){data.shellEarnCount=(Number(data.shellEarnCount)||0)+1;const s=SHELLS[(data.shellEarnCount-1)%SHELLS.length];data.shells[s.id]=(Number(data.shells[s.id])||0)+1;save();renderShells();showShellFind(s)}
 const LEVEL_NAMES=["New Tide","Fresh Start","Sunshine","Sea Breeze","Golden Hour","High Tide","Ocean Glow","Summer Soul","Tide Chaser","Sea Star"];
 function levelInfo(xp=0){const safe=Math.max(0,Number(xp)||0),level=Math.floor(safe/100)+1,within=safe%100;const name=LEVEL_NAMES[Math.min(level-1,LEVEL_NAMES.length-1)]||"Sea Star";return {level,within,name,next:100-within}}
 function showLevelUp(level,name){const toast=document.getElementById("levelToast");if(!toast)return;document.getElementById("levelToastTitle").textContent=`LEVEL ${level} — ${name}`;document.getElementById("levelToastCopy").textContent="Level up! Keep making waves ♡";toast.classList.add("show");clearTimeout(window.levelToastTimer);window.levelToastTimer=setTimeout(()=>toast.classList.remove("show"),2600)}
-function addXP(n){const beforeXP=Number(data.xp)||0,before=levelInfo(beforeXP);data.xp=beforeXP+n;const after=levelInfo(data.xp);save();render();if(after.level>before.level)showLevelUp(after.level,after.name);const newly=THEMES.find(t=>beforeXP<t.need&&data.xp>=t.need);if(newly)setTimeout(()=>alert(`🌊 New theme unlocked: ${newly.emoji} ${newly.name}! Check Personalize.`),300)}
+function addXP(n){const beforeXP=Number(data.xp)||0,before=levelInfo(beforeXP);data.xp=beforeXP+n;const after=levelInfo(data.xp);save();render();if(after.level>before.level){showLevelUp(after.level,after.name);earnShell()}const newly=THEMES.find(t=>beforeXP<t.need&&data.xp>=t.need);if(newly)setTimeout(()=>alert(`🌊 New theme unlocked: ${newly.emoji} ${newly.name}! Check Personalize.`),300)}
 const THEMES=[
  {id:"ocean",name:"Ocean Blue",emoji:"🌊",need:0,desc:"Your classic Salty Plans vibe.",sw:["#dcecf7","#75b9df","#315f8e"]},
  {id:"seaglass",name:"Sea Glass",emoji:"🐚",need:300,desc:"Soft, minty beach glass.",sw:["#d9eee9","#73bdb3","#3e756f"]},
@@ -351,7 +357,7 @@ function render(){
  ["doneStat"].forEach(id=>document.getElementById(id).textContent=done); document.getElementById("totalStat").textContent=total;
  document.getElementById("todoDonePill").textContent=`${done}/${total} done`; document.getElementById("todoBadge").textContent=total-done;
  document.getElementById("badgeCount").textContent=data.badges;
- renderTodos(); renderGoals(); renderCalendar(); renderBrain(); renderPersonalization();
+ renderTodos(); renderGoals(); renderCalendar(); renderBrain(); renderPersonalization(); renderShells();
 }
 function renderTodos(){
  const html=data.todos.map((t,i)=>`<div class="todo ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span>${esc(t.text)}</span><span class="todo-actions"><button class="icon-btn" title="Edit" onclick="editTodo(${i})">✎</button><button class="icon-btn" title="Delete" onclick="deleteTodo(${i})">×</button></span></div>`).join("");
@@ -367,13 +373,13 @@ function editTodo(i){
 function deleteTodo(i){
  if(confirm(`Delete "${data.todos[i].text}"?`)){data.todos.splice(i,1);save();render()}
 }
-function toggleTodo(i){data.todos[i].done=!data.todos[i].done;if(data.todos[i].done){data.badges+=1;addXP(10)}else{save();render()}}
+function toggleTodo(i){data.todos[i].done=!data.todos[i].done;if(data.todos[i].done){data.badges+=1;addXP(10);earnShell()}else{save();render()}}
 function addTodo(inputId="todoInput"){const el=document.getElementById(inputId);const v=el.value.trim();if(!v)return;data.todos.push({text:v,done:false});el.value="";save();render()}
 function renderGoals(){
  const html=data.goals.map((g,i)=>{let pct=Math.round(g.done/g.total*100);return `<div class="goal"><div class="goal-top"><span class="goal-name">${esc(g.name)}</span><button class="x" onclick="removeGoal(${i})">×</button></div><p>${esc(g.why)}</p><div style="display:flex;justify-content:space-between;font-size:10px;color:#6f91ad;margin-bottom:6px"><span>${g.done} of ${g.total} days</span><b>${pct}%</b></div><div class="progress"><span style="width:${pct}%"></span></div><div class="goal-foot"><button onclick="goalStep(${i},-1)">−</button><span>track today</span><button onclick="goalStep(${i},1)">+</button></div></div>`}).join("");
  ["goalList","goalList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
 }
-function goalStep(i,n){const before=data.goals[i].done;data.goals[i].done=Math.max(0,Math.min(data.goals[i].total,data.goals[i].done+n));if(n>0&&data.goals[i].done>before)addXP(5);else{save();render()}}
+function goalStep(i,n){const before=data.goals[i].done;data.goals[i].done=Math.max(0,Math.min(data.goals[i].total,data.goals[i].done+n));if(n>0&&data.goals[i].done>before){addXP(5);earnShell()}else{save();render()}}
 function removeGoal(i){data.goals.splice(i,1);save();render()}
 function openGoalModal(){document.getElementById("eventModal").style.display="none";document.getElementById("goalModal").style.display="block";document.getElementById("modalBack").classList.add("open")}
 function saveGoal(){let n=document.getElementById("goalName").value.trim(),w=document.getElementById("goalWhy").value.trim();if(!n)return;data.goals.push({name:n,why:w||"A little progress, most days",done:0,total:7});closeModal();save();render()}
