@@ -186,7 +186,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 
 <section class="view" id="achievements">
   <h2 class="page-title">Achievements 🏆</h2>
-  <p class="page-sub">Little milestones from your Salty Plans journey.</p>
+  <p class="page-sub">Little milestones from your Salty Plans journey. <span style="font-size:10px;opacity:.65">V5.4.3</span></p>
   <div class="card" style="margin-top:18px">
     <div class="eyebrow">TROPHY SHELF</div>
     <h3>Your badges</h3>
@@ -311,7 +311,7 @@ function showAchievement(a){
 }
 function checkAchievements(showPopups=true){
  let changed=false, newly=[];
- ACHIEVEMENTS.forEach(a=>{if(!data.achievements[a.id]&&a.test()){data.achievements[a.id]=true;changed=true;newly.push(a)}});
+ ACHIEVEMENTS.forEach(a=>{let earned=false;try{earned=!!a.test()}catch(err){console.warn("Achievement check skipped:",a.id,err)}if(!data.achievements[a.id]&&earned){data.achievements[a.id]=true;changed=true;newly.push(a)}});
  if(changed)save();
  renderAchievements();
  if(showPopups&&newly.length){
