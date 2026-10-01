@@ -65,6 +65,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 .modal .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:600px){.modal .two-col{grid-template-columns:1fr}.event-note{margin-left:0}}
 
+.level-toast{position:fixed;left:50%;top:26px;transform:translate(-50%,-18px);z-index:50;background:rgba(255,253,251,.97);border:1px solid var(--line);border-radius:22px;padding:15px 22px;box-shadow:0 16px 45px rgba(45,95,130,.22);text-align:center;color:var(--ink);opacity:0;pointer-events:none;transition:.3s}.level-toast.show{opacity:1;transform:translate(-50%,0)}.level-toast b{display:block;font-size:18px;margin:3px 0}.level-toast span{font-size:11px;color:var(--muted)}
 </style>
 </head>
 <body class="theme-ocean">
@@ -200,6 +201,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
 </main>
 </div>
 
+<div class="level-toast" id="levelToast"><div>🌊✨🐚</div><b id="levelToastTitle">LEVEL UP!</b><span id="levelToastCopy">You’re making waves.</span></div>
 <div class="modal-back" id="modalBack">
   <div class="modal" id="eventModal">
     <h3 id="eventModalTitle">🌊 Add a little plan</h3>
@@ -247,6 +249,10 @@ function save(){localStorage.setItem(KEY,JSON.stringify(data));document.querySel
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})}
 
+const LEVEL_NAMES=["New Tide","Fresh Start","Sunshine","Sea Breeze","Golden Hour","High Tide","Ocean Glow","Summer Soul","Tide Chaser","Sea Star"];
+function levelInfo(xp=0){const safe=Math.max(0,Number(xp)||0),level=Math.floor(safe/100)+1,within=safe%100;const name=LEVEL_NAMES[Math.min(level-1,LEVEL_NAMES.length-1)]||"Sea Star";return {level,within,name,next:100-within}}
+function showLevelUp(level,name){const toast=document.getElementById("levelToast");if(!toast)return;document.getElementById("levelToastTitle").textContent=`LEVEL ${level} — ${name}`;document.getElementById("levelToastCopy").textContent="Level up! Keep making waves ♡";toast.classList.add("show");clearTimeout(window.levelToastTimer);window.levelToastTimer=setTimeout(()=>toast.classList.remove("show"),2600)}
+function addXP(n){const beforeXP=Number(data.xp)||0,before=levelInfo(beforeXP);data.xp=beforeXP+n;const after=levelInfo(data.xp);save();render();if(after.level>before.level)showLevelUp(after.level,after.name);const newly=THEMES.find(t=>beforeXP<t.need&&data.xp>=t.need);if(newly)setTimeout(()=>alert(`🌊 New theme unlocked: ${newly.emoji} ${newly.name}! Check Personalize.`),300)}
 const THEMES=[
  {id:"ocean",name:"Ocean Blue",emoji:"🌊",need:0,desc:"Your classic Salty Plans vibe.",sw:["#dcecf7","#75b9df","#315f8e"]},
  {id:"seaglass",name:"Sea Glass",emoji:"🐚",need:300,desc:"Soft, minty beach glass.",sw:["#d9eee9","#73bdb3","#3e756f"]},
@@ -338,9 +344,9 @@ async function loadWeather(){
 
 function render(){
  document.getElementById("xpNum").textContent=data.xp; document.getElementById("streakStat").textContent=data.streak; document.getElementById("sideStreak").textContent=data.streak+" day streak";
- const level=Math.floor(data.xp/100)+1, within=data.xp%100;
- document.getElementById("levelPill").textContent="LEVEL "+level; document.getElementById("xpBar").style.width=within+"%";
- document.getElementById("levelText").textContent=`Level ${level}: ${level%2?"Sea Glass":"Golden Hour"} · ${100-within} XP to level up`;
+ const li=levelInfo(data.xp);
+ document.getElementById("levelPill").textContent="LEVEL "+li.level; document.getElementById("xpBar").style.width=li.within+"%";
+ document.getElementById("levelText").textContent=`Level ${li.level}: ${li.name} · ${li.next} XP to level up`;
  const done=data.todos.filter(t=>t.done).length,total=data.todos.length;
  ["doneStat"].forEach(id=>document.getElementById(id).textContent=done); document.getElementById("totalStat").textContent=total;
  document.getElementById("todoDonePill").textContent=`${done}/${total} done`; document.getElementById("todoBadge").textContent=total-done;
@@ -361,13 +367,13 @@ function editTodo(i){
 function deleteTodo(i){
  if(confirm(`Delete "${data.todos[i].text}"?`)){data.todos.splice(i,1);save();render()}
 }
-function toggleTodo(i){data.todos[i].done=!data.todos[i].done;if(data.todos[i].done){data.xp+=10;data.badges+=1}save();render()}
+function toggleTodo(i){data.todos[i].done=!data.todos[i].done;if(data.todos[i].done){data.badges+=1;addXP(10)}else{save();render()}}
 function addTodo(inputId="todoInput"){const el=document.getElementById(inputId);const v=el.value.trim();if(!v)return;data.todos.push({text:v,done:false});el.value="";save();render()}
 function renderGoals(){
  const html=data.goals.map((g,i)=>{let pct=Math.round(g.done/g.total*100);return `<div class="goal"><div class="goal-top"><span class="goal-name">${esc(g.name)}</span><button class="x" onclick="removeGoal(${i})">×</button></div><p>${esc(g.why)}</p><div style="display:flex;justify-content:space-between;font-size:10px;color:#6f91ad;margin-bottom:6px"><span>${g.done} of ${g.total} days</span><b>${pct}%</b></div><div class="progress"><span style="width:${pct}%"></span></div><div class="goal-foot"><button onclick="goalStep(${i},-1)">−</button><span>track today</span><button onclick="goalStep(${i},1)">+</button></div></div>`}).join("");
  ["goalList","goalList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
 }
-function goalStep(i,n){data.goals[i].done=Math.max(0,Math.min(data.goals[i].total,data.goals[i].done+n));if(n>0)data.xp+=5;save();render()}
+function goalStep(i,n){const before=data.goals[i].done;data.goals[i].done=Math.max(0,Math.min(data.goals[i].total,data.goals[i].done+n));if(n>0&&data.goals[i].done>before)addXP(5);else{save();render()}}
 function removeGoal(i){data.goals.splice(i,1);save();render()}
 function openGoalModal(){document.getElementById("eventModal").style.display="none";document.getElementById("goalModal").style.display="block";document.getElementById("modalBack").classList.add("open")}
 function saveGoal(){let n=document.getElementById("goalName").value.trim(),w=document.getElementById("goalWhy").value.trim();if(!n)return;data.goals.push({name:n,why:w||"A little progress, most days",done:0,total:7});closeModal();save();render()}
@@ -466,7 +472,7 @@ function resetStreak(){
  data.lastLogin=localDateKey();
  save();render();
 }
-function gainXP(n){const before=data.xp;data.xp+=n;data.badges+=1;save();render();const newly=THEMES.find(t=>before<t.need && data.xp>=t.need);if(newly)alert(`🌊 New theme unlocked: ${newly.emoji} ${newly.name}! Check Personalize.`)}
+function gainXP(n){data.badges+=1;addXP(n)}
 function toggleMusic(){playing=!playing;document.getElementById("playBtn").textContent=playing?"Ⅱ":"▶";if(playing)musicTick()}
 function musicTick(){if(!playing)return;let b=document.getElementById("musicProgress"),w=parseInt(b.style.width)||38;w=(w+1)%101;b.style.width=w+"%";setTimeout(musicTick,700)}
 function nextSong(){songIndex=(songIndex+1)%songs.length;document.getElementById("songTitle").textContent=songs[songIndex]}
