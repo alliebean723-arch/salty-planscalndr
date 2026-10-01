@@ -555,6 +555,8 @@ document.getElementById("modalBack").onclick=e=>{if(e.target.id==="modalBack")cl
 document.getElementById("dateTop").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"});
 updateLoginStreak();
 render();
+checkAchievements(false);
+render();
 loadWeather();
 </script>
 </body>
