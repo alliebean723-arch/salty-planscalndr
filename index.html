@@ -127,6 +127,16 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
   .streak-mini{font-size:11px;padding:6px 9px}
 }
 
+
+/* V5.5 Game Room */
+.game-room-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:16px 0}
+.game-stat{background:var(--panel2);border:1px solid var(--line);border-radius:18px;padding:17px;text-align:center}
+.game-stat strong{display:block;font-size:28px;margin:6px 0;color:var(--ink)}
+.game-stat small{color:var(--muted);font-size:11px}
+.game-room-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:15px}
+.game-action{border:1px solid var(--line);background:var(--panel2);border-radius:18px;padding:18px;color:var(--ink);text-align:left}
+.game-action b{display:block;font-size:16px;margin:6px 0}.game-action small{color:var(--muted)}
+@media(max-width:760px){.game-room-stats{grid-template-columns:1fr}.game-room-actions{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="theme-ocean">
@@ -139,6 +149,7 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
     <button data-view="todos">☷ <span>To-dos</span><span class="badge" id="todoBadge">0</span></button>
     <button data-view="goals">⚑ <span>Goals</span></button>
     <button data-view="notes">♧ <span>Notes</span></button>
+    <button data-view="gameroom">🎮 <span>Game Room</span></button>
     <button data-view="collection">🐚 <span>Shells</span><span class="badge" id="shellBadge">0</span></button><button data-view="achievements">🏆 <span>Achievements</span><span class="badge" id="achievementBadge">0</span></button><button data-view="personalize">⚙ <span>Personalize</span></button>
   </nav>
   <div class="side-bottom">
@@ -229,7 +240,25 @@ body.theme-surf{--bg:#d9eef4;--panel:#fffefb;--panel2:#edf9fb;--ink:#2f7188;--mu
     <div class="feature-grid"><div class="card brain"><div class="eyebrow">LET IT OUT</div><h3>♧ Brain dump</h3><textarea id="brainDump2" placeholder="Write anything..."></textarea><div class="char"><span>autosaves</span><span id="charCount2">0 characters</span></div></div><div class="card"><div class="eyebrow">LITTLE REMINDER</div><h3>♡</h3><p style="font-family:'Shadows Into Light';font-size:25px">Small steps = big progress ♡</p></div></div>
   </section>
 
-  <section class="view" id="collection"><h2 class="page-title">Shell Collection 🐚</h2><p class="page-sub">Little treasures you find while making waves.</p><div class="card" style="margin-top:18px"><div class="eyebrow">YOUR BEACH BAG</div><h3>Collected treasures</h3><div class="shell-summary"><div><b id="shellTotal">0</b> treasures found<div class="mini-note" id="shellUnique">0 of 10 discovered</div></div><div style="font-size:34px">🐚</div></div><div class="shell-grid" id="shellGrid"></div><div class="mini-note" style="margin-top:14px">Complete to-dos, grow your goals, and level up to discover more treasures ♡</div></div></section>
+  <section class="view" id="gameroom">
+  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.5</span></p>
+  <div class="card" style="margin-top:18px">
+    <div class="eyebrow">YOUR COASTAL JOURNEY</div><h3 id="gameRoomLevel">🌊 Level 1 · New Tide</h3>
+    <div class="xpbar"><span id="gameRoomXPBar" style="width:0%"></span></div>
+    <div class="mini-note" id="gameRoomNext">100 XP to next level</div>
+    <div class="game-room-stats">
+      <div class="game-stat"><span>⭐ XP</span><strong id="gameRoomXP">0</strong><small>Total earned</small></div>
+      <div class="game-stat"><span>🐚 Treasures</span><strong id="gameRoomShells">0</strong><small>In your beach bag</small></div>
+      <div class="game-stat"><span>🏆 Badges</span><strong id="gameRoomAchievements">0/6</strong><small>Achievements earned</small></div>
+    </div>
+    <div class="game-room-actions">
+      <button class="game-action" onclick="goToRoom('collection')"><span style="font-size:28px">🐚</span><b>Shell Collection →</b><small>See the treasures you've discovered.</small></button>
+      <button class="game-action" onclick="goToRoom('achievements')"><span style="font-size:28px">🏆</span><b>Trophy Shelf →</b><small>See your badges and upcoming milestones.</small></button>
+    </div>
+    <p class="mini-note" style="margin-top:16px">Keep completing tasks and growing goals to make waves. More little games are coming soon ♡</p>
+  </div>
+</section>
+<section class="view" id="collection"><h2 class="page-title">Shell Collection 🐚</h2><p class="page-sub">Little treasures you find while making waves.</p><div class="card" style="margin-top:18px"><div class="eyebrow">YOUR BEACH BAG</div><h3>Collected treasures</h3><div class="shell-summary"><div><b id="shellTotal">0</b> treasures found<div class="mini-note" id="shellUnique">0 of 10 discovered</div></div><div style="font-size:34px">🐚</div></div><div class="shell-grid" id="shellGrid"></div><div class="mini-note" style="margin-top:14px">Complete to-dos, grow your goals, and level up to discover more treasures ♡</div></div></section>
 
 <section class="view" id="achievements">
   <h2 class="page-title">Achievements 🏆</h2>
@@ -458,6 +487,16 @@ async function loadWeather(){
  }
 }
 
+function renderGameRoom(){
+ const li=levelInfo(data.xp);
+ document.getElementById("gameRoomLevel").textContent=`🌊 Level ${li.level} · ${li.name}`;
+ document.getElementById("gameRoomXPBar").style.width=li.within+"%";
+ document.getElementById("gameRoomNext").textContent=`${li.next} XP to next level`;
+ document.getElementById("gameRoomXP").textContent=data.xp;
+ document.getElementById("gameRoomShells").textContent=SHELLS.reduce((n,s)=>n+(Number(data.shells[s.id])||0),0);
+ document.getElementById("gameRoomAchievements").textContent=ACHIEVEMENTS.filter(a=>data.achievements[a.id]).length+"/"+ACHIEVEMENTS.length;
+}
+function goToRoom(id){const btn=document.querySelector(`.nav button[data-view="${id}"]`);if(btn)btn.click()}
 function render(){
  document.getElementById("xpNum").textContent=data.xp; document.getElementById("streakStat").textContent=data.streak; document.getElementById("sideStreak").textContent=data.streak+" day streak";
  const li=levelInfo(data.xp);
@@ -467,7 +506,7 @@ function render(){
  ["doneStat"].forEach(id=>document.getElementById(id).textContent=done); document.getElementById("totalStat").textContent=total;
  document.getElementById("todoDonePill").textContent=`${done}/${total} done`; document.getElementById("todoBadge").textContent=total-done;
  document.getElementById("badgeCount").textContent=data.badges;
- renderTodos(); renderGoals(); renderCalendar(); renderBrain(); renderPersonalization(); renderShells(); renderAchievements();
+ renderTodos(); renderGoals(); renderCalendar(); renderBrain(); renderPersonalization(); renderShells(); renderAchievements(); renderGameRoom();
 }
 function renderTodos(){
  const html=data.todos.map((t,i)=>`<div class="todo ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span>${esc(t.text)}</span><span class="todo-actions"><button class="icon-btn" title="Edit" onclick="editTodo(${i})">✎</button><button class="icon-btn" title="Delete" onclick="deleteTodo(${i})">×</button></span></div>`).join("");
