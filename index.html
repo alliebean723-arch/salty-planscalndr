@@ -420,6 +420,14 @@ body.memory-open{overflow:hidden}
 .focus-note{margin-top:12px;text-align:center;font-size:11px;color:var(--muted)}
 @media(max-width:760px){.focus-timer{font-size:58px}.focus-stats{grid-template-columns:1fr 1fr 1fr}.focus-hero{padding:22px 12px}}
 
+
+/* V5.13 Focus Session Goal */
+.focus-goal-wrap{max-width:520px;margin:0 auto 16px;text-align:left}
+.focus-goal-wrap label{display:block;font-size:10px;font-weight:900;letter-spacing:.09em;color:var(--muted);margin-bottom:6px}
+.focus-goal-wrap input{width:100%;box-sizing:border-box;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:12px;padding:11px 12px;font:inherit}
+.focus-current-goal{margin:12px auto 16px;padding:10px 13px;max-width:520px;border-radius:12px;background:var(--panel2);font-size:12px}
+.focus-current-goal strong{color:#2f7f78}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -533,11 +541,16 @@ body.memory-open{overflow:hidden}
 <div class="class-grid" id="classGrid"></div></section>
 <section class="view" id="focus">
 <h2 class="page-title">Focus Cove 🍅</h2>
-<p class="page-sub">Settle in, focus, then take a little shore break. <span style="font-size:10px;opacity:.6">V5.12.1</span></p>
+<p class="page-sub">Settle in, focus, then take a little shore break. <span style="font-size:10px;opacity:.6">V5.13</span></p>
 <div class="focus-wrap">
  <div class="card focus-hero">
-   <div class="focus-mode" id="focusModeLabel">FOCUS SESSION</div>
+   <div class="focus-goal-wrap">
+<label for="focusGoalInput">WHAT ARE YOU WORKING ON?</label>
+<input id="focusGoalInput" placeholder="e.g. Finish Psych Chapter 5" oninput="updateFocusGoal()">
+</div>
+<div class="focus-mode" id="focusModeLabel">FOCUS SESSION</div>
    <div class="focus-timer" id="focusTimer">25:00</div>
+   <div class="focus-current-goal" id="focusCurrentGoal" style="display:none"></div>
    <div class="focus-actions">
      <button class="focus-primary" id="focusStartBtn" onclick="toggleFocusTimer()">▶ Start</button>
      <button class="focus-secondary" onclick="resetFocusTimer()">↻ Reset</button>
@@ -682,7 +695,7 @@ body.memory-open{overflow:hidden}
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},
+ xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},focusGoal:"",
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -702,7 +715,7 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
+if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
 function save(){localStorage.setItem(KEY,JSON.stringify(data));document.querySelectorAll(".save-dot").forEach(x=>x.textContent="● Saved on this device")}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
@@ -1095,6 +1108,10 @@ function deleteEvent(i){
  if(confirm(`Delete "${data.events[i].name}"?`)){data.events.splice(i,1);save();render()}
 }
 function closeModal(){document.getElementById("modalBack").classList.remove("open");editingEventIndex=-1}
+function updateFocusGoal(){
+ const input=document.getElementById("focusGoalInput");if(!input)return;
+ data.focusGoal=input.value;save();renderFocus();
+}
 let focusInterval=null,focusRemaining=25*60,focusDuration=25,focusMode="focus",focusRunning=false,focusEndAt=0;
 function focusTodayKey(){return localDateKey(new Date())}
 function normalizeFocusStats(){
@@ -1102,6 +1119,10 @@ function normalizeFocusStats(){
 }
 function renderFocus(){
  const timer=document.getElementById("focusTimer");if(!timer)return;
+ const goalInput=document.getElementById("focusGoalInput"),goalBox=document.getElementById("focusCurrentGoal");
+ if(goalInput&&document.activeElement!==goalInput)goalInput.value=data.focusGoal||"";
+ if(goalBox){if((data.focusGoal||"").trim()){goalBox.style.display="block";goalBox.innerHTML=`📚 Working on: <strong>${esc(data.focusGoal.trim())}</strong>`}else goalBox.style.display="none"}
+
  normalizeFocusStats();
  const m=Math.floor(focusRemaining/60),sec=focusRemaining%60;
  timer.textContent=`${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
