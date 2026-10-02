@@ -299,6 +299,29 @@ body.memory-open{overflow:hidden}
  border-radius:9px;padding:5px 8px;font-size:10px;font-weight:700;white-space:nowrap;
 }
 .assignment-actions .assignment-done-btn.is-done{opacity:.75}
+
+/* V5.10.2 Coastal action button polish */
+#classes #classSaveBtn{
+  appearance:none!important;border:0!important;background:var(--accent)!important;color:#fff!important;
+  border-radius:12px!important;padding:10px 16px!important;font:inherit!important;font-weight:800!important;
+  cursor:pointer!important;box-shadow:0 5px 14px rgba(0,0,0,.08)!important;opacity:1!important;
+}
+#classes #classSaveBtn:hover{transform:translateY(-1px)}
+#classes .assignment-add button{
+  appearance:none!important;border:0!important;background:var(--accent)!important;color:#fff!important;
+  border-radius:10px!important;padding:8px 12px!important;font:inherit!important;font-size:11px!important;
+  font-weight:800!important;cursor:pointer!important;opacity:1!important;white-space:nowrap!important;
+  box-shadow:0 4px 10px rgba(0,0,0,.07)!important;
+}
+#classes .assignment-add button:hover{transform:translateY(-1px)}
+#classes .assignment-actions .assignment-done-btn{
+  background:var(--accent)!important;color:#fff!important;border:0!important;opacity:1!important;
+  border-radius:9px!important;padding:6px 9px!important;font-weight:800!important;
+}
+#classes .assignment-actions .assignment-done-btn.is-done{
+  background:var(--panel)!important;color:var(--ink)!important;border:1px solid var(--line)!important;
+}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -404,7 +427,7 @@ body.memory-open{overflow:hidden}
   </section>
 
   <section class="view" id="classes">
-<h2 class="page-title">Classes 🎓</h2><p class="page-sub">Your college schedule, Salty Plans style. <span style="font-size:10px;opacity:.6">V5.10.1</span></p>
+<h2 class="page-title">Classes 🎓</h2><p class="page-sub">Your college schedule, Salty Plans style. <span style="font-size:10px;opacity:.6">V5.10.2</span></p>
 <div class="card" style="margin-top:18px"><div class="eyebrow">ADD A CLASS</div>
 <div class="class-form"><input id="className" class="wide" placeholder="Class name · e.g. Introduction to Psychology"><input id="classProfessor" placeholder="Professor"><input id="classLocation" placeholder="Building / room"><input id="classDays" placeholder="Days · e.g. Mon, Wed, Fri"><input id="classTime" placeholder="Time · e.g. 10:00–10:50 AM"><select id="classColor" class="wide"><option value="#77bfd1">🌊 Ocean Blue</option><option value="#79bfa8">🫧 Sea Glass</option><option value="#e9a879">🌅 Sunset</option><option value="#e7a9bd">🌸 Coastal Pink</option><option value="#a9a0d7">🌙 Lavender Tide</option><option value="#e0bd63">☀️ Sunshine</option></select></div>
 <button class="primary" id="classSaveBtn" onclick="saveClass()" style="margin-top:12px">Add class 🎓</button> <button class="small-btn" id="classCancelBtn" onclick="cancelClassEdit()" style="display:none">Cancel</button></div>
