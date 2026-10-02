@@ -460,6 +460,18 @@ body.memory-open{overflow:hidden}
 .dashboard-sticker{font-size:30px;line-height:1;background:rgba(255,255,255,.55);border:1px solid var(--line);border-radius:13px;padding:7px;cursor:pointer}
 .dashboard-sticker:hover{box-shadow:0 2px 10px rgba(0,0,0,.08)}
 
+
+/* V5.18 Memory Scrapbook */
+.scrap-form{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.scrap-form .wide{grid-column:1/-1}.scrap-form input,.scrap-form textarea{width:100%;box-sizing:border-box;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:12px;padding:10px 11px;font:inherit}.scrap-form textarea{min-height:78px;resize:vertical}
+.scrap-add{border:0;background:#2f7f78;color:#fff;border-radius:11px;padding:10px 14px;font-weight:900;cursor:pointer}
+.scrap-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}
+.scrap-card{padding:12px;transform:rotate(-.4deg)}.scrap-card:nth-child(even){transform:rotate(.5deg)}
+.scrap-photo{height:150px;border-radius:12px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:42px;overflow:hidden;margin-bottom:10px}.scrap-photo img{width:100%;height:100%;object-fit:cover}
+.scrap-date{font-size:9px;font-weight:900;letter-spacing:.08em;color:var(--muted)}.scrap-title{font-size:15px;font-weight:900;margin:4px 0}.scrap-caption{font-size:11px;line-height:1.5;white-space:pre-wrap}.scrap-actions{display:flex;justify-content:flex-end;margin-top:9px}.scrap-delete{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:10px}
+@media(max-width:900px){.scrap-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.scrap-form{grid-template-columns:1fr}.scrap-form .wide{grid-column:auto}.scrap-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -474,6 +486,7 @@ body.memory-open{overflow:hidden}
     <button data-view="notes">♧ <span>Notes</span></button>
     <button data-view="classes">🎓 <span>Classes</span></button>
     <button data-view="focus">🍅 <span>Focus Cove</span></button>
+    <button data-view="scrapbook">📸 <span>Scrapbook</span></button>
     <button data-view="shop">🏝️ <span>Beach Shop</span></button>
     <button data-view="gameroom">🎮 <span>Game Room</span></button>
     <button data-view="collection">🐚 <span>Shells</span><span class="badge" id="shellBadge">0</span></button><button data-view="achievements">🏆 <span>Achievements</span><span class="badge" id="achievementBadge">0</span></button><button data-view="personalize">⚙ <span>Personalize</span></button>
@@ -605,6 +618,21 @@ body.memory-open{overflow:hidden}
    <div class="card focus-stat"><strong id="focusTotal">0</strong><span>ALL-TIME SESSIONS</span></div>
  </div>
 </div>
+</section>
+<section class="view" id="scrapbook">
+<h2 class="page-title">Memory Scrapbook 📸</h2>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.18</span></p>
+<div class="card" style="padding:16px">
+ <div class="eyebrow">ADD A MEMORY</div>
+ <div class="scrap-form">
+  <input id="scrapTitle" placeholder="Memory title">
+  <input id="scrapDate" type="date">
+  <input class="wide" id="scrapPhoto" placeholder="Optional photo URL (we’ll add uploads next)">
+  <textarea class="wide" id="scrapCaption" placeholder="Write a little caption or memory..."></textarea>
+ </div>
+ <button class="scrap-add" onclick="addScrapbookMemory()">＋ Add to Scrapbook</button>
+</div>
+<div class="scrap-grid" id="scrapGrid"></div>
 </section>
 <section class="view" id="shop">
 <h2 class="page-title">Beach Shop 🏝️</h2>
@@ -741,7 +769,7 @@ body.memory-open{overflow:hidden}
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},focusGoal:"",sandDollars:100,shopOwned:[],shopLaunchGift:false,equippedFrame:"",dashboardStickers:[],sandRewarded:{tasks:[],focus:0,streak:[],achievements:[]},
+ xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},focusGoal:"",sandDollars:100,shopOwned:[],shopLaunchGift:false,equippedFrame:"",dashboardStickers:[],sandRewarded:{tasks:[],focus:0,streak:[],achievements:[]},scrapbook:[],
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -761,7 +789,7 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";if(!Array.isArray(data.dashboardStickers))data.dashboardStickers=[];if(!data.sandRewarded||typeof data.sandRewarded!=="object")data.sandRewarded={tasks:[],focus:0,streak:[],achievements:[]};["tasks","streak","achievements"].forEach(k=>{if(!Array.isArray(data.sandRewarded[k]))data.sandRewarded[k]=[]});if(typeof data.sandRewarded.focus!=="number")data.sandRewarded.focus=0;
+if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";if(!Array.isArray(data.dashboardStickers))data.dashboardStickers=[];if(!Array.isArray(data.scrapbook))data.scrapbook=[];if(!data.sandRewarded||typeof data.sandRewarded!=="object")data.sandRewarded={tasks:[],focus:0,streak:[],achievements:[]};["tasks","streak","achievements"].forEach(k=>{if(!Array.isArray(data.sandRewarded[k]))data.sandRewarded[k]=[]});if(typeof data.sandRewarded.focus!=="number")data.sandRewarded.focus=0;
 if(typeof data.sandDollars!=="number")data.sandDollars=0;
 if(!data.shopLaunchGift){data.sandDollars+=100;data.shopLaunchGift=true;save()}if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
@@ -1076,7 +1104,7 @@ function render(){
  document.getElementById("todoDonePill").textContent=`${done}/${total} done`; document.getElementById("todoBadge").textContent=total-done;
  document.getElementById("badgeCount").textContent=data.badges;
  renderTodos(); renderGoals(); renderCalendar(); renderBrain(); renderPersonalization(); renderShells(); renderAchievements(); renderGameRoom();
-renderClasses(); renderShop(); applyShopCosmetics(); renderDashboardStickers(); sandRewardCheck();}
+renderClasses(); renderShop(); applyShopCosmetics(); renderDashboardStickers(); renderScrapbook(); sandRewardCheck();}
 function renderTodos(){
  const html=data.todos.map((t,i)=>`<div class="todo ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span>${esc(t.text)}</span><span class="todo-actions"><button class="icon-btn" title="Edit" onclick="editTodo(${i})">✎</button><button class="icon-btn" title="Delete" onclick="deleteTodo(${i})">×</button></span></div>`).join("");
  ["todoList","todoList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
@@ -1156,6 +1184,26 @@ function deleteEvent(i){
 }
 function closeModal(){document.getElementById("modalBack").classList.remove("open");editingEventIndex=-1}
 
+function addScrapbookMemory(){
+ const title=(document.getElementById("scrapTitle").value||"").trim();
+ const date=document.getElementById("scrapDate").value||localDateKey();
+ const photo=(document.getElementById("scrapPhoto").value||"").trim();
+ const caption=(document.getElementById("scrapCaption").value||"").trim();
+ if(!title&&!caption){alert("Give this memory a title or little caption first 📸");return}
+ data.scrapbook.unshift({id:Date.now(),title,date,photo,caption});save();
+ ["scrapTitle","scrapPhoto","scrapCaption"].forEach(id=>document.getElementById(id).value="");
+ document.getElementById("scrapDate").value=localDateKey();renderScrapbook();
+}
+function deleteScrapbookMemory(id){
+ if(!confirm("Remove this memory from your scrapbook?"))return;
+ data.scrapbook=data.scrapbook.filter(x=>x.id!==id);save();renderScrapbook();
+}
+function renderScrapbook(){
+ const grid=document.getElementById("scrapGrid");if(!grid)return;
+ const date=document.getElementById("scrapDate");if(date&&!date.value)date.value=localDateKey();
+ if(!data.scrapbook.length){grid.innerHTML='<div class="card" style="padding:18px;font-size:11px;color:var(--muted)">Your scrapbook is waiting for its first memory 🌅📷</div>';return}
+ grid.innerHTML=data.scrapbook.map(x=>`<div class="card scrap-card"><div class="scrap-photo">${x.photo?`<img src="${esc(x.photo)}" alt="">`:"📷"}</div><div class="scrap-date">${esc(x.date||"")}</div><div class="scrap-title">${esc(x.title||"Untitled memory")}</div><div class="scrap-caption">${esc(x.caption||"")}</div><div class="scrap-actions"><button class="scrap-delete" onclick="deleteScrapbookMemory(${Number(x.id)})">Delete</button></div></div>`).join("");
+}
 function awardSandDollars(amount,msg){
  amount=Math.max(0,Number(amount)||0);if(!amount)return;
  data.sandDollars=(Number(data.sandDollars)||0)+amount;save();renderShop();
