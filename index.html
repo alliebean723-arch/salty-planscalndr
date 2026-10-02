@@ -279,6 +279,19 @@ body.memory-open{overflow:hidden}
 .class-form input,.class-form select{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:12px;padding:10px 11px;font:inherit}
 .class-empty{grid-column:1/-1;text-align:center;padding:28px;color:var(--muted);border:1px dashed var(--line);border-radius:18px}
 @media(max-width:760px){.class-grid,.class-form{grid-template-columns:1fr}.class-form .wide{grid-column:auto}}
+
+/* V5.10 Class Assignments */
+.assignment-box{margin-top:13px;padding-top:12px;border-top:1px solid var(--line)}
+.assignment-list{display:grid;gap:7px;margin-top:8px}
+.assignment-item{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:9px 10px}
+.assignment-item.done{opacity:.6}.assignment-item.done .assignment-title{text-decoration:line-through}
+.assignment-title{font-size:13px;font-weight:700}.assignment-meta{font-size:10px;color:var(--muted);margin-top:2px}
+.assignment-actions{display:flex;gap:4px;flex-shrink:0}.assignment-actions button{border:0;background:transparent;cursor:pointer;padding:3px}
+.assignment-add{display:grid;grid-template-columns:1.4fr .9fr .8fr auto;gap:6px;margin-top:9px}
+.assignment-add input,.assignment-add select{min-width:0;width:100%;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;padding:7px;font:inherit;font-size:11px}
+.assignment-add button{border:0;background:var(--accent);color:white;border-radius:9px;padding:7px 9px;cursor:pointer}
+@media(max-width:900px){.assignment-add{grid-template-columns:1fr 1fr}.assignment-add button{grid-column:1/-1}}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -384,7 +397,7 @@ body.memory-open{overflow:hidden}
   </section>
 
   <section class="view" id="classes">
-<h2 class="page-title">Classes 🎓</h2><p class="page-sub">Your college schedule, Salty Plans style. <span style="font-size:10px;opacity:.6">V5.9</span></p>
+<h2 class="page-title">Classes 🎓</h2><p class="page-sub">Your college schedule, Salty Plans style. <span style="font-size:10px;opacity:.6">V5.10</span></p>
 <div class="card" style="margin-top:18px"><div class="eyebrow">ADD A CLASS</div>
 <div class="class-form"><input id="className" class="wide" placeholder="Class name · e.g. Introduction to Psychology"><input id="classProfessor" placeholder="Professor"><input id="classLocation" placeholder="Building / room"><input id="classDays" placeholder="Days · e.g. Mon, Wed, Fri"><input id="classTime" placeholder="Time · e.g. 10:00–10:50 AM"><select id="classColor" class="wide"><option value="#77bfd1">🌊 Ocean Blue</option><option value="#79bfa8">🫧 Sea Glass</option><option value="#e9a879">🌅 Sunset</option><option value="#e7a9bd">🌸 Coastal Pink</option><option value="#a9a0d7">🌙 Lavender Tide</option><option value="#e0bd63">☀️ Sunshine</option></select></div>
 <button class="primary" id="classSaveBtn" onclick="saveClass()" style="margin-top:12px">Add class 🎓</button> <button class="small-btn" id="classCancelBtn" onclick="cancelClassEdit()" style="display:none">Cancel</button></div>
@@ -534,7 +547,7 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
+if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
 function save(){localStorage.setItem(KEY,JSON.stringify(data));document.querySelectorAll(".save-dot").forEach(x=>x.textContent="● Saved on this device")}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
@@ -802,11 +815,36 @@ let editingClassIndex=null;
 function renderClasses(){
  const grid=document.getElementById("classGrid");if(!grid)return;
  if(!data.classes.length){grid.innerHTML='<div class="class-empty">🎓 No classes yet. Add your first one above!</div>';return}
- grid.innerHTML=data.classes.map((c,i)=>`<div class="class-card" style="--class-color:${c.color||"#77bfd1"}"><h3>${esc(c.name||"Untitled class")}</h3><div class="class-meta">${c.professor?`👩‍🏫 ${esc(c.professor)}<br>`:""}${c.location?`📍 ${esc(c.location)}<br>`:""}${c.days||c.time?`🗓️ ${esc(c.days||"")} ${esc(c.time||"")}`:""}</div><div class="class-actions"><button onclick="editClass(${i})">✏️ Edit</button><button onclick="deleteClass(${i})">🗑️ Delete</button></div></div>`).join("");
+ grid.innerHTML=data.classes.map((c,i)=>`<div class="class-card" style="--class-color:${c.color||"#77bfd1"}">
+ <h3>${esc(c.name||"Untitled class")}</h3>
+ <div class="class-meta">${c.professor?`👩‍🏫 ${esc(c.professor)}<br>`:""}${c.location?`📍 ${esc(c.location)}<br>`:""}${c.days||c.time?`🗓️ ${esc(c.days||"")} ${esc(c.time||"")}`:""}</div>
+ <div class="class-actions"><button onclick="editClass(${i})">✏️ Edit</button><button onclick="deleteClass(${i})">🗑️ Delete</button></div>
+ <div class="assignment-box"><div class="eyebrow">ASSIGNMENTS · ${(c.assignments||[]).filter(a=>!a.done).length} LEFT</div>
+ <div class="assignment-list">${(c.assignments||[]).length?(c.assignments||[]).map((a,j)=>`<div class="assignment-item ${a.done?"done":""}"><div><div class="assignment-title">${esc(a.title)}</div><div class="assignment-meta">${a.due?`📅 ${esc(a.due)} · `:""}${esc(a.type||"Assignment")}</div></div><div class="assignment-actions"><button title="Complete" onclick="toggleAssignment(${i},${j})">${a.done?"↩️":"✅"}</button><button title="Edit" onclick="editAssignment(${i},${j})">✏️</button><button title="Delete" onclick="deleteAssignment(${i},${j})">🗑️</button></div></div>`).join(""):'<div class="mini-note">No assignments yet ✨</div>'}</div>
+ <div class="assignment-add"><input id="assignTitle${i}" placeholder="Assignment"><input id="assignDue${i}" type="date"><select id="assignType${i}"><option>Assignment</option><option>Quiz</option><option>Exam</option><option>Paper</option><option>Project</option><option>Reading</option></select><button onclick="addAssignment(${i})">＋ Add</button></div>
+ </div></div>`).join("");
 }
+function addAssignment(ci){
+ const title=document.getElementById("assignTitle"+ci).value.trim();if(!title){alert("Add an assignment name first 📚");return}
+ data.classes[ci].assignments=data.classes[ci].assignments||[];
+ data.classes[ci].assignments.push({title,due:document.getElementById("assignDue"+ci).value,type:document.getElementById("assignType"+ci).value,done:false});
+ save();renderClasses();
+}
+function toggleAssignment(ci,ai){
+ const a=data.classes[ci].assignments[ai],was=a.done;a.done=!a.done;
+ if(!was&&a.done){data.rewardStats.tasks=(Number(data.rewardStats.tasks)||0)+1;addXP(10);checkRewardMilestones()}
+ else{save();render()}
+}
+function editAssignment(ci,ai){
+ const a=data.classes[ci].assignments[ai],title=prompt("Assignment name:",a.title);if(title===null||!title.trim())return;
+ const due=prompt("Due date (YYYY-MM-DD):",a.due||"");if(due===null)return;
+ const type=prompt("Type (Assignment, Quiz, Exam, Paper, Project, Reading):",a.type||"Assignment");if(type===null)return;
+ Object.assign(a,{title:title.trim(),due:due.trim(),type:type.trim()||"Assignment"});save();renderClasses();
+}
+function deleteAssignment(ci,ai){if(confirm("Delete this assignment?")){data.classes[ci].assignments.splice(ai,1);save();renderClasses()}}
 function saveClass(){
  const name=document.getElementById("className").value.trim();if(!name){alert("Give your class a name first 🌊");return}
- const c={name,professor:document.getElementById("classProfessor").value.trim(),location:document.getElementById("classLocation").value.trim(),days:document.getElementById("classDays").value.trim(),time:document.getElementById("classTime").value.trim(),color:document.getElementById("classColor").value};
+ const previous=editingClassIndex===null?null:data.classes[editingClassIndex];const c={name,professor:document.getElementById("classProfessor").value.trim(),location:document.getElementById("classLocation").value.trim(),days:document.getElementById("classDays").value.trim(),time:document.getElementById("classTime").value.trim(),color:document.getElementById("classColor").value,assignments:previous?.assignments||[]};
  if(editingClassIndex===null)data.classes.push(c);else data.classes[editingClassIndex]=c;save();cancelClassEdit();renderClasses();
 }
 function editClass(i){const c=data.classes[i];editingClassIndex=i;className.value=c.name||"";classProfessor.value=c.professor||"";classLocation.value=c.location||"";classDays.value=c.days||"";classTime.value=c.time||"";classColor.value=c.color||"#77bfd1";classSaveBtn.textContent="Save changes 🌊";classCancelBtn.style.display="inline-block";className.focus()}
