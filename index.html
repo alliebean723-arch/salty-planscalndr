@@ -663,6 +663,10 @@ body.memory-open{overflow:hidden}
 <button onclick="setAmbience('rain')" id="ambRain">🌧️ Rain</button>
 <button onclick="setAmbience('cafe')" id="ambCafe">☕ Café</button>
 <button onclick="setAmbience('night')" id="ambNight">🌙 Night Shore</button>
+<button onclick="setAmbience('fire')" id="ambFire">🔥 Cozy Fireplace</button>
+<button onclick="setAmbience('storm')" id="ambStorm">⛈️ Thunderstorm</button>
+<button onclick="setAmbience('forest')" id="ambForest">🌾 Sea Grass</button>
+<button onclick="setAmbience('brown')" id="ambBrown">🩵 Blue Noise</button>
 <button onclick="setAmbience('off')" id="ambOff">✕ Off</button>
 </div>
 <div class="ambience-volume"><span>🔈</span><input id="ambienceVolume" type="range" min="0" max="100" value="35" oninput="setAmbienceVolume(this.value)"><span>🔊</span></div>
@@ -675,7 +679,7 @@ body.memory-open{overflow:hidden}
 </section>
 <section class="view" id="scrapbook">
 <h2 class="page-title">Memory Scrapbook 📸</h2>
-<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.21</span></p>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.21.2</span></p>
 <div class="card" style="padding:16px">
  <div class="eyebrow">ADD A MEMORY</div>
  <div class="scrap-form">
@@ -1432,6 +1436,16 @@ function startAmbienceAudio(kind){
  if(kind==="rain"){addNoise("white",900,6500,.38);addNoise("brown",80,700,.12)}
  if(kind==="cafe"){addNoise("brown",120,1200,.22);addNoise("white",500,2800,.07)}
  if(kind==="night"){addNoise("brown",60,650,.35);addNoise("white",1500,5000,.035)}
+ if(kind==="brown"){addNoise("brown",45,900,.72)}
+ if(kind==="fire"){
+   addNoise("brown",100,1200,.22);addNoise("white",1800,6000,.025);
+   const crack=ambienceCtx.createOscillator(),cg=ambienceCtx.createGain();crack.type="triangle";crack.frequency.value=48;cg.gain.value=.018;crack.connect(cg);cg.connect(master);crack.start();ambienceNodes.push(crack,cg)
+ }
+ if(kind==="storm"){addNoise("white",350,7000,.32);addNoise("brown",45,500,.3)}
+ if(kind==="forest"){
+   addNoise("brown",100,1400,.16);addNoise("white",2200,6500,.018);
+   const bird=ambienceCtx.createOscillator(),bg=ambienceCtx.createGain();bird.type="sine";bird.frequency.value=1450;bg.gain.value=.006;bird.connect(bg);bg.connect(master);bird.start();ambienceNodes.push(bird,bg)
+ }
 }
 function setAmbience(kind){
  data.focusAmbience=kind;save();startAmbienceAudio(kind);renderAmbience();
@@ -1441,9 +1455,9 @@ function setAmbienceVolume(v){
  if(data.focusAmbience!=="off")startAmbienceAudio(data.focusAmbience);
 }
 function renderAmbience(){
- const names={off:"Off",ocean:"Ocean Waves 🌊",rain:"Rain 🌧️",cafe:"Café ☕",night:"Night Shore 🌙"};
+ const names={off:"Off",ocean:"Ocean Waves 🌊",rain:"Rain 🌧️",cafe:"Café ☕",night:"Night Shore 🌙",fire:"Cozy Fireplace 🔥",storm:"Thunderstorm ⛈️",forest:"Sea Grass 🌾",brown:"Blue Noise 🩵"};
  const now=document.getElementById("ambienceNow"),vol=document.getElementById("ambienceVolume");if(now)now.textContent=names[data.focusAmbience]||"Off";if(vol)vol.value=data.focusAmbienceVolume;
- const ids={ocean:"ambOcean",rain:"ambRain",cafe:"ambCafe",night:"ambNight",off:"ambOff"};
+ const ids={ocean:"ambOcean",rain:"ambRain",cafe:"ambCafe",night:"ambNight",fire:"ambFire",storm:"ambStorm",forest:"ambForest",brown:"ambBrown",off:"ambOff"};
  Object.entries(ids).forEach(([k,id])=>{const b=document.getElementById(id);if(b)b.classList.toggle("active",data.focusAmbience===k)});
 }
 function updateFocusGoal(){
