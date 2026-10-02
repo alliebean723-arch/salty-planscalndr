@@ -402,6 +402,24 @@ body.memory-open{overflow:hidden}
   }
 }
 
+
+/* V5.12 Focus Cove */
+.focus-wrap{max-width:760px;margin:18px auto 0}
+.focus-hero{text-align:center;padding:28px 22px}
+.focus-mode{font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.focus-timer{font-size:72px;line-height:1;font-weight:900;letter-spacing:-.04em;margin:14px 0;color:var(--ink)}
+.focus-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}
+.focus-actions button,.focus-presets button{border:0;border-radius:12px;padding:10px 15px;font:inherit;font-weight:800;cursor:pointer}
+.focus-primary{background:#2f7f78!important;color:#fff!important}
+.focus-secondary{background:var(--panel2)!important;color:var(--ink)!important;border:1px solid var(--line)!important}
+.focus-presets{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:16px}
+.focus-presets button{background:var(--panel2);color:var(--ink);border:1px solid var(--line);font-size:11px;padding:8px 11px}
+.focus-presets button.active{background:#d9eee9;border-color:#7bbab0;color:#245f5a}
+.focus-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.focus-stat{text-align:center;padding:16px}.focus-stat strong{display:block;font-size:23px}.focus-stat span{font-size:10px;color:var(--muted);font-weight:800;letter-spacing:.08em}
+.focus-note{margin-top:12px;text-align:center;font-size:11px;color:var(--muted)}
+@media(max-width:760px){.focus-timer{font-size:58px}.focus-stats{grid-template-columns:1fr 1fr 1fr}.focus-hero{padding:22px 12px}}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -415,6 +433,7 @@ body.memory-open{overflow:hidden}
     <button data-view="goals">⚑ <span>Goals</span></button>
     <button data-view="notes">♧ <span>Notes</span></button>
     <button data-view="classes">🎓 <span>Classes</span></button>
+    <button data-view="focus">🍅 <span>Focus Cove</span></button>
     <button data-view="gameroom">🎮 <span>Game Room</span></button>
     <button data-view="collection">🐚 <span>Shells</span><span class="badge" id="shellBadge">0</span></button><button data-view="achievements">🏆 <span>Achievements</span><span class="badge" id="achievementBadge">0</span></button><button data-view="personalize">⚙ <span>Personalize</span></button>
   </nav>
@@ -512,6 +531,31 @@ body.memory-open{overflow:hidden}
 <div class="class-form"><input id="className" class="wide" placeholder="Class name · e.g. Introduction to Psychology"><input id="classProfessor" placeholder="Professor"><input id="classLocation" placeholder="Building / room"><input id="classDays" placeholder="Days · e.g. Mon, Wed, Fri"><input id="classTime" placeholder="Time · e.g. 10:00–10:50 AM"><select id="classColor" class="wide"><option value="#77bfd1">🌊 Ocean Blue</option><option value="#79bfa8">🫧 Sea Glass</option><option value="#e9a879">🌅 Sunset</option><option value="#e7a9bd">🌸 Coastal Pink</option><option value="#a9a0d7">🌙 Lavender Tide</option><option value="#e0bd63">☀️ Sunshine</option></select></div>
 <button class="primary" id="classSaveBtn" onclick="saveClass()" style="margin-top:12px">Add class 🎓</button> <button class="small-btn" id="classCancelBtn" onclick="cancelClassEdit()" style="display:none">Cancel</button></div>
 <div class="class-grid" id="classGrid"></div></section>
+<section class="view" id="focus">
+<h2 class="page-title">Focus Cove 🍅</h2>
+<p class="page-sub">Settle in, focus, then take a little shore break. <span style="font-size:10px;opacity:.6">V5.12</span></p>
+<div class="focus-wrap">
+ <div class="card focus-hero">
+   <div class="focus-mode" id="focusModeLabel">FOCUS SESSION</div>
+   <div class="focus-timer" id="focusTimer">25:00</div>
+   <div class="focus-actions">
+     <button class="focus-primary" id="focusStartBtn" onclick="toggleFocusTimer()">▶ Start</button>
+     <button class="focus-secondary" onclick="resetFocusTimer()">↻ Reset</button>
+   </div>
+   <div class="focus-presets">
+     <button id="focusPreset25" class="active" onclick="setFocusPreset(25,'focus')">25 min Focus</button>
+     <button id="focusPreset5" onclick="setFocusPreset(5,'break')">5 min Break</button>
+     <button id="focusPreset15" onclick="setFocusPreset(15,'break')">15 min Long Break</button>
+   </div>
+   <div class="focus-note">🌊 Your timer keeps running while you move around Salty Plans.</div>
+ </div>
+ <div class="focus-stats">
+   <div class="card focus-stat"><strong id="focusToday">0</strong><span>SESSIONS TODAY</span></div>
+   <div class="card focus-stat"><strong id="focusMinutes">0</strong><span>FOCUS MINUTES</span></div>
+   <div class="card focus-stat"><strong id="focusTotal">0</strong><span>ALL-TIME SESSIONS</span></div>
+ </div>
+</div>
+</section>
 <section class="view" id="gameroom">
   <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.8.2</span></p>
   <div class="card" style="margin-top:18px">
@@ -637,7 +681,7 @@ body.memory-open{overflow:hidden}
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],
+ xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -657,7 +701,7 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
+if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
 function save(){localStorage.setItem(KEY,JSON.stringify(data));document.querySelectorAll(".save-dot").forEach(x=>x.textContent="● Saved on this device")}
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
@@ -974,7 +1018,7 @@ renderClasses();}
 function renderTodos(){
  const html=data.todos.map((t,i)=>`<div class="todo ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span>${esc(t.text)}</span><span class="todo-actions"><button class="icon-btn" title="Edit" onclick="editTodo(${i})">✎</button><button class="icon-btn" title="Delete" onclick="deleteTodo(${i})">×</button></span></div>`).join("");
  ["todoList","todoList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
-}
+renderFocus();}
 function editTodo(i){
  const next=prompt("Edit your to-do:",data.todos[i].text);
  if(next===null)return;
@@ -1050,6 +1094,42 @@ function deleteEvent(i){
  if(confirm(`Delete "${data.events[i].name}"?`)){data.events.splice(i,1);save();render()}
 }
 function closeModal(){document.getElementById("modalBack").classList.remove("open");editingEventIndex=-1}
+let focusInterval=null,focusRemaining=25*60,focusDuration=25,focusMode="focus",focusRunning=false,focusEndAt=0;
+function focusTodayKey(){return localDateKey(new Date())}
+function normalizeFocusStats(){
+ const fs=data.focusStats;if(fs.date!==focusTodayKey()){fs.date=focusTodayKey();fs.today=0;save()}
+}
+function renderFocus(){
+ const timer=document.getElementById("focusTimer");if(!timer)return;
+ normalizeFocusStats();
+ const m=Math.floor(focusRemaining/60),sec=focusRemaining%60;
+ timer.textContent=`${String(m).padStart(2,"0")}:${String(sec).padStart(2,"0")}`;
+ document.getElementById("focusModeLabel").textContent=focusMode==="focus"?"FOCUS SESSION":"SHORE BREAK";
+ document.getElementById("focusStartBtn").textContent=focusRunning?"Ⅱ Pause":"▶ Start";
+ document.getElementById("focusToday").textContent=data.focusStats.today||0;
+ document.getElementById("focusMinutes").textContent=data.focusStats.minutes||0;
+ document.getElementById("focusTotal").textContent=data.focusStats.total||0;
+ [25,5,15].forEach(n=>{const b=document.getElementById("focusPreset"+n);if(b)b.classList.toggle("active",focusDuration===n)});
+}
+function setFocusPreset(minutes,mode){
+ if(focusInterval)clearInterval(focusInterval);focusInterval=null;focusRunning=false;focusDuration=minutes;focusRemaining=minutes*60;focusMode=mode;focusEndAt=0;renderFocus();
+}
+function toggleFocusTimer(){
+ if(focusRunning){if(focusInterval)clearInterval(focusInterval);focusInterval=null;focusRemaining=Math.max(0,Math.ceil((focusEndAt-Date.now())/1000));focusRunning=false;renderFocus();return}
+ if(focusRemaining<=0)focusRemaining=focusDuration*60;
+ focusRunning=true;focusEndAt=Date.now()+focusRemaining*1000;
+ focusInterval=setInterval(tickFocusTimer,250);renderFocus();
+}
+function tickFocusTimer(){
+ focusRemaining=Math.max(0,Math.ceil((focusEndAt-Date.now())/1000));renderFocus();
+ if(focusRemaining<=0){
+   clearInterval(focusInterval);focusInterval=null;focusRunning=false;
+   if(focusMode==="focus"){normalizeFocusStats();data.focusStats.today=(Number(data.focusStats.today)||0)+1;data.focusStats.total=(Number(data.focusStats.total)||0)+1;data.focusStats.minutes=(Number(data.focusStats.minutes)||0)+focusDuration;save();alert("Focus session complete! 🌊✨ Time for a shore break.")}
+   else alert("Break complete! 🌴 Ready when you are.");
+   renderFocus();
+ }
+}
+function resetFocusTimer(){if(focusInterval)clearInterval(focusInterval);focusInterval=null;focusRunning=false;focusRemaining=focusDuration*60;focusEndAt=0;renderFocus()}
 function classAssignmentsForDate(date){
  const out=[];
  (data.classes||[]).forEach((c,ci)=>(c.assignments||[]).forEach((a,ai)=>{
