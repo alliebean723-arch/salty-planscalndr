@@ -516,6 +516,11 @@ body.memory-open{overflow:hidden}
 .real-ambience-player{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
 .real-ambience-player iframe{width:100%;height:185px;border:0;border-radius:14px;background:#000}
 @media(max-width:760px){.real-ambience-player iframe{height:165px}}
+/* V5.23 Decor Packs */
+body.decor-sunset .topbar,body.decor-sunset .page-head{background:linear-gradient(90deg,rgba(255,222,198,.72),rgba(255,244,232,.28))}body.decor-sunset .card{box-shadow:0 8px 24px rgba(238,166,123,.22)}body.decor-sunset .main:before{content:"🌅";position:fixed;right:26px;bottom:24px;font-size:44px;opacity:.14;pointer-events:none}
+body.decor-moonlit .topbar,body.decor-moonlit .page-head{background:linear-gradient(90deg,rgba(218,218,246,.68),rgba(225,239,255,.25))}body.decor-moonlit .card{box-shadow:0 8px 24px rgba(112,107,181,.20)}body.decor-moonlit .main:before{content:"🌙 ✦";position:fixed;right:25px;bottom:24px;font-size:39px;opacity:.15;pointer-events:none}
+body.decor-tropical .topbar,body.decor-tropical .page-head{background:linear-gradient(90deg,rgba(211,246,224,.72),rgba(255,230,220,.30))}body.decor-tropical .card{box-shadow:0 8px 24px rgba(78,174,137,.20)}body.decor-tropical .main:before{content:"🌴 🌺";position:fixed;right:24px;bottom:24px;font-size:39px;opacity:.15;pointer-events:none}
+@media(max-width:760px){body.decor-sunset .main:before,body.decor-moonlit .main:before,body.decor-tropical .main:before{bottom:76px;right:12px;font-size:30px}}
 </style>
 </head>
 <body class="theme-ocean">
@@ -683,7 +688,7 @@ body.memory-open{overflow:hidden}
 </section>
 <section class="view" id="scrapbook">
 <h2 class="page-title">Memory Scrapbook 📸</h2>
-<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.22</span></p>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.23</span></p>
 <div class="card" style="padding:16px">
  <div class="eyebrow">ADD A MEMORY</div>
  <div class="scrap-form">
@@ -835,7 +840,7 @@ body.memory-open{overflow:hidden}
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},focusGoal:"",focusAmbience:"off",focusAmbienceVolume:35,sandDollars:100,shopOwned:[],shopLaunchGift:false,equippedFrame:"",dashboardStickers:[],sandRewarded:{tasks:[],focus:0,streak:[],achievements:[]},scrapbook:[],
+ xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},focusGoal:"",focusAmbience:"off",focusAmbienceVolume:35,sandDollars:100,shopOwned:[],shopLaunchGift:false,equippedFrame:"",equippedDecor:"",dashboardStickers:[],sandRewarded:{tasks:[],focus:0,streak:[],achievements:[]},scrapbook:[],
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -855,7 +860,7 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(typeof data.focusAmbience!=="string")data.focusAmbience="off";if(!["off","ocean","rain","fire","cafe"].includes(data.focusAmbience))data.focusAmbience="off";if(typeof data.focusAmbienceVolume!=="number")data.focusAmbienceVolume=35;if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";if(!Array.isArray(data.dashboardStickers))data.dashboardStickers=[];if(!Array.isArray(data.scrapbook))data.scrapbook=[];data.scrapbook=data.scrapbook.map(x=>({...x,stickers:Array.isArray(x.stickers)?x.stickers:[],favorite:!!x.favorite,pinned:!!x.pinned,layout:x.layout||"classic"}));if(!data.sandRewarded||typeof data.sandRewarded!=="object")data.sandRewarded={tasks:[],focus:0,streak:[],achievements:[]};["tasks","streak","achievements"].forEach(k=>{if(!Array.isArray(data.sandRewarded[k]))data.sandRewarded[k]=[]});if(typeof data.sandRewarded.focus!=="number")data.sandRewarded.focus=0;
+if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(typeof data.focusAmbience!=="string")data.focusAmbience="off";if(!["off","ocean","rain","fire","cafe"].includes(data.focusAmbience))data.focusAmbience="off";if(typeof data.focusAmbienceVolume!=="number")data.focusAmbienceVolume=35;if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";if(typeof data.equippedDecor!=="string")data.equippedDecor="";if(!Array.isArray(data.dashboardStickers))data.dashboardStickers=[];if(!Array.isArray(data.scrapbook))data.scrapbook=[];data.scrapbook=data.scrapbook.map(x=>({...x,stickers:Array.isArray(x.stickers)?x.stickers:[],favorite:!!x.favorite,pinned:!!x.pinned,layout:x.layout||"classic"}));if(!data.sandRewarded||typeof data.sandRewarded!=="object")data.sandRewarded={tasks:[],focus:0,streak:[],achievements:[]};["tasks","streak","achievements"].forEach(k=>{if(!Array.isArray(data.sandRewarded[k]))data.sandRewarded[k]=[]});if(typeof data.sandRewarded.focus!=="number")data.sandRewarded.focus=0;
 if(typeof data.sandDollars!=="number")data.sandDollars=0;
 if(!data.shopLaunchGift){data.sandDollars+=100;data.shopLaunchGift=true;save()}if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
@@ -1368,19 +1373,20 @@ const SHOP_ITEMS=[
  {id:"tropical_fish",icon:"🐠",name:"Tropical Fish Buddy",desc:"A colorful little friend for your collection.",price:60},
  {id:"sun_charm_shop",icon:"☀️",name:"Sunshine Charm",desc:"A bright golden charm for sunny planner days.",price:75},
  {id:"message_bottle",icon:"🍾",name:"Message in a Bottle",desc:"A mysterious beach treasure washed ashore.",price:90},
- {id:"sunset_pack",icon:"🌅",name:"Sunset Decor Pack",desc:"A future decorative pack for Salty Plans.",price:100},
- {id:"moonlight_pack",icon:"🌌",name:"Moonlit Decor Pack",desc:"A future dreamy nighttime decor set.",price:125},
- {id:"tropical_pack",icon:"🌺",name:"Tropical Decor Pack",desc:"A future bright tropical decor set.",price:125},
+ {id:"sunset_pack",icon:"🌅",name:"Sunset Decor Pack",desc:"A future decorative pack for Salty Plans.",price:100,type:"decor"},
+ {id:"moonlight_pack",icon:"🌌",name:"Moonlit Decor Pack",desc:"A future dreamy nighttime decor set.",price:125,type:"decor"},
+ {id:"tropical_pack",icon:"🌺",name:"Tropical Decor Pack",desc:"A future bright tropical decor set.",price:125,type:"decor"},
  {id:"golden_frame",icon:"👑",name:"Golden Coastal Frame",desc:"A glowing golden frame for your profile bubble.",price:150,type:"frame"}
 ];
 function renderShop(){
  const count=document.getElementById("sandDollarCount"),grid=document.getElementById("shopGrid");if(!count||!grid)return;
  count.textContent=Math.max(0,Number(data.sandDollars)||0);
  grid.innerHTML=SHOP_ITEMS.map(item=>{
-   const owned=data.shopOwned.includes(item.id),canBuy=(Number(data.sandDollars)||0)>=item.price,equipped=item.type==="frame"&&data.equippedFrame===item.id;
+   const owned=data.shopOwned.includes(item.id),canBuy=(Number(data.sandDollars)||0)>=item.price,equipped=(item.type==="frame"&&data.equippedFrame===item.id)||(item.type==="decor"&&data.equippedDecor===item.id);
    let action;
    if(!owned)action=`<button class="shop-buy" ${canBuy?"":"disabled"} onclick="buyShopItem('${item.id}')">${canBuy?"Buy":"Need more 🪙"}</button>`;
    else if(item.type==="frame")action=`<button class="shop-equip ${equipped?"is-equipped":""}" onclick="toggleShopFrame('${item.id}')">${equipped?"✓ Equipped":"Equip"}</button>`;
+   else if(item.type==="decor")action=`<button class="shop-equip ${equipped?"is-equipped":""}" onclick="toggleShopDecor('${item.id}')">${equipped?"✓ Equipped":"Equip"}</button>`;
    else action='<div class="shop-owned">✓ OWNED</div>';
    return `<div class="card shop-item"><div class="shop-icon">${item.icon}</div><h3>${item.name}</h3><p>${item.desc}</p><div class="shop-price">🪙 ${item.price}</div>${action}</div>`;
  }).join("");
@@ -1403,7 +1409,15 @@ function renderDashboardStickers(){
  }
  if(placed)placed.innerHTML=data.dashboardStickers.map((id,i)=>{const x=stickerItem(id);return x?`<button class="dashboard-sticker" title="Click to remove ${esc(x.name)}" onclick="removeDashboardSticker(${i})">${x.icon}</button>`:""}).join("");
 }
+function toggleShopDecor(id){
+ if(!data.shopOwned.includes(id))return;
+ data.equippedDecor=data.equippedDecor===id?"":id;save();applyShopCosmetics();renderShop();
+}
 function applyShopCosmetics(){
+ document.body.classList.remove("decor-sunset","decor-moonlit","decor-tropical");
+ if(data.equippedDecor==="sunset_pack")document.body.classList.add("decor-sunset");
+ if(data.equippedDecor==="moonlight_pack")document.body.classList.add("decor-moonlit");
+ if(data.equippedDecor==="tropical_pack")document.body.classList.add("decor-tropical");
  const avatar=document.querySelector(".avatar");if(!avatar)return;
  avatar.classList.remove("shop-frame-ocean","shop-frame-gold");
  if(data.equippedFrame==="ocean_frame")avatar.classList.add("shop-frame-ocean");
