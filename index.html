@@ -356,6 +356,36 @@ body.memory-open{overflow:hidden}
 .class-assignment-row{border-left:4px solid var(--class-color,#2f7f78);padding-left:7px}
 .class-assignment-label{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.72}
 
+
+/* V5.11.1 iPhone/mobile bottom-nav swipe fix */
+@media (max-width:760px){
+  .sidebar{
+    overflow:visible!important;
+  }
+  .sidebar .nav{
+    display:flex!important;
+    flex-direction:row!important;
+    flex-wrap:nowrap!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x proximity;
+    scrollbar-width:none;
+    gap:7px!important;
+    min-width:0!important;
+    padding-bottom:3px!important;
+  }
+  .sidebar .nav::-webkit-scrollbar{display:none}
+  .sidebar .nav button{
+    flex:0 0 auto!important;
+    width:auto!important;
+    min-width:max-content!important;
+    scroll-snap-align:start;
+    white-space:nowrap!important;
+  }
+}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -461,7 +491,7 @@ body.memory-open{overflow:hidden}
   </section>
 
   <section class="view" id="classes">
-<h2 class="page-title">Classes 🎓</h2><p class="page-sub">Your college schedule, Salty Plans style. <span style="font-size:10px;opacity:.6">V5.11</span></p>
+<h2 class="page-title">Classes 🎓</h2><p class="page-sub">Your college schedule, Salty Plans style. <span style="font-size:10px;opacity:.6">V5.11.1</span></p>
 <div class="card" style="margin-top:18px"><div class="eyebrow">ADD A CLASS</div>
 <div class="class-form"><input id="className" class="wide" placeholder="Class name · e.g. Introduction to Psychology"><input id="classProfessor" placeholder="Professor"><input id="classLocation" placeholder="Building / room"><input id="classDays" placeholder="Days · e.g. Mon, Wed, Fri"><input id="classTime" placeholder="Time · e.g. 10:00–10:50 AM"><select id="classColor" class="wide"><option value="#77bfd1">🌊 Ocean Blue</option><option value="#79bfa8">🫧 Sea Glass</option><option value="#e9a879">🌅 Sunset</option><option value="#e7a9bd">🌸 Coastal Pink</option><option value="#a9a0d7">🌙 Lavender Tide</option><option value="#e0bd63">☀️ Sunshine</option></select></div>
 <button class="primary" id="classSaveBtn" onclick="saveClass()" style="margin-top:12px">Add class 🎓</button> <button class="small-btn" id="classCancelBtn" onclick="cancelClassEdit()" style="display:none">Cancel</button></div>
