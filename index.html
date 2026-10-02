@@ -512,6 +512,10 @@ body.memory-open{overflow:hidden}
 .ambience-buttons{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.ambience-buttons button{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:10px;padding:8px 10px;font-size:10px;font-weight:800;cursor:pointer}.ambience-buttons button.active{background:#2f7f78;color:#fff;border-color:#2f7f78}
 .ambience-volume{display:flex;align-items:center;gap:8px;margin-top:12px}.ambience-volume input{flex:1;accent-color:#2f7f78}
 
+
+.real-ambience-player{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.real-ambience-player iframe{width:100%;height:185px;border:0;border-radius:14px;background:#000}
+@media(max-width:760px){.real-ambience-player iframe{height:165px}}
 </style>
 </head>
 <body class="theme-ocean">
@@ -657,20 +661,20 @@ body.memory-open{overflow:hidden}
    <div class="focus-note">🌊 Your timer keeps running while you move around Salty Plans.</div>
  </div>
  <div class="focus-ambience card">
-<div class="ambience-head"><div><div class="eyebrow">FOCUS AMBIENCE 🎧</div><div class="mini-note">Pick a background sound for your study sesh.</div></div><div class="ambience-now" id="ambienceNow">Off</div></div>
+<div class="ambience-head"><div><div class="eyebrow">REAL FOCUS AMBIENCE 🎧</div><div class="mini-note">Real recorded ambience from YouTube — these should sound WAY more different.</div></div><div class="ambience-now" id="ambienceNow">Off</div></div>
 <div class="ambience-buttons">
-<button onclick="setAmbience('ocean')" id="ambOcean">🌊 Ocean Waves</button>
-<button onclick="setAmbience('rain')" id="ambRain">🌧️ Rain</button>
-<button onclick="setAmbience('cafe')" id="ambCafe">☕ Café</button>
-<button onclick="setAmbience('night')" id="ambNight">🌙 Night Shore</button>
-<button onclick="setAmbience('fire')" id="ambFire">🔥 Cozy Fireplace</button>
-<button onclick="setAmbience('storm')" id="ambStorm">⛈️ Thunderstorm</button>
-<button onclick="setAmbience('forest')" id="ambForest">🌾 Sea Grass</button>
-<button onclick="setAmbience('brown')" id="ambBrown">🩵 Blue Noise</button>
-<button onclick="setAmbience('off')" id="ambOff">✕ Off</button>
+<button onclick="playRealAmbience('ocean')" id="ambOcean">🌊 Ocean Waves</button>
+<button onclick="playRealAmbience('rain')" id="ambRain">🌧️ Rain on Window</button>
+<button onclick="playRealAmbience('fire')" id="ambFire">🔥 Crackling Fireplace</button>
+<button onclick="playRealAmbience('cafe')" id="ambCafe">☕ Coffee Shop</button>
+<button onclick="playRealAmbience('off')" id="ambOff">✕ Off</button>
 </div>
-<div class="ambience-volume"><span>🔈</span><input id="ambienceVolume" type="range" min="0" max="100" value="35" oninput="setAmbienceVolume(this.value)"><span>🔊</span></div>
-</div><div class="focus-stats">
+<div id="realAmbiencePlayerWrap" class="real-ambience-player" style="display:none">
+<iframe id="realAmbiencePlayer" title="Focus ambience player" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<div class="mini-note" style="margin-top:7px">Use the YouTube player's volume control. Your Focus timer still runs normally while this plays.</div>
+</div>
+</div>
+<div class="focus-stats">
    <div class="card focus-stat"><strong id="focusToday">0</strong><span>SESSIONS TODAY</span></div>
    <div class="card focus-stat"><strong id="focusMinutes">0</strong><span>FOCUS MINUTES</span></div>
    <div class="card focus-stat"><strong id="focusTotal">0</strong><span>ALL-TIME SESSIONS</span></div>
@@ -679,7 +683,7 @@ body.memory-open{overflow:hidden}
 </section>
 <section class="view" id="scrapbook">
 <h2 class="page-title">Memory Scrapbook 📸</h2>
-<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.21.2</span></p>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.22</span></p>
 <div class="card" style="padding:16px">
  <div class="eyebrow">ADD A MEMORY</div>
  <div class="scrap-form">
@@ -851,7 +855,7 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(typeof data.focusAmbience!=="string")data.focusAmbience="off";if(typeof data.focusAmbienceVolume!=="number")data.focusAmbienceVolume=35;if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";if(!Array.isArray(data.dashboardStickers))data.dashboardStickers=[];if(!Array.isArray(data.scrapbook))data.scrapbook=[];data.scrapbook=data.scrapbook.map(x=>({...x,stickers:Array.isArray(x.stickers)?x.stickers:[],favorite:!!x.favorite,pinned:!!x.pinned,layout:x.layout||"classic"}));if(!data.sandRewarded||typeof data.sandRewarded!=="object")data.sandRewarded={tasks:[],focus:0,streak:[],achievements:[]};["tasks","streak","achievements"].forEach(k=>{if(!Array.isArray(data.sandRewarded[k]))data.sandRewarded[k]=[]});if(typeof data.sandRewarded.focus!=="number")data.sandRewarded.focus=0;
+if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(typeof data.focusAmbience!=="string")data.focusAmbience="off";if(!["off","ocean","rain","fire","cafe"].includes(data.focusAmbience))data.focusAmbience="off";if(typeof data.focusAmbienceVolume!=="number")data.focusAmbienceVolume=35;if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";if(!Array.isArray(data.dashboardStickers))data.dashboardStickers=[];if(!Array.isArray(data.scrapbook))data.scrapbook=[];data.scrapbook=data.scrapbook.map(x=>({...x,stickers:Array.isArray(x.stickers)?x.stickers:[],favorite:!!x.favorite,pinned:!!x.pinned,layout:x.layout||"classic"}));if(!data.sandRewarded||typeof data.sandRewarded!=="object")data.sandRewarded={tasks:[],focus:0,streak:[],achievements:[]};["tasks","streak","achievements"].forEach(k=>{if(!Array.isArray(data.sandRewarded[k]))data.sandRewarded[k]=[]});if(typeof data.sandRewarded.focus!=="number")data.sandRewarded.focus=0;
 if(typeof data.sandDollars!=="number")data.sandDollars=0;
 if(!data.shopLaunchGift){data.sandDollars+=100;data.shopLaunchGift=true;save()}if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
@@ -1416,48 +1420,28 @@ function buyShopItem(id){
  if(!confirm(`Buy ${item.name} for ${item.price} Sand Dollars?`))return;
  data.sandDollars-=item.price;data.shopOwned.push(id);save();renderShop();alert(`${item.icon} ${item.name} is yours!`);
 }
-let ambienceCtx=null,ambienceNodes=[];
-function stopAmbienceAudio(){ambienceNodes.forEach(n=>{try{n.stop&&n.stop()}catch(e){}try{n.disconnect&&n.disconnect()}catch(e){}});ambienceNodes=[]}
-function noiseBuffer(ctx,color="white"){
- const len=ctx.sampleRate*2,b=ctx.createBuffer(1,len,ctx.sampleRate),d=b.getChannelData(0);let last=0;
- for(let i=0;i<len;i++){const w=Math.random()*2-1;if(color==="brown"){last=(last+.02*w)/1.02;d[i]=last*3.5}else d[i]=w}
- return b;
-}
-function startAmbienceAudio(kind){
- stopAmbienceAudio();if(kind==="off")return;
- ambienceCtx=ambienceCtx||new (window.AudioContext||window.webkitAudioContext)();ambienceCtx.resume();
- const master=ambienceCtx.createGain();master.gain.value=(Number(data.focusAmbienceVolume)||35)/100*.32;master.connect(ambienceCtx.destination);ambienceNodes.push(master);
- const addNoise=(color,low,high,gain)=>{
-  const src=ambienceCtx.createBufferSource();src.buffer=noiseBuffer(ambienceCtx,color);src.loop=true;
-  const f=ambienceCtx.createBiquadFilter();f.type="bandpass";f.frequency.value=(low+high)/2;f.Q.value=Math.max(.25,(low+high)/(high-low));
-  const g=ambienceCtx.createGain();g.gain.value=gain;src.connect(f);f.connect(g);g.connect(master);src.start();ambienceNodes.push(src,f,g);
- };
- if(kind==="ocean"){addNoise("brown",80,900,.8);addNoise("white",500,1800,.12)}
- if(kind==="rain"){addNoise("white",900,6500,.38);addNoise("brown",80,700,.12)}
- if(kind==="cafe"){addNoise("brown",120,1200,.22);addNoise("white",500,2800,.07)}
- if(kind==="night"){addNoise("brown",60,650,.35);addNoise("white",1500,5000,.035)}
- if(kind==="brown"){addNoise("brown",45,900,.72)}
- if(kind==="fire"){
-   addNoise("brown",100,1200,.22);addNoise("white",1800,6000,.025);
-   const crack=ambienceCtx.createOscillator(),cg=ambienceCtx.createGain();crack.type="triangle";crack.frequency.value=48;cg.gain.value=.018;crack.connect(cg);cg.connect(master);crack.start();ambienceNodes.push(crack,cg)
+const REAL_AMBIENCE={
+ ocean:{name:"Ocean Waves 🌊",id:"IE0BcxlsWjo"},
+ rain:{name:"Rain on Window 🌧️",id:"c1XOgrBz6sU"},
+ fire:{name:"Crackling Fireplace 🔥",id:"eXtaM4QM4hk"},
+ cafe:{name:"Coffee Shop ☕",id:"X_iscLqRYkc"}
+};
+function playRealAmbience(kind){
+ const wrap=document.getElementById("realAmbiencePlayerWrap"),frame=document.getElementById("realAmbiencePlayer");
+ data.focusAmbience=kind;save();
+ if(kind==="off"){
+   if(frame)frame.src="about:blank";if(wrap)wrap.style.display="none";renderAmbience();return;
  }
- if(kind==="storm"){addNoise("white",350,7000,.32);addNoise("brown",45,500,.3)}
- if(kind==="forest"){
-   addNoise("brown",100,1400,.16);addNoise("white",2200,6500,.018);
-   const bird=ambienceCtx.createOscillator(),bg=ambienceCtx.createGain();bird.type="sine";bird.frequency.value=1450;bg.gain.value=.006;bird.connect(bg);bg.connect(master);bird.start();ambienceNodes.push(bird,bg)
- }
+ const item=REAL_AMBIENCE[kind];if(!item)return;
+ if(frame)frame.src=`https://www.youtube-nocookie.com/embed/${item.id}?autoplay=1&loop=1&playlist=${item.id}&playsinline=1&rel=0`;
+ if(wrap)wrap.style.display="block";renderAmbience();
 }
-function setAmbience(kind){
- data.focusAmbience=kind;save();startAmbienceAudio(kind);renderAmbience();
-}
-function setAmbienceVolume(v){
- data.focusAmbienceVolume=Number(v);save();
- if(data.focusAmbience!=="off")startAmbienceAudio(data.focusAmbience);
-}
+function setAmbience(kind){playRealAmbience(kind)}
+function setAmbienceVolume(v){data.focusAmbienceVolume=Number(v);save()}
 function renderAmbience(){
- const names={off:"Off",ocean:"Ocean Waves 🌊",rain:"Rain 🌧️",cafe:"Café ☕",night:"Night Shore 🌙",fire:"Cozy Fireplace 🔥",storm:"Thunderstorm ⛈️",forest:"Sea Grass 🌾",brown:"Blue Noise 🩵"};
- const now=document.getElementById("ambienceNow"),vol=document.getElementById("ambienceVolume");if(now)now.textContent=names[data.focusAmbience]||"Off";if(vol)vol.value=data.focusAmbienceVolume;
- const ids={ocean:"ambOcean",rain:"ambRain",cafe:"ambCafe",night:"ambNight",fire:"ambFire",storm:"ambStorm",forest:"ambForest",brown:"ambBrown",off:"ambOff"};
+ const now=document.getElementById("ambienceNow");
+ if(now)now.textContent=data.focusAmbience==="off"?"Off":(REAL_AMBIENCE[data.focusAmbience]?.name||"Off");
+ const ids={ocean:"ambOcean",rain:"ambRain",fire:"ambFire",cafe:"ambCafe",off:"ambOff"};
  Object.entries(ids).forEach(([k,id])=>{const b=document.getElementById(id);if(b)b.classList.toggle("active",data.focusAmbience===k)});
 }
 function updateFocusGoal(){
