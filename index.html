@@ -472,6 +472,11 @@ body.memory-open{overflow:hidden}
 @media(max-width:900px){.scrap-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.scrap-form{grid-template-columns:1fr}.scrap-form .wide{grid-column:auto}.scrap-grid{grid-template-columns:1fr}}
 
+
+/* V5.18.1 Real Scrapbook Photo Uploads */
+.scrap-photo-picker{display:inline-block;background:#2f7f78;color:#fff;border-radius:11px;padding:10px 14px;font-weight:900;cursor:pointer}
+.scrap-photo-preview{margin-top:10px;min-height:54px;border:1px dashed var(--line);border-radius:12px;background:var(--panel2);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:10px;color:var(--muted)}
+.scrap-photo-preview img{display:block;width:100%;max-height:220px;object-fit:cover}
 </style>
 </head>
 <body class="theme-ocean">
@@ -621,13 +626,17 @@ body.memory-open{overflow:hidden}
 </section>
 <section class="view" id="scrapbook">
 <h2 class="page-title">Memory Scrapbook 📸</h2>
-<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.18</span></p>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.18.1</span></p>
 <div class="card" style="padding:16px">
  <div class="eyebrow">ADD A MEMORY</div>
  <div class="scrap-form">
   <input id="scrapTitle" placeholder="Memory title">
   <input id="scrapDate" type="date">
-  <input class="wide" id="scrapPhoto" placeholder="Optional photo URL (we’ll add uploads next)">
+  <div class="wide">
+<label class="scrap-photo-picker" for="scrapPhotoFile">📷 Choose Photo</label>
+<input id="scrapPhotoFile" type="file" accept="image/*" onchange="previewScrapPhoto(event)" style="display:none">
+<div class="scrap-photo-preview" id="scrapPhotoPreview"><span>Optional — choose a photo from your device</span></div>
+</div>
   <textarea class="wide" id="scrapCaption" placeholder="Write a little caption or memory..."></textarea>
  </div>
  <button class="scrap-add" onclick="addScrapbookMemory()">＋ Add to Scrapbook</button>
@@ -1184,14 +1193,33 @@ function deleteEvent(i){
 }
 function closeModal(){document.getElementById("modalBack").classList.remove("open");editingEventIndex=-1}
 
+let pendingScrapPhoto="";
+function previewScrapPhoto(event){
+ const file=event.target.files&&event.target.files[0];if(!file){pendingScrapPhoto="";renderScrapPhotoPreview();return}
+ if(!file.type.startsWith("image/")){alert("Please choose an image file 📷");event.target.value="";return}
+ const reader=new FileReader();
+ reader.onload=e=>{const img=new Image();img.onload=()=>{
+  const maxSide=900,scale=Math.min(1,maxSide/Math.max(img.width,img.height));
+  const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+  canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+  pendingScrapPhoto=canvas.toDataURL("image/jpeg",0.72);renderScrapPhotoPreview();
+ };img.src=e.target.result};reader.readAsDataURL(file);
+}
+function renderScrapPhotoPreview(){
+ const p=document.getElementById("scrapPhotoPreview");if(!p)return;
+ p.innerHTML=pendingScrapPhoto?`<img src="${pendingScrapPhoto}" alt="Selected scrapbook photo">`:"<span>Optional — choose a photo from your device</span>";
+}
 function addScrapbookMemory(){
  const title=(document.getElementById("scrapTitle").value||"").trim();
  const date=document.getElementById("scrapDate").value||localDateKey();
- const photo=(document.getElementById("scrapPhoto").value||"").trim();
+ const photo=pendingScrapPhoto||"";
  const caption=(document.getElementById("scrapCaption").value||"").trim();
  if(!title&&!caption){alert("Give this memory a title or little caption first 📸");return}
- data.scrapbook.unshift({id:Date.now(),title,date,photo,caption});save();
- ["scrapTitle","scrapPhoto","scrapCaption"].forEach(id=>document.getElementById(id).value="");
+ data.scrapbook.unshift({id:Date.now(),title,date,photo,caption});
+ try{save()}catch(err){data.scrapbook.shift();alert("This photo is a little too large for your browser storage. Try a smaller photo 📷");return}
+ ["scrapTitle","scrapCaption"].forEach(id=>document.getElementById(id).value="");
+ const fileInput=document.getElementById("scrapPhotoFile");if(fileInput)fileInput.value="";
+ pendingScrapPhoto="";renderScrapPhotoPreview();
  document.getElementById("scrapDate").value=localDateKey();renderScrapbook();
 }
 function deleteScrapbookMemory(id){
