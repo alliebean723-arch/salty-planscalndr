@@ -351,6 +351,11 @@ body.memory-open{overflow:hidden}
   border:2px solid #7bbab0!important;
 }
 
+
+/* V5.11 Calendar-linked class assignments */
+.class-assignment-row{border-left:4px solid var(--class-color,#2f7f78);padding-left:7px}
+.class-assignment-label{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.72}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -456,7 +461,7 @@ body.memory-open{overflow:hidden}
   </section>
 
   <section class="view" id="classes">
-<h2 class="page-title">Classes 🎓</h2><p class="page-sub">Your college schedule, Salty Plans style. <span style="font-size:10px;opacity:.6">V5.10.3</span></p>
+<h2 class="page-title">Classes 🎓</h2><p class="page-sub">Your college schedule, Salty Plans style. <span style="font-size:10px;opacity:.6">V5.11</span></p>
 <div class="card" style="margin-top:18px"><div class="eyebrow">ADD A CLASS</div>
 <div class="class-form"><input id="className" class="wide" placeholder="Class name · e.g. Introduction to Psychology"><input id="classProfessor" placeholder="Professor"><input id="classLocation" placeholder="Building / room"><input id="classDays" placeholder="Days · e.g. Mon, Wed, Fri"><input id="classTime" placeholder="Time · e.g. 10:00–10:50 AM"><select id="classColor" class="wide"><option value="#77bfd1">🌊 Ocean Blue</option><option value="#79bfa8">🫧 Sea Glass</option><option value="#e9a879">🌅 Sunset</option><option value="#e7a9bd">🌸 Coastal Pink</option><option value="#a9a0d7">🌙 Lavender Tide</option><option value="#e0bd63">☀️ Sunshine</option></select></div>
 <button class="primary" id="classSaveBtn" onclick="saveClass()" style="margin-top:12px">Add class 🎓</button> <button class="small-btn" id="classCancelBtn" onclick="cancelClassEdit()" style="display:none">Cancel</button></div>
@@ -999,6 +1004,13 @@ function deleteEvent(i){
  if(confirm(`Delete "${data.events[i].name}"?`)){data.events.splice(i,1);save();render()}
 }
 function closeModal(){document.getElementById("modalBack").classList.remove("open");editingEventIndex=-1}
+function classAssignmentsForDate(date){
+ const out=[];
+ (data.classes||[]).forEach((c,ci)=>(c.assignments||[]).forEach((a,ai)=>{
+   if(a.due===date)out.push({...a,_classIndex:ci,_assignmentIndex:ai,_className:c.name||"Class",_classColor:c.color||"#2f7f78"});
+ }));
+ return out;
+}
 function renderCalendar(){
  const y=current.getFullYear(),m=current.getMonth();document.querySelectorAll("#monthLabel,#monthLabel2").forEach(e=>e.textContent=current.toLocaleDateString(undefined,{month:"long",year:"numeric"}));
  const first=new Date(y,m,1),start=(first.getDay()+6)%7,last=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
@@ -1006,16 +1018,27 @@ function renderCalendar(){
  for(let i=0;i<42;i++){let n=i-start+1,day=n,muted=false,yy=y,mm=m;if(n<=0){day=prev+n;muted=true;mm=m-1}else if(n>last){day=n-last;muted=true;mm=m+1}
   const cellDate=new Date(yy,mm,day), cy=cellDate.getFullYear(), cm=cellDate.getMonth(), cd=cellDate.getDate();
   const iso=`${cy}-${String(cm+1).padStart(2,"0")}-${String(cd).padStart(2,"0")}`;
-  const ev=data.events.filter(e=>e.date===iso); cells+=`<div class="day ${muted?"muted":""} ${iso===selected?"today":""}" onclick="selectDate('${iso}')"><span class="num">${day}</span>${ev.slice(0,2).map(e=>`<span class="event-dot ${e.type}">${esc(e.name)}</span>`).join("")}</div>`;
+  const ev=data.events.filter(e=>e.date===iso);
+  const assignments=classAssignmentsForDate(iso);
+  const calendarItems=[
+    ...ev.map(e=>`<span class="event-dot ${e.type}">${esc(e.name)}</span>`),
+    ...assignments.map(a=>`<span class="event-dot" style="background:${a._classColor};color:white">${a.done?"✓ ":"📚 "}${esc(a.title)}</span>`)
+  ];
+  cells+=`<div class="day ${muted?"muted":""} ${iso===selected?"today":""}" onclick="selectDate('${iso}')"><span class="num">${day}</span>${calendarItems.slice(0,2).join("")}</div>`;
  }
  const grid=`<div class="weekdays">${["MON","TUE","WED","THU","FRI","SAT","SUN"].map(x=>`<div>${x}</div>`).join("")}</div><div class="days">${cells}</div>`;
  ["calendarGrid","calendarGrid2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=grid});
  document.querySelectorAll("#selectedDateLabel,#selectedDateLabel2").forEach(e=>e.textContent=fmtDate(new Date(selected+"T12:00:00")));
  const evs=data.events.map((e,index)=>({...e,_index:index})).filter(e=>e.date===selected).sort((a,b)=>(a.start||"").localeCompare(b.start||""));
- const plansHTML=evs.length?evs.map(e=>{
+ const assignments=classAssignmentsForDate(selected);
+ const eventHTML=evs.map(e=>{
    const time=e.start?(e.end?`${e.start}–${e.end}`:e.start):"Anytime";
    return `<div class="plan-row"><span class="time">${time}</span><span class="event-dot ${e.type}" style="flex:1">${esc(e.name)}</span><span class="event-actions"><button class="icon-btn" title="Edit" onclick="openEventModal(${e._index})">✎</button><button class="icon-btn" title="Delete" onclick="deleteEvent(${e._index})">×</button></span></div>${e.note?`<div class="event-note">📝 ${esc(e.note)}</div>`:""}`;
- }).join(""):`<div class="mini-note">No plans yet — a little breathing room ♡</div>`;
+ }).join("");
+ const assignmentHTML=assignments.map(a=>`<div class="class-assignment-row" style="--class-color:${a._classColor}">
+   <div class="plan-row"><span class="time">Due</span><span style="flex:1"><span class="class-assignment-label">🎓 ${esc(a._className)} · ${esc(a.type||"Assignment")}</span><br><strong style="${a.done?"text-decoration:line-through;opacity:.6":""}">${a.done?"✓ ":""}${esc(a.title)}</strong></span><span class="event-actions"><button class="assignment-done-btn ${a.done?"is-done":""}" onclick="toggleAssignment(${a._classIndex},${a._assignmentIndex})">${a.done?"↩ Undo":"✓ Done"}</button></span></div>
+ </div>`).join("");
+ const plansHTML=(eventHTML||assignmentHTML)?eventHTML+assignmentHTML:`<div class="mini-note">No plans yet — a little breathing room ♡</div>`;
  document.querySelectorAll("#planList,#planList2").forEach(e=>e.innerHTML=plansHTML);
 }
 function selectDate(iso){selected=iso;renderCalendar()}
