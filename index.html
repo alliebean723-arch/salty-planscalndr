@@ -516,11 +516,25 @@ body.memory-open{overflow:hidden}
 .real-ambience-player{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
 .real-ambience-player iframe{width:100%;height:185px;border:0;border-radius:14px;background:#000}
 @media(max-width:760px){.real-ambience-player iframe{height:165px}}
-/* V5.23 Decor Packs */
-body.decor-sunset .topbar,body.decor-sunset .page-head{background:linear-gradient(90deg,rgba(255,222,198,.72),rgba(255,244,232,.28))}body.decor-sunset .card{box-shadow:0 8px 24px rgba(238,166,123,.22)}body.decor-sunset .main:before{content:"🌅";position:fixed;right:26px;bottom:24px;font-size:44px;opacity:.14;pointer-events:none}
-body.decor-moonlit .topbar,body.decor-moonlit .page-head{background:linear-gradient(90deg,rgba(218,218,246,.68),rgba(225,239,255,.25))}body.decor-moonlit .card{box-shadow:0 8px 24px rgba(112,107,181,.20)}body.decor-moonlit .main:before{content:"🌙 ✦";position:fixed;right:25px;bottom:24px;font-size:39px;opacity:.15;pointer-events:none}
-body.decor-tropical .topbar,body.decor-tropical .page-head{background:linear-gradient(90deg,rgba(211,246,224,.72),rgba(255,230,220,.30))}body.decor-tropical .card{box-shadow:0 8px 24px rgba(78,174,137,.20)}body.decor-tropical .main:before{content:"🌴 🌺";position:fixed;right:24px;bottom:24px;font-size:39px;opacity:.15;pointer-events:none}
-@media(max-width:760px){body.decor-sunset .main:before,body.decor-moonlit .main:before,body.decor-tropical .main:before{bottom:76px;right:12px;font-size:30px}}
+/* V5.23.2 Vibrant Decor Packs */
+body.decor-sunset{background:linear-gradient(135deg,#fff8f0 0%,#ffe1d1 48%,#ffd4dc 100%) fixed}
+body.decor-sunset .sidebar{background:linear-gradient(180deg,#fff5ec,#ffd8c2)!important}
+body.decor-sunset .topbar,body.decor-sunset .page-head{background:linear-gradient(90deg,rgba(255,177,118,.50),rgba(255,207,173,.55),rgba(244,151,174,.34))!important}
+body.decor-sunset .card{border-color:rgba(232,135,101,.28)!important;box-shadow:0 9px 26px rgba(230,123,92,.18)}
+body.decor-sunset .main:before{content:"☀️  🌅  ✦";position:fixed;right:24px;bottom:22px;font-size:46px;letter-spacing:6px;opacity:.20;pointer-events:none}
+
+body.decor-moonlit{background:linear-gradient(135deg,#f5f2ff 0%,#dfe5ff 48%,#ddd0f6 100%) fixed}
+body.decor-moonlit .sidebar{background:linear-gradient(180deg,#f1efff,#d8d9f6)!important}
+body.decor-moonlit .topbar,body.decor-moonlit .page-head{background:linear-gradient(90deg,rgba(123,118,202,.38),rgba(161,173,230,.42),rgba(192,166,222,.34))!important}
+body.decor-moonlit .card{border-color:rgba(114,108,188,.26)!important;box-shadow:0 9px 28px rgba(91,88,165,.18)}
+body.decor-moonlit .main:before{content:"🌙  ✦  ⭐";position:fixed;right:24px;bottom:22px;font-size:43px;letter-spacing:8px;opacity:.22;pointer-events:none}
+
+body.decor-tropical{background:linear-gradient(135deg,#f0fff8 0%,#ccefdc 48%,#ffe1d8 100%) fixed}
+body.decor-tropical .sidebar{background:linear-gradient(180deg,#effff6,#ccebd8)!important}
+body.decor-tropical .topbar,body.decor-tropical .page-head{background:linear-gradient(90deg,rgba(74,188,145,.40),rgba(130,218,172,.42),rgba(255,164,157,.30))!important}
+body.decor-tropical .card{border-color:rgba(61,161,124,.26)!important;box-shadow:0 9px 27px rgba(45,148,111,.17)}
+body.decor-tropical .main:before{content:"🌴  🌺  ☀️";position:fixed;right:24px;bottom:22px;font-size:43px;letter-spacing:6px;opacity:.21;pointer-events:none}
+@media(max-width:760px){body.decor-sunset .main:before,body.decor-moonlit .main:before,body.decor-tropical .main:before{bottom:76px;right:12px;font-size:30px}}}
 /* V5.23.1 Decor preview */
 .shop-decor-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}.shop-preview{border:1px solid #2f7f78;background:transparent;color:#2f7f78;border-radius:10px;padding:8px 11px;font-size:10px;font-weight:900;cursor:pointer}.shop-preview:hover,.shop-preview.is-previewing{background:#d9eee9}
 </style>
@@ -690,7 +704,7 @@ body.decor-tropical .topbar,body.decor-tropical .page-head{background:linear-gra
 </section>
 <section class="view" id="scrapbook">
 <h2 class="page-title">Memory Scrapbook 📸</h2>
-<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.23.1</span></p>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.23.2</span></p>
 <div class="card" style="padding:16px">
  <div class="eyebrow">ADD A MEMORY</div>
  <div class="scrap-form">
@@ -1386,10 +1400,10 @@ function renderShop(){
  grid.innerHTML=SHOP_ITEMS.map(item=>{
    const owned=data.shopOwned.includes(item.id),canBuy=(Number(data.sandDollars)||0)>=item.price,equipped=(item.type==="frame"&&data.equippedFrame===item.id)||(item.type==="decor"&&data.equippedDecor===item.id);
    let action;
-   if(!owned&&item.type==="decor")action=`<div class="shop-decor-actions"><button class="shop-buy" ${canBuy?"":"disabled"} onclick="buyShopItem('${item.id}')">${canBuy?"Buy":"Need more 🪙"}</button><button class="shop-preview ${previewDecor===item.id?"is-previewing":""}" onclick="previewShopDecor('${item.id}')">${previewDecor===item.id?"✕ End Preview":"👀 Preview"}</button></div>`;
+   if(!owned&&item.type==="decor")action=`<div class="shop-decor-actions"><button class="shop-buy" ${canBuy?"":"disabled"} onclick="buyShopItem('${item.id}')">${canBuy?"Buy":"Need more 🪙"}</button><button class="shop-preview ${previewDecor===item.id?"is-previewing":""}" onclick="previewShopDecor('${item.id}')">${previewDecor===item.id?"⏳ Previewing…":"👀 Preview 15s"}</button></div>`;
    else if(!owned)action=`<button class="shop-buy" ${canBuy?"":"disabled"} onclick="buyShopItem('${item.id}')">${canBuy?"Buy":"Need more 🪙"}</button>`;
    else if(item.type==="frame")action=`<button class="shop-equip ${equipped?"is-equipped":""}" onclick="toggleShopFrame('${item.id}')">${equipped?"✓ Equipped":"Equip"}</button>`;
-   else if(item.type==="decor")action=`<div class="shop-decor-actions"><button class="shop-equip ${equipped?"is-equipped":""}" onclick="toggleShopDecor('${item.id}')">${equipped?"✓ Equipped":"Equip"}</button><button class="shop-preview ${previewDecor===item.id?"is-previewing":""}" onclick="previewShopDecor('${item.id}')">${previewDecor===item.id?"✕ End Preview":"👀 Preview"}</button></div>`;
+   else if(item.type==="decor")action=`<div class="shop-decor-actions"><button class="shop-equip ${equipped?"is-equipped":""}" onclick="toggleShopDecor('${item.id}')">${equipped?"✓ Equipped":"Equip"}</button><button class="shop-preview ${previewDecor===item.id?"is-previewing":""}" onclick="previewShopDecor('${item.id}')">${previewDecor===item.id?"⏳ Previewing…":"👀 Preview 15s"}</button></div>`;
    else action='<div class="shop-owned">✓ OWNED</div>';
    return `<div class="card shop-item"><div class="shop-icon">${item.icon}</div><h3>${item.name}</h3><p>${item.desc}</p><div class="shop-price">🪙 ${item.price}</div>${action}</div>`;
  }).join("");
@@ -1412,11 +1426,16 @@ function renderDashboardStickers(){
  }
  if(placed)placed.innerHTML=data.dashboardStickers.map((id,i)=>{const x=stickerItem(id);return x?`<button class="dashboard-sticker" title="Click to remove ${esc(x.name)}" onclick="removeDashboardSticker(${i})">${x.icon}</button>`:""}).join("");
 }
-let previewDecor="";
+let previewDecor="",previewDecorTimer=null;
+function endShopDecorPreview(){
+ if(previewDecorTimer){clearTimeout(previewDecorTimer);previewDecorTimer=null}
+ previewDecor="";applyShopCosmetics();renderShop();
+}
 function previewShopDecor(id){
- previewDecor=previewDecor===id?"":id;
- applyShopCosmetics();
- renderShop();
+ if(previewDecor===id){endShopDecorPreview();return}
+ if(previewDecorTimer)clearTimeout(previewDecorTimer);
+ previewDecor=id;applyShopCosmetics();renderShop();
+ previewDecorTimer=setTimeout(()=>{endShopDecorPreview()},15000);
 }
 function activeDecor(){return previewDecor||data.equippedDecor}
 function toggleShopDecor(id){
