@@ -495,6 +495,16 @@ body.memory-open{overflow:hidden}
 .scrap-layout-select{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:9px;padding:6px;font-size:10px}
 @media(max-width:560px){.scrap-card.layout-wide{grid-column:span 1}}
 
+
+/* V5.20 Assignment Hub + Scrollable Sidebar */
+.class-hub{padding:15px;margin:12px 0 16px}.class-hub-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.hub-tabs{display:flex;gap:6px;flex-wrap:wrap}.hub-tabs button{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:9px;padding:7px 9px;font-size:10px;font-weight:800;cursor:pointer}.hub-tabs button.active{background:#2f7f78;color:#fff;border-color:#2f7f78}
+.hub-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}.hub-row:first-child{margin-top:10px}.hub-title{font-size:12px;font-weight:900}.hub-meta{font-size:9px;color:var(--muted);margin-top:3px}.hub-due{font-size:10px;font-weight:900}.hub-empty{font-size:11px;color:var(--muted);padding:13px 0}
+.sidebar{display:flex!important;flex-direction:column!important;height:100vh!important;overflow:hidden!important}
+.sidebar .nav{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain;scrollbar-width:thin}
+.sidebar .side-bottom{flex:0 0 auto!important}
+@media(max-width:760px){.sidebar{height:auto!important;overflow:visible!important}.sidebar .nav{overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important}}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -606,7 +616,11 @@ body.memory-open{overflow:hidden}
   </section>
 
   <section class="view" id="classes">
-<h2 class="page-title">Classes 🎓</h2><p class="page-sub">Your college schedule, Salty Plans style. <span style="font-size:10px;opacity:.6">V5.11.2</span></p>
+<h2 class="page-title">Classes 🎓</h2><p class="page-sub">Your college schedule, Salty Plans style. <span style="font-size:10px;opacity:.6">V5.11.2</span></p><div class="class-hub card">
+<div class="class-hub-head"><div><div class="eyebrow">ASSIGNMENT HUB</div><div class="mini-note">Everything from your classes, all in one place 📚</div></div>
+<div class="hub-tabs"><button onclick="setAssignmentHubFilter('all')" id="hubAll">All</button><button onclick="setAssignmentHubFilter('soon')" id="hubSoon">Due Soon</button><button onclick="setAssignmentHubFilter('overdue')" id="hubOverdue">Overdue</button><button onclick="setAssignmentHubFilter('done')" id="hubDone">Completed</button></div></div>
+<div id="assignmentHub"></div>
+</div>
 <div class="card" style="margin-top:18px"><div class="eyebrow">ADD A CLASS</div>
 <div class="class-form"><input id="className" class="wide" placeholder="Class name · e.g. Introduction to Psychology"><input id="classProfessor" placeholder="Professor"><input id="classLocation" placeholder="Building / room"><input id="classDays" placeholder="Days · e.g. Mon, Wed, Fri"><input id="classTime" placeholder="Time · e.g. 10:00–10:50 AM"><select id="classColor" class="wide"><option value="#77bfd1">🌊 Ocean Blue</option><option value="#79bfa8">🫧 Sea Glass</option><option value="#e9a879">🌅 Sunset</option><option value="#e7a9bd">🌸 Coastal Pink</option><option value="#a9a0d7">🌙 Lavender Tide</option><option value="#e0bd63">☀️ Sunshine</option></select></div>
 <button class="primary" id="classSaveBtn" onclick="saveClass()" style="margin-top:12px">Add class 🎓</button> <button class="small-btn" id="classCancelBtn" onclick="cancelClassEdit()" style="display:none">Cancel</button></div>
@@ -644,7 +658,7 @@ body.memory-open{overflow:hidden}
 </section>
 <section class="view" id="scrapbook">
 <h2 class="page-title">Memory Scrapbook 📸</h2>
-<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.19</span></p>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.20</span></p>
 <div class="card" style="padding:16px">
  <div class="eyebrow">ADD A MEMORY</div>
  <div class="scrap-form">
@@ -1083,6 +1097,25 @@ function renderGameRoom(){
 }
 function goToRoom(id){const btn=document.querySelector(`.nav button[data-view="${id}"]`);if(btn)btn.click()}
 let editingClassIndex=null;
+let assignmentHubFilter="all";
+function setAssignmentHubFilter(f){assignmentHubFilter=f;renderAssignmentHub()}
+function assignmentHubItems(){
+ const out=[];(data.classes||[]).forEach((c,ci)=>(c.assignments||[]).forEach((a,ai)=>out.push({...a,className:c.name||"Class",classColor:c.color||"#77bfd1",ci,ai})));
+ return out.sort((a,b)=>(a.done-b.done)||String(a.due||"9999-99-99").localeCompare(String(b.due||"9999-99-99")));
+}
+function renderAssignmentHub(){
+ const box=document.getElementById("assignmentHub");if(!box)return;
+ ["all","soon","overdue","done"].forEach(f=>{const b=document.getElementById("hub"+f[0].toUpperCase()+f.slice(1));if(b)b.classList.toggle("active",assignmentHubFilter===f)});
+ const today=localDateKey(),limit=new Date();limit.setDate(limit.getDate()+7);const soonKey=localDateKey(limit);
+ let items=assignmentHubItems().filter(a=>{
+  if(assignmentHubFilter==="done")return !!a.done;
+  if(assignmentHubFilter==="overdue")return !a.done&&a.due&&a.due<today;
+  if(assignmentHubFilter==="soon")return !a.done&&a.due&&a.due>=today&&a.due<=soonKey;
+  return true;
+ });
+ if(!items.length){box.innerHTML='<div class="hub-empty">Nothing here right now 🌊</div>';return}
+ box.innerHTML=items.map(a=>`<div class="hub-row"><div><div class="hub-title">${a.done?"✓ ":""}${esc(a.title||"Untitled assignment")}</div><div class="hub-meta"><span style="color:${a.classColor}">●</span> ${esc(a.className)} • ${esc(a.type||"Assignment")}</div></div><div class="hub-due">${a.due?esc(a.due):"No due date"}</div></div>`).join("");
+}
 function renderClasses(){
  const grid=document.getElementById("classGrid");if(!grid)return;
  if(!data.classes.length){grid.innerHTML='<div class="class-empty">🎓 No classes yet. Add your first one above!</div>';return}
@@ -1131,7 +1164,7 @@ function render(){
  document.getElementById("todoDonePill").textContent=`${done}/${total} done`; document.getElementById("todoBadge").textContent=total-done;
  document.getElementById("badgeCount").textContent=data.badges;
  renderTodos(); renderGoals(); renderCalendar(); renderBrain(); renderPersonalization(); renderShells(); renderAchievements(); renderGameRoom();
-renderClasses(); renderShop(); applyShopCosmetics(); renderDashboardStickers(); renderScrapbook(); sandRewardCheck();}
+renderClasses(); renderAssignmentHub(); renderShop(); applyShopCosmetics(); renderDashboardStickers(); renderScrapbook(); sandRewardCheck();}
 function renderTodos(){
  const html=data.todos.map((t,i)=>`<div class="todo ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span>${esc(t.text)}</span><span class="todo-actions"><button class="icon-btn" title="Edit" onclick="editTodo(${i})">✎</button><button class="icon-btn" title="Delete" onclick="deleteTodo(${i})">×</button></span></div>`).join("");
  ["todoList","todoList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
