@@ -477,6 +477,24 @@ body.memory-open{overflow:hidden}
 .scrap-photo-picker{display:inline-block;background:#2f7f78;color:#fff;border-radius:11px;padding:10px 14px;font-weight:900;cursor:pointer}
 .scrap-photo-preview{margin-top:10px;min-height:54px;border:1px dashed var(--line);border-radius:12px;background:var(--panel2);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:10px;color:var(--muted)}
 .scrap-photo-preview img{display:block;width:100%;max-height:220px;object-fit:cover}
+
+/* V5.19 Scrapbook Deluxe */
+.scrap-toolbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.scrap-tool{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:9px;padding:6px 8px;font-size:10px;font-weight:800;cursor:pointer}
+.scrap-tool.active{background:#fff1bf;border-color:#dfbd5c}
+.scrap-sticker-tray{display:none;margin-top:8px;padding:9px;border-radius:11px;background:var(--panel2);border:1px solid var(--line)}
+.scrap-sticker-tray.open{display:flex;gap:6px;flex-wrap:wrap}
+.scrap-mini-sticker{font-size:20px;border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:5px 7px;cursor:pointer}
+.scrap-card-stickers{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.scrap-card-sticker{font-size:20px;border:0;background:transparent;cursor:pointer;padding:2px}
+.scrap-card.pinned{box-shadow:0 0 0 2px #e2c05f,0 8px 24px rgba(0,0,0,.08)}
+.scrap-card.layout-polaroid{padding:16px 16px 26px;background:#fff;color:#24333a}
+.scrap-card.layout-polaroid .scrap-photo{height:190px;border-radius:2px}
+.scrap-card.layout-wide{grid-column:span 2;transform:none}
+.scrap-card.layout-wide .scrap-photo{height:220px}
+.scrap-layout-select{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:9px;padding:6px;font-size:10px}
+@media(max-width:560px){.scrap-card.layout-wide{grid-column:span 1}}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -626,7 +644,7 @@ body.memory-open{overflow:hidden}
 </section>
 <section class="view" id="scrapbook">
 <h2 class="page-title">Memory Scrapbook 📸</h2>
-<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.18.1</span></p>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.19</span></p>
 <div class="card" style="padding:16px">
  <div class="eyebrow">ADD A MEMORY</div>
  <div class="scrap-form">
@@ -798,7 +816,7 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";if(!Array.isArray(data.dashboardStickers))data.dashboardStickers=[];if(!Array.isArray(data.scrapbook))data.scrapbook=[];if(!data.sandRewarded||typeof data.sandRewarded!=="object")data.sandRewarded={tasks:[],focus:0,streak:[],achievements:[]};["tasks","streak","achievements"].forEach(k=>{if(!Array.isArray(data.sandRewarded[k]))data.sandRewarded[k]=[]});if(typeof data.sandRewarded.focus!=="number")data.sandRewarded.focus=0;
+if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";if(!Array.isArray(data.dashboardStickers))data.dashboardStickers=[];if(!Array.isArray(data.scrapbook))data.scrapbook=[];data.scrapbook=data.scrapbook.map(x=>({...x,stickers:Array.isArray(x.stickers)?x.stickers:[],favorite:!!x.favorite,pinned:!!x.pinned,layout:x.layout||"classic"}));if(!data.sandRewarded||typeof data.sandRewarded!=="object")data.sandRewarded={tasks:[],focus:0,streak:[],achievements:[]};["tasks","streak","achievements"].forEach(k=>{if(!Array.isArray(data.sandRewarded[k]))data.sandRewarded[k]=[]});if(typeof data.sandRewarded.focus!=="number")data.sandRewarded.focus=0;
 if(typeof data.sandDollars!=="number")data.sandDollars=0;
 if(!data.shopLaunchGift){data.sandDollars+=100;data.shopLaunchGift=true;save()}if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
@@ -1215,22 +1233,53 @@ function addScrapbookMemory(){
  const photo=pendingScrapPhoto||"";
  const caption=(document.getElementById("scrapCaption").value||"").trim();
  if(!title&&!caption){alert("Give this memory a title or little caption first 📸");return}
- data.scrapbook.unshift({id:Date.now(),title,date,photo,caption});
+ data.scrapbook.unshift({id:Date.now(),title,date,photo,caption,stickers:[],favorite:false,pinned:false,layout:"classic"});
  try{save()}catch(err){data.scrapbook.shift();alert("This photo is a little too large for your browser storage. Try a smaller photo 📷");return}
  ["scrapTitle","scrapCaption"].forEach(id=>document.getElementById(id).value="");
  const fileInput=document.getElementById("scrapPhotoFile");if(fileInput)fileInput.value="";
  pendingScrapPhoto="";renderScrapPhotoPreview();
  document.getElementById("scrapDate").value=localDateKey();renderScrapbook();
 }
+function scrapbookEntry(id){return data.scrapbook.find(x=>Number(x.id)===Number(id))}
 function deleteScrapbookMemory(id){
  if(!confirm("Remove this memory from your scrapbook?"))return;
- data.scrapbook=data.scrapbook.filter(x=>x.id!==id);save();renderScrapbook();
+ data.scrapbook=data.scrapbook.filter(x=>Number(x.id)!==Number(id));save();renderScrapbook();
 }
+function toggleScrapFavorite(id){const x=scrapbookEntry(id);if(!x)return;x.favorite=!x.favorite;save();renderScrapbook()}
+function toggleScrapPin(id){const x=scrapbookEntry(id);if(!x)return;x.pinned=!x.pinned;save();renderScrapbook()}
+function setScrapLayout(id,layout){const x=scrapbookEntry(id);if(!x)return;x.layout=["classic","polaroid","wide"].includes(layout)?layout:"classic";save();renderScrapbook()}
+function toggleScrapStickerTray(id){const el=document.getElementById(`scrapTray${id}`);if(el)el.classList.toggle("open")}
+function addScrapSticker(id,stickerId){const x=scrapbookEntry(id);if(!x||!data.shopOwned.includes(stickerId)||!DASHBOARD_STICKER_IDS.includes(stickerId))return;x.stickers.push(stickerId);save();renderScrapbook()}
+function removeScrapSticker(id,index){const x=scrapbookEntry(id);if(!x)return;x.stickers.splice(index,1);save();renderScrapbook()}
 function renderScrapbook(){
  const grid=document.getElementById("scrapGrid");if(!grid)return;
  const date=document.getElementById("scrapDate");if(date&&!date.value)date.value=localDateKey();
  if(!data.scrapbook.length){grid.innerHTML='<div class="card" style="padding:18px;font-size:11px;color:var(--muted)">Your scrapbook is waiting for its first memory 🌅📷</div>';return}
- grid.innerHTML=data.scrapbook.map(x=>`<div class="card scrap-card"><div class="scrap-photo">${x.photo?`<img src="${esc(x.photo)}" alt="">`:"📷"}</div><div class="scrap-date">${esc(x.date||"")}</div><div class="scrap-title">${esc(x.title||"Untitled memory")}</div><div class="scrap-caption">${esc(x.caption||"")}</div><div class="scrap-actions"><button class="scrap-delete" onclick="deleteScrapbookMemory(${Number(x.id)})">Delete</button></div></div>`).join("");
+ const memories=[...data.scrapbook].sort((a,b)=>(Number(b.pinned)-Number(a.pinned))||(Number(b.favorite)-Number(a.favorite)));
+ const ownedStickers=DASHBOARD_STICKER_IDS.filter(id=>data.shopOwned.includes(id));
+ grid.innerHTML=memories.map(x=>{
+   const id=Number(x.id),layout=x.layout||"classic";
+   const stickerButtons=ownedStickers.length?ownedStickers.map(sid=>{const st=stickerItem(sid);return `<button class="scrap-mini-sticker" title="${esc(st.name)}" onclick="addScrapSticker(${id},'${sid}')">${st.icon}</button>`}).join(""):'<span class="sticker-empty">Buy stickers in the Beach Shop first 🏝️</span>';
+   const placed=(x.stickers||[]).map((sid,i)=>{const st=stickerItem(sid);return st?`<button class="scrap-card-sticker" title="Click to remove" onclick="removeScrapSticker(${id},${i})">${st.icon}</button>`:""}).join("");
+   return `<div class="card scrap-card layout-${layout} ${x.pinned?"pinned":""}">
+    <div class="scrap-photo">${x.photo?`<img src="${x.photo}" alt="">`:"📷"}</div>
+    <div class="scrap-date">${esc(x.date||"")}</div><div class="scrap-title">${x.favorite?"💗 ":""}${esc(x.title||"Untitled memory")}${x.pinned?" 📌":""}</div>
+    <div class="scrap-caption">${esc(x.caption||"")}</div>
+    <div class="scrap-card-stickers">${placed}</div>
+    <div class="scrap-toolbar">
+      <button class="scrap-tool ${x.favorite?"active":""}" onclick="toggleScrapFavorite(${id})">💗 Favorite</button>
+      <button class="scrap-tool ${x.pinned?"active":""}" onclick="toggleScrapPin(${id})">📌 Pin</button>
+      <button class="scrap-tool" onclick="toggleScrapStickerTray(${id})">🎨 Stickers</button>
+      <select class="scrap-layout-select" onchange="setScrapLayout(${id},this.value)">
+       <option value="classic" ${layout==="classic"?"selected":""}>Classic</option>
+       <option value="polaroid" ${layout==="polaroid"?"selected":""}>Polaroid</option>
+       <option value="wide" ${layout==="wide"?"selected":""}>Wide</option>
+      </select>
+      <button class="scrap-tool" onclick="deleteScrapbookMemory(${id})">Delete</button>
+    </div>
+    <div class="scrap-sticker-tray" id="scrapTray${id}">${stickerButtons}</div>
+   </div>`;
+ }).join("");
 }
 function awardSandDollars(amount,msg){
  amount=Math.max(0,Number(amount)||0);if(!amount)return;
