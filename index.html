@@ -442,6 +442,13 @@ body.memory-open{overflow:hidden}
 @media(max-width:900px){.shop-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.shop-grid{grid-template-columns:1fr}.shop-top{align-items:flex-start;flex-direction:column}}
 
+
+/* V5.15 Equip Shop Cosmetics */
+.avatar.shop-frame-ocean{box-shadow:0 0 0 4px #8fd4df,0 0 0 7px rgba(255,255,255,.9),0 4px 14px rgba(47,127,120,.22)}
+.avatar.shop-frame-gold{box-shadow:0 0 0 4px #e3bd54,0 0 0 7px #fff3bd,0 0 18px rgba(227,189,84,.65)}
+.shop-equip{border:1px solid #2f7f78!important;background:white!important;color:#2f7f78!important;border-radius:10px!important;padding:8px 12px!important;font-weight:900!important;cursor:pointer!important}
+.shop-equip.is-equipped{background:#d9eee9!important}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -587,7 +594,7 @@ body.memory-open{overflow:hidden}
 </section>
 <section class="view" id="shop">
 <h2 class="page-title">Beach Shop 🏝️</h2>
-<p class="page-sub">Spend Sand Dollars on little coastal treats for your planner. <span style="font-size:10px;opacity:.6">V5.14.2</span></p>
+<p class="page-sub">Spend Sand Dollars on little coastal treats for your planner. <span style="font-size:10px;opacity:.6">V5.15</span></p>
 <div class="shop-top">
  <div><div class="eyebrow">YOUR COASTAL WALLET</div><div class="mini-note">Earn Sand Dollars from meaningful milestones — not button mashing. 🌊</div></div>
  <div class="sand-wallet">🪙 <span id="sandDollarCount">0</span> Sand Dollars</div>
@@ -719,7 +726,7 @@ body.memory-open{overflow:hidden}
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},focusGoal:"",sandDollars:100,shopOwned:[],shopLaunchGift:false,
+ xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},focusGoal:"",sandDollars:100,shopOwned:[],shopLaunchGift:false,equippedFrame:"",
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -739,7 +746,7 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(!Array.isArray(data.shopOwned))data.shopOwned=[];
+if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(typeof data.focusGoal!=="string")data.focusGoal="";if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";
 if(typeof data.sandDollars!=="number")data.sandDollars=0;
 if(!data.shopLaunchGift){data.sandDollars+=100;data.shopLaunchGift=true;save()}if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
@@ -1054,7 +1061,7 @@ function render(){
  document.getElementById("todoDonePill").textContent=`${done}/${total} done`; document.getElementById("todoBadge").textContent=total-done;
  document.getElementById("badgeCount").textContent=data.badges;
  renderTodos(); renderGoals(); renderCalendar(); renderBrain(); renderPersonalization(); renderShells(); renderAchievements(); renderGameRoom();
-renderClasses(); renderShop();}
+renderClasses(); renderShop(); applyShopCosmetics();}
 function renderTodos(){
  const html=data.todos.map((t,i)=>`<div class="todo ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span>${esc(t.text)}</span><span class="todo-actions"><button class="icon-btn" title="Edit" onclick="editTodo(${i})">✎</button><button class="icon-btn" title="Delete" onclick="deleteTodo(${i})">×</button></span></div>`).join("");
  ["todoList","todoList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
@@ -1137,7 +1144,7 @@ const SHOP_ITEMS=[
  {id:"shell_sticker",icon:"🐚",name:"Seashell Sticker",desc:"A cute coastal collectible for your shop shelf.",price:25},
  {id:"star_sticker",icon:"⭐",name:"Starfish Sticker",desc:"A sunny little starfish collectible.",price:30},
  {id:"hibiscus_sticker",icon:"🌺",name:"Hibiscus Sticker",desc:"A tropical flower for your collection.",price:35},
- {id:"ocean_frame",icon:"🖼️",name:"Ocean Profile Frame",desc:"A future profile cosmetic — yours once purchased.",price:50},
+ {id:"ocean_frame",icon:"🖼️",name:"Ocean Profile Frame",desc:"A cool ocean-blue frame for your profile bubble.",price:50,type:"frame"},
  {id:"gold_shell",icon:"✨",name:"Golden Shell",desc:"A special Beach Shop-only treasure.",price:75},
  {id:"pearl_charm",icon:"🤍",name:"Pearl Charm",desc:"A soft little pearl treasure for your collection.",price:40},
  {id:"sea_glass_bundle",icon:"🫧",name:"Sea Glass Bundle",desc:"A dreamy bundle of sea-glass treasures.",price:55},
@@ -1152,15 +1159,30 @@ const SHOP_ITEMS=[
  {id:"sunset_pack",icon:"🌅",name:"Sunset Decor Pack",desc:"A future decorative pack for Salty Plans.",price:100},
  {id:"moonlight_pack",icon:"🌌",name:"Moonlit Decor Pack",desc:"A future dreamy nighttime decor set.",price:125},
  {id:"tropical_pack",icon:"🌺",name:"Tropical Decor Pack",desc:"A future bright tropical decor set.",price:125},
- {id:"golden_frame",icon:"👑",name:"Golden Coastal Frame",desc:"A deluxe future profile frame for serious beach royalty.",price:150}
+ {id:"golden_frame",icon:"👑",name:"Golden Coastal Frame",desc:"A glowing golden frame for your profile bubble.",price:150,type:"frame"}
 ];
 function renderShop(){
  const count=document.getElementById("sandDollarCount"),grid=document.getElementById("shopGrid");if(!count||!grid)return;
  count.textContent=Math.max(0,Number(data.sandDollars)||0);
  grid.innerHTML=SHOP_ITEMS.map(item=>{
-   const owned=data.shopOwned.includes(item.id),canBuy=(Number(data.sandDollars)||0)>=item.price;
-   return `<div class="card shop-item"><div class="shop-icon">${item.icon}</div><h3>${item.name}</h3><p>${item.desc}</p><div class="shop-price">🪙 ${item.price}</div>${owned?'<div class="shop-owned">✓ OWNED</div>':`<button class="shop-buy" ${canBuy?"":"disabled"} onclick="buyShopItem('${item.id}')">${canBuy?"Buy":"Need more 🪙"}</button>`}</div>`;
+   const owned=data.shopOwned.includes(item.id),canBuy=(Number(data.sandDollars)||0)>=item.price,equipped=item.type==="frame"&&data.equippedFrame===item.id;
+   let action;
+   if(!owned)action=`<button class="shop-buy" ${canBuy?"":"disabled"} onclick="buyShopItem('${item.id}')">${canBuy?"Buy":"Need more 🪙"}</button>`;
+   else if(item.type==="frame")action=`<button class="shop-equip ${equipped?"is-equipped":""}" onclick="toggleShopFrame('${item.id}')">${equipped?"✓ Equipped":"Equip"}</button>`;
+   else action='<div class="shop-owned">✓ OWNED</div>';
+   return `<div class="card shop-item"><div class="shop-icon">${item.icon}</div><h3>${item.name}</h3><p>${item.desc}</p><div class="shop-price">🪙 ${item.price}</div>${action}</div>`;
  }).join("");
+}
+function applyShopCosmetics(){
+ const avatar=document.querySelector(".avatar");if(!avatar)return;
+ avatar.classList.remove("shop-frame-ocean","shop-frame-gold");
+ if(data.equippedFrame==="ocean_frame")avatar.classList.add("shop-frame-ocean");
+ if(data.equippedFrame==="golden_frame")avatar.classList.add("shop-frame-gold");
+}
+function toggleShopFrame(id){
+ if(!data.shopOwned.includes(id))return;
+ data.equippedFrame=data.equippedFrame===id?"":id;
+ save();renderShop();applyShopCosmetics();
 }
 function buyShopItem(id){
  const item=SHOP_ITEMS.find(x=>x.id===id);if(!item||data.shopOwned.includes(id))return;
