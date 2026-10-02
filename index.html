@@ -533,7 +533,7 @@ body.memory-open{overflow:hidden}
 <div class="class-grid" id="classGrid"></div></section>
 <section class="view" id="focus">
 <h2 class="page-title">Focus Cove 🍅</h2>
-<p class="page-sub">Settle in, focus, then take a little shore break. <span style="font-size:10px;opacity:.6">V5.12</span></p>
+<p class="page-sub">Settle in, focus, then take a little shore break. <span style="font-size:10px;opacity:.6">V5.12.1</span></p>
 <div class="focus-wrap">
  <div class="card focus-hero">
    <div class="focus-mode" id="focusModeLabel">FOCUS SESSION</div>
@@ -544,6 +544,7 @@ body.memory-open{overflow:hidden}
    </div>
    <div class="focus-presets">
      <button id="focusPreset25" class="active" onclick="setFocusPreset(25,'focus')">25 min Focus</button>
+     <button id="focusPreset60" onclick="setFocusPreset(60,'focus')">60 min Study Sesh</button>
      <button id="focusPreset5" onclick="setFocusPreset(5,'break')">5 min Break</button>
      <button id="focusPreset15" onclick="setFocusPreset(15,'break')">15 min Long Break</button>
    </div>
@@ -1109,7 +1110,7 @@ function renderFocus(){
  document.getElementById("focusToday").textContent=data.focusStats.today||0;
  document.getElementById("focusMinutes").textContent=data.focusStats.minutes||0;
  document.getElementById("focusTotal").textContent=data.focusStats.total||0;
- [25,5,15].forEach(n=>{const b=document.getElementById("focusPreset"+n);if(b)b.classList.toggle("active",focusDuration===n)});
+ [25,60,5,15].forEach(n=>{const b=document.getElementById("focusPreset"+n);if(b)b.classList.toggle("active",focusDuration===n)});
 }
 function setFocusPreset(minutes,mode){
  if(focusInterval)clearInterval(focusInterval);focusInterval=null;focusRunning=false;focusDuration=minutes;focusRemaining=minutes*60;focusMode=mode;focusEndAt=0;renderFocus();
