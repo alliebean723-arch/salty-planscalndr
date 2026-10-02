@@ -540,6 +540,12 @@ body.decor-tropical .topbar{box-shadow:0 3px 15px rgba(38,151,108,.14)}
 .shop-decor-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}.shop-preview{border:1px solid #2f7f78;background:transparent;color:#2f7f78;border-radius:10px;padding:8px 11px;font-size:10px;font-weight:900;cursor:pointer}.shop-preview:hover,.shop-preview.is-previewing{background:#d9eee9}
 .beach-builder-card{margin-top:16px;padding:16px}.builder-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.builder-points{font-size:11px;font-weight:900;background:var(--panel2);padding:8px 11px;border-radius:999px}.builder-scene{position:relative;height:250px;border-radius:18px;overflow:hidden;margin:14px 0;border:1px solid var(--line);background:linear-gradient(#bfe9f3 0 42%,#6fc5d6 42% 61%,#f4dca5 61%)}.builder-sky{position:absolute;right:24px;top:18px;font-size:32px}.builder-water{position:absolute;top:47%;width:100%;text-align:center;color:white;font-size:25px}.builder-sand{position:absolute;inset:61% 0 0}.builder-items-layer{position:absolute;inset:0;z-index:3;pointer-events:none}.builder-items-layer .builder-item{pointer-events:auto}.builder-item{touch-action:none;user-select:none;-webkit-user-select:none;position:absolute;transform:translate(-50%,-50%);font-size:34px;cursor:pointer;filter:drop-shadow(0 3px 2px rgba(0,0,0,.1))}.builder-actions{display:flex;gap:8px}.builder-actions button,.builder-shop button{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:10px;padding:9px 12px;font-size:10px;font-weight:900;cursor:pointer}.builder-actions .primary{background:#2f7f78;color:#fff}.builder-shop{grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin-top:12px}.builder-shop button{display:flex;justify-content:space-between}.builder-shop button:disabled{opacity:.45}.comb-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:8px}.comb-spot{height:48px;border:1px dashed rgba(116,89,50,.28);background:#f7e5b9;border-radius:10px;font-size:21px;cursor:pointer}.comb-spot.found{background:#fff4d8}@media(max-width:760px){.builder-scene{height:215px}.builder-item{font-size:29px}}
 .builder-size-controls{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:10px;padding:9px 10px;background:var(--panel2);border:1px solid var(--line);border-radius:12px}.builder-size-controls span{font-size:10px;font-weight:900;margin-right:auto}.builder-size-controls button{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:9px;padding:7px 9px;font-size:9px;font-weight:900;cursor:pointer}.builder-shop{max-height:310px;overflow-y:auto;padding-right:3px}
+
+/* V5.25 achievement + rarity expansion */
+.rarity-legend{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.rarity-legend span,.rarity-tag,.achievement-category{font-size:8px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border-radius:999px;background:var(--panel2);border:1px solid var(--line)}
+.shell-item{position:relative}.shell-item .rarity-tag{position:absolute;top:7px;right:7px}.shell-item.rarity-rare:not(.locked){box-shadow:0 0 0 2px rgba(239,139,106,.18),0 8px 24px rgba(239,139,106,.12)}.shell-item.rarity-epic:not(.locked){box-shadow:0 0 0 2px rgba(136,112,190,.20),0 8px 25px rgba(136,112,190,.15)}.shell-item.rarity-legendary:not(.locked){box-shadow:0 0 0 2px rgba(222,174,65,.26),0 8px 28px rgba(222,174,65,.18)}
+.achievement-card{position:relative}.achievement-category{display:inline-block;margin-bottom:8px}.achievement-reward{display:block;margin-top:8px;font-weight:800;line-height:1.45}.achievement-card:not(.locked) .achievement-reward{opacity:.9}
+
 </style>
 </head>
 <body class="theme-ocean">
@@ -707,7 +713,7 @@ body.decor-tropical .topbar{box-shadow:0 3px 15px rgba(38,151,108,.14)}
 </section>
 <section class="view" id="scrapbook">
 <h2 class="page-title">Memory Scrapbook 📸</h2>
-<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.24.4</span></p>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.25</span></p>
 <div class="card" style="padding:16px">
  <div class="eyebrow">ADD A MEMORY</div>
  <div class="scrap-form">
@@ -735,7 +741,7 @@ body.decor-tropical .topbar{box-shadow:0 3px 15px rgba(38,151,108,.14)}
 <div class="shop-grid" id="shopGrid"></div>
 </section>
 <section class="view" id="gameroom">
-  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.8.2</span></p>
+  <h2 class="page-title">Game Room 🎮</h2><p class="page-sub">Your little corner of coastal progress. <span style="font-size:10px;opacity:.65">V5.25</span></p>
   <div class="card" style="margin-top:18px">
     <div class="eyebrow">YOUR COASTAL JOURNEY</div><h3 id="gameRoomLevel">🌊 Level 1 · New Tide</h3>
     <div class="xpbar"><span id="gameRoomXPBar" style="width:0%"></span></div>
@@ -743,7 +749,7 @@ body.decor-tropical .topbar{box-shadow:0 3px 15px rgba(38,151,108,.14)}
     <div class="game-room-stats">
       <div class="game-stat"><span>⭐ XP</span><strong id="gameRoomXP">0</strong><small>Total earned</small></div>
       <div class="game-stat"><span>🐚 Treasures</span><strong id="gameRoomShells">0</strong><small>In your beach bag</small></div>
-      <div class="game-stat"><span>🏆 Badges</span><strong id="gameRoomAchievements">0/6</strong><small>Achievements earned</small></div>
+      <div class="game-stat"><span>🏆 Badges</span><strong id="gameRoomAchievements">0/16</strong><small>Achievements earned</small></div>
     </div>
     <div class="game-room-actions">
       <button class="game-action" onclick="goToRoom('collection')"><span style="font-size:28px">🐚</span><b>Shell Collection →</b><small>See the treasures you've discovered.</small></button>
@@ -795,7 +801,7 @@ body.decor-tropical .topbar{box-shadow:0 3px 15px rgba(38,151,108,.14)}
 <div class="builder-comb" id="builderComb" style="display:none"><p class="mini-note">Find all 5 hidden treasures! Each one = +1 point.</p><div class="comb-grid" id="combGrid"></div></div>
 <div class="builder-shop" id="builderShop" style="display:none"></div>
 </div></section>
-<section class="view" id="collection"><h2 class="page-title">Shell Collection 🐚</h2><p class="page-sub">Little treasures you find while making waves.</p><div class="card" style="margin-top:18px"><div class="eyebrow">YOUR BEACH BAG</div><h3>Collected treasures</h3><div class="shell-summary"><div><b id="shellTotal">0</b> treasures found<div class="mini-note" id="shellUnique">0 of 10 discovered</div></div><div style="font-size:34px">🐚</div></div><div class="shell-grid" id="shellGrid"></div><div class="mini-note" style="margin-top:14px">Complete to-dos, grow your goals, and level up to discover more treasures ♡</div></div></section>
+<section class="view" id="collection"><h2 class="page-title">Shell Collection 🐚</h2><p class="page-sub">Little treasures you find while making waves.</p><div class="card" style="margin-top:18px"><div class="eyebrow">YOUR BEACH BAG</div><h3>Collected treasures</h3><div class="shell-summary"><div><b id="shellTotal">0</b> treasures found<div class="mini-note" id="shellUnique">0 of 10 discovered</div></div><div style="font-size:34px">🐚</div></div><div class="rarity-legend"><span>🐚 Common</span><span>🫧 Uncommon</span><span>🪸 Rare</span><span>🌙 Epic</span><span>✨ Legendary</span></div><div class="shell-grid" id="shellGrid"></div><div class="mini-note" style="margin-top:14px">Common and uncommon treasures come from milestones. Rare, Epic, and Legendary treasures are tied to special achievements ♡</div></div></section>
 
 <section class="view" id="achievements">
   <h2 class="page-title">Achievements 🏆</h2>
@@ -865,7 +871,7 @@ body.decor-tropical .topbar{box-shadow:0 3px 15px rgba(38,151,108,.14)}
 <script>
 const KEY="saltyPlansV2";
 const defaultData={
- xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},beachBuilder:{points:12,items:[]},focusGoal:"",focusAmbience:"off",focusAmbienceVolume:35,sandDollars:100,shopOwned:[],shopLaunchGift:false,equippedFrame:"",equippedDecor:"",dashboardStickers:[],sandRewarded:{tasks:[],focus:0,streak:[],achievements:[]},scrapbook:[],
+ xp:350, streak:4, badges:7, shells:{}, shellEarnCount:0, achievements:{}, rewardStats:{tasks:0,goalSteps:0}, rewardMilestones:{}, dark:false, brain:"", name:"Jamie", initial:"J", greeting:"A new day, a fresh little start. Take it one thing at a time.", tagline:"better days, brighter plans ♡", theme:"ocean", weatherCity:"Portsmouth, NH",classes:[],focusStats:{date:"",today:0,total:0,minutes:0},beachBuilder:{points:12,items:[],combs:0,exclusiveUnlocked:[]},focusGoal:"",focusAmbience:"off",focusAmbienceVolume:35,sandDollars:100,shopOwned:[],shopLaunchGift:false,equippedFrame:"",equippedDecor:"",dashboardStickers:[],sandRewarded:{tasks:[],focus:0,streak:[],achievements:[]},scrapbook:[],
  todos:[
   {text:"Go to class",done:true},{text:"Finish psychology reading",done:true},{text:"Work on essay",done:false},
   {text:"Laundry",done:false},{text:"Gym",done:false},{text:"Call my mom",done:false},{text:"Be proud of yourself ♡",done:false}
@@ -885,7 +891,7 @@ let data=savedData?{...defaultData,...savedData}:JSON.parse(JSON.stringify(defau
 data.todos=Array.isArray(data.todos)?data.todos:JSON.parse(JSON.stringify(defaultData.todos));
 data.goals=Array.isArray(data.goals)?data.goals:JSON.parse(JSON.stringify(defaultData.goals));
 data.events=Array.isArray(data.events)?data.events:JSON.parse(JSON.stringify(defaultData.events));
-if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(!data.beachBuilder||typeof data.beachBuilder!=="object")data.beachBuilder={points:12,items:[]};if(!Array.isArray(data.beachBuilder.items))data.beachBuilder.items=[];if(typeof data.beachBuilder.points!=="number")data.beachBuilder.points=12;if(!data.beachBuilder.fullSceneV1){data.beachBuilder.items.forEach(x=>{x.y=61+(Number(x.y)||30)*.39});data.beachBuilder.fullSceneV1=true;save();}data.beachBuilder.items.forEach(x=>{if(typeof x.scale!=="number")x.scale=1});if(typeof data.focusGoal!=="string")data.focusGoal="";if(typeof data.focusAmbience!=="string")data.focusAmbience="off";if(!["off","ocean","rain","fire","cafe"].includes(data.focusAmbience))data.focusAmbience="off";if(typeof data.focusAmbienceVolume!=="number")data.focusAmbienceVolume=35;if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";if(typeof data.equippedDecor!=="string")data.equippedDecor="";if(!Array.isArray(data.dashboardStickers))data.dashboardStickers=[];if(!Array.isArray(data.scrapbook))data.scrapbook=[];data.scrapbook=data.scrapbook.map(x=>({...x,stickers:Array.isArray(x.stickers)?x.stickers:[],favorite:!!x.favorite,pinned:!!x.pinned,layout:x.layout||"classic"}));if(!data.sandRewarded||typeof data.sandRewarded!=="object")data.sandRewarded={tasks:[],focus:0,streak:[],achievements:[]};["tasks","streak","achievements"].forEach(k=>{if(!Array.isArray(data.sandRewarded[k]))data.sandRewarded[k]=[]});if(typeof data.sandRewarded.focus!=="number")data.sandRewarded.focus=0;
+if(!("lastLogin" in data)) data.lastLogin=null;if(!Array.isArray(data.classes))data.classes=[];data.classes.forEach(c=>{if(!Array.isArray(c.assignments))c.assignments=[]});if(!data.focusStats||typeof data.focusStats!=="object")data.focusStats={date:"",today:0,total:0,minutes:0};if(!data.beachBuilder||typeof data.beachBuilder!=="object")data.beachBuilder={points:12,items:[]};if(!Array.isArray(data.beachBuilder.items))data.beachBuilder.items=[];if(typeof data.beachBuilder.points!=="number")data.beachBuilder.points=12;if(typeof data.beachBuilder.combs!=="number")data.beachBuilder.combs=0;if(!Array.isArray(data.beachBuilder.exclusiveUnlocked))data.beachBuilder.exclusiveUnlocked=[];if(!data.beachBuilder.fullSceneV1){data.beachBuilder.items.forEach(x=>{x.y=61+(Number(x.y)||30)*.39});data.beachBuilder.fullSceneV1=true;save();}data.beachBuilder.items.forEach(x=>{if(typeof x.scale!=="number")x.scale=1});if(typeof data.focusGoal!=="string")data.focusGoal="";if(typeof data.focusAmbience!=="string")data.focusAmbience="off";if(!["off","ocean","rain","fire","cafe"].includes(data.focusAmbience))data.focusAmbience="off";if(typeof data.focusAmbienceVolume!=="number")data.focusAmbienceVolume=35;if(!Array.isArray(data.shopOwned))data.shopOwned=[];if(typeof data.equippedFrame!=="string")data.equippedFrame="";if(typeof data.equippedDecor!=="string")data.equippedDecor="";if(!Array.isArray(data.dashboardStickers))data.dashboardStickers=[];if(!Array.isArray(data.scrapbook))data.scrapbook=[];data.scrapbook=data.scrapbook.map(x=>({...x,stickers:Array.isArray(x.stickers)?x.stickers:[],favorite:!!x.favorite,pinned:!!x.pinned,layout:x.layout||"classic"}));if(!data.sandRewarded||typeof data.sandRewarded!=="object")data.sandRewarded={tasks:[],focus:0,streak:[],achievements:[]};["tasks","streak","achievements"].forEach(k=>{if(!Array.isArray(data.sandRewarded[k]))data.sandRewarded[k]=[]});if(typeof data.sandRewarded.focus!=="number")data.sandRewarded.focus=0;
 if(typeof data.sandDollars!=="number")data.sandDollars=0;
 if(!data.shopLaunchGift){data.sandDollars+=100;data.shopLaunchGift=true;save()}if(!data.rewardStats||typeof data.rewardStats!=="object")data.rewardStats={tasks:0,goalSteps:0};if(!data.rewardMilestones||typeof data.rewardMilestones!=="object")data.rewardMilestones={};if(!data.shells||typeof data.shells!=="object"||Array.isArray(data.shells))data.shells={};if(!Number.isFinite(Number(data.shellEarnCount)))data.shellEarnCount=0;if(!data.achievements||typeof data.achievements!=="object"||Array.isArray(data.achievements))data.achievements={};
 let current=new Date(2026,8,29), selected="2026-09-29", songs=["Golden Hour","Ocean Eyes","Coastal Drive","Sunset Lover"], songIndex=0, playing=false;
@@ -893,10 +899,23 @@ function save(){localStorage.setItem(KEY,JSON.stringify(data));document.querySel
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function fmtDate(d){return d.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})}
 
-const SHELLS=[["seashell","🐚","Seashell"],["seaglass","🫧","Sea Glass"],["starfish","⭐","Starfish"],["coral","🪸","Coral"],["hibiscus","🌺","Hibiscus"],["fish","🐠","Tropical Fish"],["palm","🌴","Palm"],["moon","🌙","Moon Shell"],["surf","🏄","Surfboard"],["sun","☀️","Sun Charm"]].map(([id,emoji,name])=>({id,emoji,name}));
-function renderShells(){const grid=document.getElementById("shellGrid");if(!grid)return;const total=SHELLS.reduce((n,s)=>n+(Number(data.shells[s.id])||0),0),unique=SHELLS.filter(s=>(Number(data.shells[s.id])||0)>0).length;document.getElementById("shellTotal").textContent=total;document.getElementById("shellUnique").textContent=`${unique} of ${SHELLS.length} discovered`;document.getElementById("shellBadge").textContent=total;grid.innerHTML=SHELLS.map(s=>{const c=Number(data.shells[s.id])||0;return `<div class="shell-item ${c?"":"locked"}"><span class="shell-emoji">${c?s.emoji:"❔"}</span><b>${c?s.name:"Undiscovered"}</b><small>${c?`× ${c}`:"Keep making waves"}</small></div>`}).join("")}
-function showShellFind(s){const t=document.getElementById("shellToast");if(!t)return;document.getElementById("shellToastEmoji").textContent=s.emoji;document.getElementById("shellToastTitle").textContent=`${s.name} found!`;document.getElementById("shellToastCopy").textContent="Added to your Shell Collection ♡";t.classList.add("show");clearTimeout(window.shellToastTimer);window.shellToastTimer=setTimeout(()=>t.classList.remove("show"),2400)}
-function earnShell(){data.shellEarnCount=(Number(data.shellEarnCount)||0)+1;const s=SHELLS[(data.shellEarnCount-1)%SHELLS.length];data.shells[s.id]=(Number(data.shells[s.id])||0)+1;save();renderShells();showShellFind(s)}
+const SHELLS=[
+{id:"seashell",emoji:"🐚",name:"Seashell",rarity:"Common"},{id:"seaglass",emoji:"🫧",name:"Sea Glass",rarity:"Common"},
+{id:"starfish",emoji:"⭐",name:"Starfish",rarity:"Common"},{id:"hibiscus",emoji:"🌺",name:"Hibiscus",rarity:"Common"},
+{id:"fish",emoji:"🐠",name:"Tropical Fish",rarity:"Uncommon"},{id:"palm",emoji:"🌴",name:"Palm Charm",rarity:"Uncommon"},
+{id:"surf",emoji:"🏄",name:"Surfboard",rarity:"Uncommon"},{id:"sun",emoji:"☀️",name:"Sun Charm",rarity:"Uncommon"},
+{id:"coral",emoji:"🪸",name:"Coral Crown",rarity:"Rare"},{id:"pearl",emoji:"🤍",name:"Pearl of Progress",rarity:"Rare"},
+{id:"turtleGem",emoji:"🐢",name:"Turtle Gem",rarity:"Rare"},{id:"cameraShell",emoji:"📸",name:"Memory Shell",rarity:"Rare"},
+{id:"moon",emoji:"🌙",name:"Moon Shell",rarity:"Epic"},{id:"focusCrystal",emoji:"💎",name:"Focus Crystal",rarity:"Epic"},
+{id:"gameCrown",emoji:"👑",name:"Arcade Crown",rarity:"Epic"},{id:"builderPearl",emoji:"🦪",name:"Builder Pearl",rarity:"Epic"},
+{id:"goldenConch",emoji:"✨",name:"Golden Conch",rarity:"Legendary"},{id:"auroraShell",emoji:"🌈",name:"Aurora Shell",rarity:"Legendary"}
+];
+const RARITY_ORDER={Common:1,Uncommon:2,Rare:3,Epic:4,Legendary:5};
+const MILESTONE_SHELLS=SHELLS.filter(s=>["Common","Uncommon"].includes(s.rarity));
+function renderShells(){const grid=document.getElementById("shellGrid");if(!grid)return;const total=SHELLS.reduce((n,x)=>n+(Number(data.shells[x.id])||0),0),unique=SHELLS.filter(x=>(Number(data.shells[x.id])||0)>0).length;document.getElementById("shellTotal").textContent=total;document.getElementById("shellUnique").textContent=`${unique} of ${SHELLS.length} discovered`;document.getElementById("shellBadge").textContent=total;grid.innerHTML=[...SHELLS].sort((a,b)=>RARITY_ORDER[a.rarity]-RARITY_ORDER[b.rarity]).map(x=>{const c=Number(data.shells[x.id])||0;return `<div class="shell-item rarity-${x.rarity.toLowerCase()} ${c?"":"locked"}"><span class="rarity-tag">${x.rarity}</span><span class="shell-emoji">${c?x.emoji:"❔"}</span><b>${c?x.name:"Undiscovered"}</b><small>${c?`× ${c}`:"Achievement treasure"}</small></div>`}).join("")}
+function showShellFind(x){const t=document.getElementById("shellToast");if(!t)return;document.getElementById("shellToastEmoji").textContent=x.emoji;document.getElementById("shellToastTitle").textContent=`${x.name} found!`;document.getElementById("shellToastCopy").textContent=`${x.rarity} treasure added to your collection ♡`;t.classList.add("show");clearTimeout(window.shellToastTimer);window.shellToastTimer=setTimeout(()=>t.classList.remove("show"),2600)}
+function grantCollectible(id){const x=SHELLS.find(s=>s.id===id);if(!x)return false;if((Number(data.shells[id])||0)>0)return false;data.shells[id]=1;save();renderShells();showShellFind(x);return true}
+function earnShell(){data.shellEarnCount=(Number(data.shellEarnCount)||0)+1;const x=MILESTONE_SHELLS[(data.shellEarnCount-1)%MILESTONE_SHELLS.length];data.shells[x.id]=(Number(data.shells[x.id])||0)+1;save();renderShells();showShellFind(x)}
 function rewardTreasure(key){if(data.rewardMilestones[key])return;data.rewardMilestones[key]=true;earnShell()}
 function checkRewardMilestones(){
  const t=Number(data.rewardStats.tasks)||0,g=Number(data.rewardStats.goalSteps)||0,x=Number(data.xp)||0,st=Number(data.streak)||0;
@@ -908,23 +927,38 @@ function checkRewardMilestones(){
 
 
 const ACHIEVEMENTS=[
- {id:"firstWave",icon:"🌊",name:"First Wave",desc:"Complete 10 to-dos.",test:()=>Number(data.rewardStats.tasks)>=10},
- {id:"makingWaves",icon:"✨",name:"Making Waves",desc:"Reach 1,000 XP.",test:()=>Number(data.xp)>=1000},
- {id:"shellCollector",icon:"🐚",name:"Shell Collector",desc:"Collect 8 coastal treasures.",test:()=>SHELLS.reduce((n,s)=>n+(Number(data.shells[s.id])||0),0)>=8},
- {id:"palmTreeEnergy",icon:"🌴",name:"Palm Tree Energy",desc:"Reach a 14-day login streak.",test:()=>Number(data.streak)>=14},
- {id:"gentleGrowth",icon:"🌱",name:"Gentle Growth",desc:"Complete 25 goal steps.",test:()=>Number(data.rewardStats.goalSteps)>=25},
- {id:"colorChaser",icon:"🎨",name:"Color Chaser",desc:"Unlock at least 5 beach themes.",test:()=>THEMES.filter(t=>Number(data.xp)>=Number(t.need)).length>=5}
+{id:"firstWave",category:"Planner",icon:"🌊",name:"First Wave",desc:"Complete 10 to-dos.",test:()=>Number(data.rewardStats.tasks)>=10},
+{id:"makingWaves",category:"Progress",icon:"✨",name:"Making Waves",desc:"Reach 1,000 XP.",test:()=>Number(data.xp)>=1000},
+{id:"shellCollector",category:"Collection",icon:"🐚",name:"Shell Collector",desc:"Collect 8 coastal treasures.",test:()=>SHELLS.reduce((n,x)=>n+(Number(data.shells[x.id])||0),0)>=8},
+{id:"palmTreeEnergy",category:"Streak",icon:"🌴",name:"Palm Tree Energy",desc:"Reach a 14-day login streak.",test:()=>Number(data.streak)>=14},
+{id:"gentleGrowth",category:"Planner",icon:"🌱",name:"Gentle Growth",desc:"Complete 25 goal steps.",test:()=>Number(data.rewardStats.goalSteps)>=25},
+{id:"colorChaser",category:"Style",icon:"🎨",name:"Color Chaser",desc:"Unlock at least 5 beach themes.",test:()=>THEMES.filter(t=>Number(data.xp)>=Number(t.need)).length>=5},
+{id:"deepFocus",category:"Focus Cove",icon:"💎",name:"Deep Focus",desc:"Complete 10 Focus Cove sessions.",reward:"focusCrystal",decor:"crystal",test:()=>Number(data.focusStats.total)>=10},
+{id:"focusLegend",category:"Focus Cove",icon:"🧠",name:"Focus Legend",desc:"Reach 1,000 total focus minutes.",reward:"goldenConch",decor:"goldenSun",test:()=>Number(data.focusStats.minutes)>=1000},
+{id:"memoryKeeper",category:"Scrapbook",icon:"📸",name:"Memory Keeper",desc:"Save 10 scrapbook memories.",reward:"cameraShell",decor:"photoFlag",test:()=>data.scrapbook.length>=10},
+{id:"beachArchitect",category:"Beach Builder",icon:"🏝️",name:"Beach Architect",desc:"Place 15 decorations on your beach.",reward:"builderPearl",decor:"treasureChest",test:()=>data.beachBuilder.items.length>=15},
+{id:"treasureHunter",category:"Beach Builder",icon:"🦪",name:"Treasure Hunter",desc:"Complete 10 Beach Comb rounds.",reward:"pearl",decor:"pearlArch",test:()=>Number(data.beachBuilder.combs)>=10},
+{id:"shellSnatcher",category:"Game Room",icon:"🐚",name:"Shell Snatcher",desc:"Score 20+ in Shell Catch.",reward:"coral",decor:"coralGate",test:()=>shellCatchBest()>=20},
+{id:"matchMaster",category:"Game Room",icon:"🧩",name:"Match Master",desc:"Finish a Hard Coastal Match.",reward:"gameCrown",decor:"crownFlag",test:()=>!!localStorage.getItem("saltyPlansMemoryBest_hard")},
+{id:"tideDevotion",category:"Streak",icon:"🌙",name:"Tide Devotion",desc:"Reach a 30-day login streak.",reward:"moon",decor:"moonArch",test:()=>Number(data.streak)>=30},
+{id:"oceanVeteran",category:"Progress",icon:"🌈",name:"Ocean Veteran",desc:"Reach 5,000 XP.",reward:"auroraShell",decor:"rainbowGate",test:()=>Number(data.xp)>=5000},
+{id:"goalGetter",category:"Planner",icon:"🐢",name:"Goal Getter",desc:"Complete 50 goal steps.",reward:"turtleGem",decor:"turtleStatue",test:()=>Number(data.rewardStats.goalSteps)>=50}
 ];
+const ACHIEVEMENT_DECOR={
+crystal:{id:"crystal",icon:"💎",name:"Focus Crystal",cost:0,exclusive:true},goldenSun:{id:"goldenSun",icon:"🌞",name:"Golden Sun",cost:0,exclusive:true},
+photoFlag:{id:"photoFlag",icon:"🎞️",name:"Memory Banner",cost:0,exclusive:true},treasureChest:{id:"treasureChest",icon:"🧰",name:"Treasure Chest",cost:0,exclusive:true},
+pearlArch:{id:"pearlArch",icon:"🦪",name:"Pearl Cove",cost:0,exclusive:true},coralGate:{id:"coralGate",icon:"🪸",name:"Coral Gate",cost:0,exclusive:true},
+crownFlag:{id:"crownFlag",icon:"👑",name:"Arcade Crown",cost:0,exclusive:true},moonArch:{id:"moonArch",icon:"🌙",name:"Moon Arch",cost:0,exclusive:true},
+rainbowGate:{id:"rainbowGate",icon:"🌈",name:"Aurora Arch",cost:0,exclusive:true},turtleStatue:{id:"turtleStatue",icon:"🐢",name:"Turtle Statue",cost:0,exclusive:true}
+};
+function unlockAchievementDecor(id){if(!id||data.beachBuilder.exclusiveUnlocked.includes(id))return;data.beachBuilder.exclusiveUnlocked.push(id)}
 function renderAchievements(){
  const grid=document.getElementById("achievementGrid");if(!grid)return;
  const earned=ACHIEVEMENTS.filter(a=>data.achievements[a.id]).length;
  document.getElementById("achievementTotal").textContent=earned;
  document.getElementById("achievementProgress").textContent=`${earned} of ${ACHIEVEMENTS.length} earned`;
  document.getElementById("achievementBadge").textContent=earned;
- grid.innerHTML=ACHIEVEMENTS.map(a=>{
-   const yes=!!data.achievements[a.id];
-   return `<div class="achievement-card ${yes?"":"locked"}"><div class="achievement-icon">${yes?a.icon:"🔒"}</div><b>${a.name}</b><small>${a.desc}</small><div class="earned">${yes?"✓ UNLOCKED":"LOCKED"}</div></div>`
- }).join("");
+ grid.innerHTML=ACHIEVEMENTS.map(a=>{const yes=!!data.achievements[a.id],reward=a.reward?SHELLS.find(x=>x.id===a.reward):null;return `<div class="achievement-card ${yes?"":"locked"}"><span class="achievement-category">${a.category}</span><div class="achievement-icon">${yes?a.icon:"🔒"}</div><b>${a.name}</b><small>${a.desc}</small>${reward?`<small class="achievement-reward">Reward: ${yes?reward.emoji:"❔"} ${reward.rarity} treasure + exclusive Beach decor</small>`:""}<div class="earned">${yes?"✓ UNLOCKED":"LOCKED"}</div></div>`}).join("");
 }
 function showAchievement(a){
  const t=document.getElementById("achievementToast");if(!t)return;
@@ -935,7 +969,7 @@ function showAchievement(a){
 }
 function checkAchievements(showPopups=true){
  let changed=false, newly=[];
- ACHIEVEMENTS.forEach(a=>{let earned=false;try{earned=!!a.test()}catch(err){console.warn("Achievement check skipped:",a.id,err)}if(!data.achievements[a.id]&&earned){data.achievements[a.id]=true;changed=true;newly.push(a)}});
+ ACHIEVEMENTS.forEach(a=>{let earned=false;try{earned=!!a.test()}catch(err){console.warn("Achievement check skipped:",a.id,err)}if(!data.achievements[a.id]&&earned){data.achievements[a.id]=true;if(a.reward)grantCollectible(a.reward);if(a.decor)unlockAchievementDecor(a.decor);changed=true;newly.push(a)}});
  if(changed)save();
  renderAchievements();
  if(showPopups&&newly.length){
@@ -1151,7 +1185,7 @@ const BUILDER_ITEMS=[
 {id:"picnic",icon:"🧺",name:"Picnic Basket",cost:4},{id:"music",icon:"🎵",name:"Music Notes",cost:3},{id:"sunflower",icon:"🌻",name:"Sunflower",cost:3}
 ];
 const BUILDER_POS=[[12,76],[28,82],[45,72],[62,86],[80,76],[20,91],[52,92],[75,90],[90,84],[37,87]];let combTreasures=[];
-function renderBeachBuilder(){const pts=document.getElementById("builderPoints"),sand=document.getElementById("builderSand"),shop=document.getElementById("builderShop");if(pts)pts.textContent=data.beachBuilder.points;if(sand)sand.innerHTML=data.beachBuilder.items.map((x,i)=>`<span class="builder-item" title="${esc(x.name)} — drag to move • click for size • double-click to remove" data-builder-index="${i}" ondblclick="removeBuilderItem(${i})" onclick="selectBuilderItem(event,${i})" onpointerdown="startBuilderDrag(event,${i})" style="left:${x.x}%;top:${x.y}%;font-size:${34*(x.scale||1)}px">${x.icon}</span>`).join("");if(shop)shop.innerHTML=BUILDER_ITEMS.map(x=>`<button ${data.beachBuilder.points<x.cost?"disabled":""} onclick="buyBuilderItem('${x.id}')"><span>${x.icon} ${x.name}</span><b>⭐${x.cost}</b></button>`).join("")}
+function renderBeachBuilder(){const pts=document.getElementById("builderPoints"),sand=document.getElementById("builderSand"),shop=document.getElementById("builderShop");if(pts)pts.textContent=data.beachBuilder.points;if(sand)sand.innerHTML=data.beachBuilder.items.map((x,i)=>`<span class="builder-item" title="${esc(x.name)} — drag to move • click for size • double-click to remove" data-builder-index="${i}" ondblclick="removeBuilderItem(${i})" onclick="selectBuilderItem(event,${i})" onpointerdown="startBuilderDrag(event,${i})" style="left:${x.x}%;top:${x.y}%;font-size:${34*(x.scale||1)}px">${x.icon}</span>`).join("");if(shop){const exclusive=data.beachBuilder.exclusiveUnlocked.map(id=>ACHIEVEMENT_DECOR[id]).filter(Boolean);shop.innerHTML=[...BUILDER_ITEMS,...exclusive].map(x=>`<button ${!x.exclusive&&data.beachBuilder.points<x.cost?"disabled":""} onclick="buyBuilderItem('${x.id}')"><span>${x.icon} ${x.name}${x.exclusive?" 🏆":""}</span><b>${x.exclusive?"EXCLUSIVE":"⭐"+x.cost}</b></button>`).join("")}}
 let selectedBuilderItem=null;
 function selectBuilderItem(e,i){
  if(builderDrag&&builderDrag.moved)return;
@@ -1190,10 +1224,10 @@ document.addEventListener("pointermove",moveBuilderDrag);
 document.addEventListener("pointerup",endBuilderDrag);
 document.addEventListener("pointercancel",endBuilderDrag);
 function toggleBuilderShop(){const x=document.getElementById("builderShop");if(x){x.style.display=x.style.display==="none"?"grid":"none";renderBeachBuilder()}}
-function buyBuilderItem(id){const item=BUILDER_ITEMS.find(x=>x.id===id);if(!item||data.beachBuilder.points<item.cost)return;const p=BUILDER_POS[data.beachBuilder.items.length%BUILDER_POS.length];data.beachBuilder.points-=item.cost;data.beachBuilder.items.push({...item,x:p[0],y:p[1],scale:1});save();renderBeachBuilder()}
-function removeBuilderItem(i){const x=data.beachBuilder.items[i];if(!x||!confirm(`Remove ${x.name} from your beach and refund its Build Points?`))return;data.beachBuilder.points+=x.cost;data.beachBuilder.items.splice(i,1);selectedBuilderItem=null;const box=document.getElementById("builderSizeControls");if(box)box.style.display="none";save();renderBeachBuilder()}
+function buyBuilderItem(id){const item=BUILDER_ITEMS.find(x=>x.id===id)||ACHIEVEMENT_DECOR[id];if(!item)return;if(item.exclusive&&!data.beachBuilder.exclusiveUnlocked.includes(id))return;if(!item.exclusive&&data.beachBuilder.points<item.cost)return;const p=BUILDER_POS[data.beachBuilder.items.length%BUILDER_POS.length];if(!item.exclusive)data.beachBuilder.points-=item.cost;data.beachBuilder.items.push({...item,x:p[0],y:p[1],scale:1});save();renderBeachBuilder();checkAchievements()}
+function removeBuilderItem(i){const x=data.beachBuilder.items[i];if(!x||!confirm(`Remove ${x.name} from your beach and refund its Build Points?`))return;if(!x.exclusive)data.beachBuilder.points+=x.cost;data.beachBuilder.items.splice(i,1);selectedBuilderItem=null;const box=document.getElementById("builderSizeControls");if(box)box.style.display="none";save();renderBeachBuilder()}
 function startBeachComb(){const wrap=document.getElementById("builderComb"),grid=document.getElementById("combGrid");if(!wrap||!grid)return;wrap.style.display="block";const picks=new Set();while(picks.size<5)picks.add(Math.floor(Math.random()*20));combTreasures=[...picks];grid.innerHTML=Array.from({length:20},(_,i)=>`<button class="comb-spot" onclick="combSpot(this,${i})">🏝️</button>`).join("")}
-function combSpot(btn,i){if(btn.disabled)return;btn.disabled=true;if(combTreasures.includes(i)){btn.textContent="🐚";btn.classList.add("found");data.beachBuilder.points++;combTreasures=combTreasures.filter(x=>x!==i);save();renderBeachBuilder();if(!combTreasures.length)setTimeout(()=>{alert("Beach comb complete! +5 Build Points ⭐");document.getElementById("builderComb").style.display="none"},150)}else btn.textContent="·"}
+function combSpot(btn,i){if(btn.disabled)return;btn.disabled=true;if(combTreasures.includes(i)){btn.textContent="🐚";btn.classList.add("found");data.beachBuilder.points++;combTreasures=combTreasures.filter(x=>x!==i);save();renderBeachBuilder();if(!combTreasures.length){data.beachBuilder.combs=(Number(data.beachBuilder.combs)||0)+1;save();checkAchievements();setTimeout(()=>{alert("Beach comb complete! +5 Build Points ⭐");document.getElementById("builderComb").style.display="none"},150)}}else btn.textContent="·"}
 function renderGameRoom(){
  updateShellCatchUI();
  updateMemoryStats();
@@ -1378,7 +1412,7 @@ function addScrapbookMemory(){
  const caption=(document.getElementById("scrapCaption").value||"").trim();
  if(!title&&!caption){alert("Give this memory a title or little caption first 📸");return}
  data.scrapbook.unshift({id:Date.now(),title,date,photo,caption,stickers:[],favorite:false,pinned:false,layout:"classic"});
- try{save()}catch(err){data.scrapbook.shift();alert("This photo is a little too large for your browser storage. Try a smaller photo 📷");return}
+ try{save()}catch(err){data.scrapbook.shift();alert("This photo is a little too large for your browser storage. Try a smaller photo 📷");return}checkAchievements();
  ["scrapTitle","scrapCaption"].forEach(id=>document.getElementById(id).value="");
  const fileInput=document.getElementById("scrapPhotoFile");if(fileInput)fileInput.value="";
  pendingScrapPhoto="";renderScrapPhotoPreview();
