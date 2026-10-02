@@ -587,7 +587,7 @@ body.memory-open{overflow:hidden}
 </section>
 <section class="view" id="shop">
 <h2 class="page-title">Beach Shop 🏝️</h2>
-<p class="page-sub">Spend Sand Dollars on little coastal treats for your planner. <span style="font-size:10px;opacity:.6">V5.14.1</span></p>
+<p class="page-sub">Spend Sand Dollars on little coastal treats for your planner. <span style="font-size:10px;opacity:.6">V5.14.2</span></p>
 <div class="shop-top">
  <div><div class="eyebrow">YOUR COASTAL WALLET</div><div class="mini-note">Earn Sand Dollars from meaningful milestones — not button mashing. 🌊</div></div>
  <div class="sand-wallet">🪙 <span id="sandDollarCount">0</span> Sand Dollars</div>
@@ -1054,7 +1054,7 @@ function render(){
  document.getElementById("todoDonePill").textContent=`${done}/${total} done`; document.getElementById("todoBadge").textContent=total-done;
  document.getElementById("badgeCount").textContent=data.badges;
  renderTodos(); renderGoals(); renderCalendar(); renderBrain(); renderPersonalization(); renderShells(); renderAchievements(); renderGameRoom();
-renderClasses();}
+renderClasses(); renderShop();}
 function renderTodos(){
  const html=data.todos.map((t,i)=>`<div class="todo ${t.done?"done":""}"><input type="checkbox" ${t.done?"checked":""} onchange="toggleTodo(${i})"><span>${esc(t.text)}</span><span class="todo-actions"><button class="icon-btn" title="Edit" onclick="editTodo(${i})">✎</button><button class="icon-btn" title="Delete" onclick="deleteTodo(${i})">×</button></span></div>`).join("");
  ["todoList","todoList2"].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=html});
@@ -1064,8 +1064,7 @@ function editTodo(i){
  if(next===null)return;
  const clean=next.trim();
  if(!clean)return;
- data.todos[i].text=clean;save();render();
-renderShop();}
+ data.todos[i].text=clean;save();render();}
 function deleteTodo(i){
  if(confirm(`Delete "${data.todos[i].text}"?`)){data.todos.splice(i,1);save();render()}
 }
