@@ -713,7 +713,7 @@ body.decor-tropical .topbar{box-shadow:0 3px 15px rgba(38,151,108,.14)}
 <div class="card focus-weekly-card"><div class="focus-weekly-head"><div><div class="eyebrow">THIS WEEK 📊</div><h3>Focus History</h3><p class="mini-note">A little look at how your focus time is adding up over the last 7 days.</p></div><div class="focus-week-total"><b id="focusWeekMinutes">0</b><span>minutes this week</span></div></div><div class="focus-week-stats"><div><b id="focusWeekSessions">0</b><span>Sessions</span></div><div><b id="focusBestDay">—</b><span>Most focused day</span></div><div><b id="focusAllTimeMinutes">0</b><span>All-time minutes</span></div></div><div class="focus-chart" id="focusWeekChart"></div><div class="mini-note focus-chart-note">Each bar shows your focus minutes for that day. 🌊</div></div></section>
 <section class="view" id="scrapbook">
 <h2 class="page-title">Memory Scrapbook 📸</h2>
-<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.27.3</span></p>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.27.5</span></p>
 <div class="card" style="padding:16px">
  <div class="eyebrow">ADD A MEMORY</div>
  <div class="scrap-form">
@@ -1091,7 +1091,9 @@ function spawnShellCatch(){
  const maxX=Math.max(0,board.clientWidth-58), maxY=Math.max(0,board.clientHeight-58);
  target.style.left=Math.floor(Math.random()*maxX)+"px";
  target.style.top=Math.floor(Math.random()*maxY)+"px";
- target.onclick=()=>{shellCatchScore++;updateShellCatchUI();target.remove();spawnShellCatch()};
+ let caught=false;
+ const catchThisShell=(e)=>{e.preventDefault();e.stopPropagation();if(caught||shellCatchTime<=0)return;caught=true;shellCatchScore++;updateShellCatchUI();target.remove();spawnShellCatch()};
+ target.addEventListener("pointerdown",catchThisShell);
  board.appendChild(target);
 }
 function startShellCatch(){
