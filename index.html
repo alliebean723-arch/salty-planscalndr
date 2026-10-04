@@ -713,7 +713,7 @@ body.decor-tropical .topbar{box-shadow:0 3px 15px rgba(38,151,108,.14)}
 <div class="card focus-weekly-card"><div class="focus-weekly-head"><div><div class="eyebrow">THIS WEEK 📊</div><h3>Focus History</h3><p class="mini-note">A little look at how your focus time is adding up over the last 7 days.</p></div><div class="focus-week-total"><b id="focusWeekMinutes">0</b><span>minutes this week</span></div></div><div class="focus-week-stats"><div><b id="focusWeekSessions">0</b><span>Sessions</span></div><div><b id="focusBestDay">—</b><span>Most focused day</span></div><div><b id="focusAllTimeMinutes">0</b><span>All-time minutes</span></div></div><div class="focus-chart" id="focusWeekChart"></div><div class="mini-note focus-chart-note">Each bar shows your focus minutes for that day. 🌊</div></div></section>
 <section class="view" id="scrapbook">
 <h2 class="page-title">Memory Scrapbook 📸</h2>
-<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.28</span></p>
+<p class="page-sub">Save little moments from college, beach days, adventures, and everything in between. <span style="font-size:10px;opacity:.6">V5.28.1</span></p>
 <div class="card" style="padding:16px">
  <div class="eyebrow">ADD A MEMORY</div>
  <div class="scrap-form">
@@ -797,7 +797,7 @@ body.decor-tropical .topbar{box-shadow:0 3px 15px rgba(38,151,108,.14)}
 <div class="card beach-builder-card">
 <div class="builder-head"><div><div class="eyebrow">BEACH BUILDER 🏖️</div><h3>Your little slice of paradise</h3><p class="mini-note">Beach-comb for Build Points, then decorate. Your beach saves!</p></div><div class="builder-points">⭐ <span id="builderPoints">0</span> points</div></div>
 <div class="builder-scene" id="builderScene"><div class="builder-sky">☀️</div><div class="builder-water">〰️ 〰️ 〰️</div><div class="builder-sand"></div><div class="builder-items-layer" id="builderSand"></div></div>
-<div class="builder-actions"><button class="primary" onclick="startBeachComb()">🐚 Beach Comb</button><button onclick="toggleBuilderShop()">🛠️ Build</button></div><div class="builder-size-controls" id="builderSizeControls" style="display:none"><span id="builderSelectedName">Decoration</span><button onclick="resizeBuilderItem(-.15)">➖ Smaller</button><button onclick="resizeBuilderItem(.15)">➕ Bigger</button><button onclick="flipBuilderItem()">↔️ Flip</button><button onclick="moveBuilderLayer(-1)">⬇️ Send Back</button><button onclick="moveBuilderLayer(1)">⬆️ Bring Forward</button><button onclick="clearBuilderSelection()">✓ Done</button></div><p class="mini-note builder-remove-note">Tip: drag decor anywhere — sand, water, or sky! Decorations can overlap. Select one to resize, flip, or move it forward/backward in the layers; double-click to remove + refund.</p>
+<div class="builder-actions"><button class="primary" onclick="startBeachComb()">🐚 Beach Comb</button><button onclick="toggleBuilderShop()">🛠️ Build</button></div><div class="builder-size-controls" id="builderSizeControls" style="display:none"><span id="builderSelectedName">Decoration</span><button onclick="resizeBuilderItem(-.15)">➖ Smaller</button><button onclick="resizeBuilderItem(.15)">➕ Bigger</button><button onclick="flipBuilderItem()">↔️ Flip</button><button onclick="moveBuilderLayer(-1)">⬇️ Send to Back</button><button onclick="moveBuilderLayer(1)">⬆️ Bring to Front</button><button onclick="clearBuilderSelection()">✓ Done</button></div><p class="mini-note builder-remove-note">Tip: drag decor anywhere — sand, water, or sky! Decorations can overlap. Select one to resize, flip, or move it forward/backward in the layers; double-click to remove + refund.</p>
 <div class="builder-comb" id="builderComb" style="display:none"><p class="mini-note">Find all 5 hidden treasures! Each one = +1 point.</p><div class="comb-grid" id="combGrid"></div></div>
 <div class="builder-shop" id="builderShop" style="display:none"></div>
 </div></section>
@@ -1223,7 +1223,7 @@ function renderBeachBuilder(){const pts=document.getElementById("builderPoints")
 let selectedBuilderItem=null;
 function selectBuilderItem(e,i){
  if(builderDrag&&builderDrag.moved)return;
- selectedBuilderItem=i;const maxLayer=Math.max(0,...data.beachBuilder.items.map(x=>Number(x.layer)||0));if(data.beachBuilder.items[i])data.beachBuilder.items[i].layer=maxLayer+1;const box=document.getElementById("builderSizeControls"),label=document.getElementById("builderSelectedName");
+ selectedBuilderItem=i;const box=document.getElementById("builderSizeControls"),label=document.getElementById("builderSelectedName");
  if(box)box.style.display="flex";if(label&&data.beachBuilder.items[i])label.textContent=data.beachBuilder.items[i].icon+" "+data.beachBuilder.items[i].name;
 }
 function resizeBuilderItem(delta){
@@ -1233,16 +1233,14 @@ function resizeBuilderItem(delta){
 function flipBuilderItem(){if(selectedBuilderItem===null||!data.beachBuilder.items[selectedBuilderItem])return;const item=data.beachBuilder.items[selectedBuilderItem];item.flipped=!item.flipped;save();renderBeachBuilder()}
 function moveBuilderLayer(direction){
  if(selectedBuilderItem===null||!data.beachBuilder.items[selectedBuilderItem])return;
- const items=data.beachBuilder.items;
- const selected=items[selectedBuilderItem];
- const ordered=items.map((x,i)=>({i,layer:Number(x.layer)||i+1})).sort((a,b)=>a.layer-b.layer);
- const pos=ordered.findIndex(x=>x.i===selectedBuilderItem),target=pos+direction;
- if(target<0||target>=ordered.length)return;
- const other=items[ordered[target].i],a=Number(selected.layer)||pos+1,b=Number(other.layer)||target+1;
- selected.layer=b;other.layer=a;save();renderBeachBuilder();
-} function clearBuilderSelection(){selectedBuilderItem=null;const box=document.getElementById("builderSizeControls");if(box)box.style.display="none"}
+ const item=data.beachBuilder.items[selectedBuilderItem];
+ const others=data.beachBuilder.items.filter((x,i)=>i!==selectedBuilderItem).map((x,i)=>Number(x.layer)||i+1);
+ item.layer=direction>0?(others.length?Math.max(...others)+1:1):(others.length?Math.min(...others)-1:1);
+ save();renderBeachBuilder();
+}
+function clearBuilderSelection(){selectedBuilderItem=null;const box=document.getElementById("builderSizeControls");if(box)box.style.display="none"}
 let builderDrag=null;
-function startBuilderDrag(e,i){ const maxLayer=Math.max(0,...data.beachBuilder.items.map(x=>Number(x.layer)||0));if(data.beachBuilder.items[i])data.beachBuilder.items[i].layer=maxLayer+1;
+function startBuilderDrag(e,i){ 
  if(e.button!==undefined&&e.button!==0)return;
  const sand=document.getElementById("builderSand"),scene=document.getElementById("builderScene");if(!sand||!scene||!data.beachBuilder.items[i])return;
  builderDrag={i,sand,scene,moved:false,startX:e.clientX,startY:e.clientY};
